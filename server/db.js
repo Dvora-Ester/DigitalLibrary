@@ -1,6 +1,8 @@
 import mysql from 'mysql2';
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'path';
+dotenv.config({ path: path.resolve('./server/.env') });
+console.log('ENV:', process.env.DB_USER, process.env.DB_PASSWORD, process.env.DB_NAME);
 
 // יצירת מאגר חיבורים
 const pool = mysql.createPool({
