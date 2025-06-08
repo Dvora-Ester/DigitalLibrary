@@ -14,6 +14,7 @@ import './db.js'
 
 // Routers
 import users from "./routes/user.js";
+import orders from "./routes/orders.js";
 // Create Express app
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/users", users);
+app.use("/api/orders", orders);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the server!');
