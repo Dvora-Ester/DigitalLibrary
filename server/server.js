@@ -13,8 +13,9 @@ import './db.js'
 
 
 // Routers
-import users from "./routes/user.js";
-import orders from "./routes/orders.js";
+import userRouter from "./routes/user.js";
+import booksRouter from './routes/books.js';
+import ordersRouter from "./routes/orders.js";
 // Create Express app
 const app = express();
 
@@ -22,10 +23,12 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
-
+console.log("ggggggg")
 // Routes
-app.use("/api/users", users);
-app.use("/api/orders", orders);
+app.use("/api/users", userRouter);
+app.use("/api/books", booksRouter);
+//app.use("/api/books", Library_Of_UserRouter);
+app.use("/api/orders", ordersRouter);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the server!');
@@ -36,3 +39,4 @@ const PORT = 4000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+console.log('Current working directory:', process.cwd());

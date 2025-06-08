@@ -148,6 +148,16 @@ import usersModel from "../modules/user.js";
 import { generateToken } from "../middleware/outh.js";
 
 const user = {
+    getById: async (req, res) => {
+            try {
+                const user = await usersModel.getById(req.params.id);
+                if (!user) return res.status(404).json({ message: 'User not found' });
+                res.json(user);
+            } catch (err) {
+                console.error('Error getting user by ID:', err);
+                res.status(500).json({ error: 'Failed to fetch user' });
+            }
+        },
      register: async (req, res) => {
         const { name, email, phone, password } = req.body;
 

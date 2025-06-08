@@ -1,4 +1,4 @@
-CREATE DATABASE DigitalLibrary;
+CREATE DATABASE digitallibrary;
 USE DigitalLibrary;
 
  -- טבלת משתמשים
