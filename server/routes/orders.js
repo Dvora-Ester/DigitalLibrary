@@ -1,13 +1,14 @@
 import express from "express";
 import ordersController from "../controllers/orders.js";
+import { verifyToken } from "../middleware/outh.js"; // Ensure you have the correct path to your auth middleware
 
 const orderRouter = express.Router();
 
-orderRouter.get("/getAllOrdersByUserId/:userId", ordersController.getAllByUserId);
+orderRouter.get("/getAllOrdersByUserId",verifyToken, ordersController.getAllByUserId);
 console.log("Order router initialized");
-orderRouter.post("/addOrder/:userId", ordersController.add);
-orderRouter.delete("/deleteOrder/:id", ordersController.delete);
-orderRouter.put("/updateOrder/:order_id", ordersController.update);
-orderRouter.get("/search/:userId", ordersController.search);
+orderRouter.post("/addOrder",verifyToken ,ordersController.add);
+orderRouter.delete("/deleteOrder/:orderId",verifyToken, ordersController.delete);
+orderRouter.put("/updateOrder/:orderId",verifyToken, ordersController.update);
+orderRouter.get("/search/",verifyToken, ordersController.search);
 
 export default orderRouter;

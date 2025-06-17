@@ -2,7 +2,9 @@ import ordersModel from "../modules/orders.js";
 
 const ordersController = {
   getAllByUserId: async (req, res) => {
-    const { userId } = req.params;
+    // const { userId } = req.params;
+  
+        const userId = req.userId;
     const { sortBy } = req.query;
     console.log("Fetching orders for user ID:", userId);
 
@@ -18,7 +20,7 @@ const ordersController = {
     console.log("Adding order with body:", req.body);
     console.log("User ID from params:", req.params.userId);
     const { ccNumber, validity, cvv, date } = req.body;
-    const { userId } = req.params;
+      const userId = req.userId;
 
     if (!ccNumber || !validity || !cvv || !date) {
       return res.status(400).json({ error: "All required fields must be filled" });
@@ -38,10 +40,10 @@ const ordersController = {
   },
 
   delete: async (req, res) => {
-    const { id } = req.params;
+    const { orderId } = req.params;
 
     try {
-      const result = await ordersModel.delete(id);
+      const result = await ordersModel.delete(orderId);
       if (!result) return res.status(404).json({ error: "No orders found for this user" });
       res.json(result);
     } catch (err) {
@@ -50,7 +52,7 @@ const ordersController = {
   },
 
   update: async (req, res) => {
-    const { order_id } = req.params;
+    const { orderId } = req.params;
     const { ccNumber, validity, cvv, date } = req.body;
 
     if (ccNumber == null && validity == null && cvv == null && date == null) {
@@ -58,7 +60,7 @@ const ordersController = {
     }
 
     try {
-      const result = await ordersModel.update(order_id, { ccNumber, validity, cvv, date });
+      const result = await ordersModel.update(orderId, { ccNumber, validity, cvv, date });
       if (result.affectedRows === 0) return res.status(404).json({ error: "order not found" });
 
       res.json({ message: "order updated successfully" });
@@ -68,7 +70,7 @@ const ordersController = {
   },
 
   search: async (req, res) => {
-    const userId = req.params.userId;
+     const userId = req.userId;
     const { filterBy, value } = req.query;
 
     if (!filterBy || value === undefined) {
