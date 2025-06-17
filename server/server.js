@@ -16,6 +16,7 @@ import './db.js'
 import userRouter from "./routes/user.js";
 import booksRouter from './routes/books.js';
 import ordersRouter from "./routes/orders.js";
+import orderDetailRouter from './routes/orderDetail.js';
 // Create Express app
 const app = express();
 
@@ -29,7 +30,7 @@ app.use("/api/users", userRouter);
 app.use("/api/books", booksRouter);
 //app.use("/api/books", Library_Of_UserRouter);
 app.use("/api/orders", ordersRouter);
-
+app.use("/api/orderDetails", orderDetailRouter);
 app.get('/', (req, res) => {
   res.send('Welcome to the server!');
 });
