@@ -14,8 +14,10 @@ const ordersModel = {
     },
 
     add: async (orderData) => {
-        const { userId, ccNumber, Validity, cvv, date } = orderData;
+        console.log("hello");
+        const { userId, ccNumber, date } = orderData;
         //טוקן של תשלום אמיתי
+        console.log("Adding order with data:", orderData);
         const lastFour = ccNumber.slice(-4);
         const [orderResult] = await promisePool.query(
             "INSERT INTO orders (User_Id, cc_Last_Four_Diggits, date) VALUES (?, ?, ?)",

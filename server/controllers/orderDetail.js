@@ -1,11 +1,9 @@
+import booksModel from "../modules/books.js";
 import orderDetailsModel from "../modules/orderDetail.js";
 
 const orderDetailsController = {
     getOrderDetailsByOrdersrIdAndBookId: async (req, res) => {
         const { orderId, bookId } = req.params;
-        // const userId = req.userId;
-        console.log("Fetching orders for user ID:", orderId, bookId);
-
         try {
             const orders = await orderDetailsModel.getOrderDetailsByOrdersrIdAndBookId(orderId, bookId);
             res.json(orders);
@@ -13,30 +11,37 @@ const orderDetailsController = {
             res.status(500).json({ error: "Database error" });
         }
     },
-
-    add: async (req, res) => {
-        console.log("Adding order with body:", req.body);
-        console.log("User ID from params:", req.params.userId);
-        const { orderId, bookId } = req.body;
-        // const userId = req.userId;
-
-        if (!orderId || !bookId) {
-            return res.status(400).json({ error: "All required fields must be filled" });
-        }
-
-        const orderDetailsToSave = {
-            orderId, bookId
-        };
-
+  getAllOrderDetailsByOrdersId: async (req, res) => {
+        const { orderId} = req.params;
         try {
-            const result = await orderDetailsModel.add(orderDetailsToSave);
-            res.status(201).json({ message: "order added successfully", orderId: result.insertId });
+            const orderDetails = await orderDetailsModel.getAllOrderDetailsByOrdersId(orderId);
+            res.json(orderDetails);
         } catch (err) {
-            console.error("Error adding the order to the database:", err);
-            res.status(500).json({ error: "Error adding the order" });
+            res.status(500).json({ error: "Database error" });
         }
     },
+    add: async (orderId, orderedBookIds, res) => {
+        if (!orderId || !Array.isArray(orderedBookIds) || orderedBookIds.length === 0) {
+            return res.status(400).json({ error: "All required fields must be filled" });
+        }
+        for (const bookId of orderedBookIds) {
+            const book = await booksModel.getById(bookId);
+            if (!book) {
+                return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
+            }
+        }
 
+        try {
+            for (const bookId of orderedBookIds) {
+                await orderDetailsModel.add({ orderId: orderId, bookId: bookId });
+            }
+            console.log("sucsses");
+            return orderId;
+        } catch (err) {
+            res.status(500).json({ error: "Error adding the order details" });
+        }
+    },
+  
     delete: async (req, res) => {
         const { orderId } = req.params;
 

@@ -1,4 +1,6 @@
+import orderDetailsModel from "../modules/orderDetail.js";
 import ordersModel from "../modules/orders.js";
+import orderDetailsController from "./orderDetail.js";
 
 const ordersController = {
   getAllByUserId: async (req, res) => {
@@ -17,9 +19,7 @@ const ordersController = {
   },
 
   add: async (req, res) => {
-    console.log("Adding order with body:", req.body);
-    console.log("User ID from params:", req.params.userId);
-    const { ccNumber, validity, cvv, date } = req.body;
+    const { ccNumber, validity, cvv, date, orderedBookIds } = req.body;
       const userId = req.userId;
 
     if (!ccNumber || !validity || !cvv || !date) {
@@ -32,7 +32,11 @@ const ordersController = {
 
     try {
       const result = await ordersModel.add(orderToSave);
-      res.status(201).json({ message: "order added successfully", id: result.insertId });
+      const resultOrderDetails = await orderDetailsController.add(
+        result.orderId,orderedBookIds,res);
+      res.status(201).json({ message: "order added successfully",
+        orderId: result.orderId});
+      //, id: result.orderId,orderDetailsId: resultOrderDetails.insertId
     } catch (err) {
       console.error("Error adding the order to the database:", err);
       res.status(500).json({ error: "Error adding the order" });

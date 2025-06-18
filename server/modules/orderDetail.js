@@ -1,22 +1,33 @@
 import promisePool from "../db.js";
 
 const orderDetailsModel = {
-    getOrderDetailsByOrdersrIdAndBookId: async (orderId,bookId) => {
-     const [orderDetailsResult] = await promisePool.query(
-            "SELECT * FROM Order_Details WHERE order_id = ? AND book_id = ?",
+    getOrderDetailsByOrdersrIdAndBookId: async (orderId, bookId) => {
+        const [orderDetailsResult] = await promisePool.query(
+            "SELECT * FROM Order_details WHERE order_id = ? AND book_id = ?",
             [orderId, bookId]
         );
 
         if (orderDetailsResult.length === 0) return null;
         return orderDetailsResult[0];
     },
-
+    getAllOrderDetailsByOrdersId: async (orderId) => {
+        const [orderDetailsResult] = await promisePool.query(
+            "SELECT books.id, books.name FROM books JOIN Order_Details on books.id=Order_Details.book_Id WHERE Order_Details.Order_Id = ?" ,
+            [orderId]
+        );
+// `SELECT * FROM users
+//     JOIN passwords ON users.id = passwords.user_id
+//     WHERE users.username = ? AND passwords.password_hash = ?`;
+        if (orderDetailsResult.length === 0) return null;
+        return orderDetailsResult[0];
+    },
     add: async (orderData) => {
-        const { orderId,bookId } = orderData;
+        console.log("Adding order details with data:", orderData);
+        const { orderId, bookId } = orderData;
 
         const [orderDetailsResult] = await promisePool.query(
             "INSERT INTO Order_Details (order_id,book_id) VALUES (?, ?)",
-            [orderId,bookId]
+            [orderId, bookId]
         );
         if (orderDetailsResult.length === 0) return null;
         return { orderId: orderId };
