@@ -1,7 +1,7 @@
 import promisePool from "../db.js"; 
 import bcrypt from 'bcrypt';
 const booksModel = {
-create: async (userData) => {
+Create: async (userData) => {
     const {
             Book_Name, author, number_Of_Page, Price,
             Category, Note, Status, Seller_Id, Editing_Date

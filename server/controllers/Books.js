@@ -26,16 +26,16 @@ const Books = {
             res.status(500).json({ error: 'Failed to fetch book' });
         }
     },
-    getByName: async (req, res) => {
-        try {
-            const book = await booksModel.getByName(req.params.Book_Name);
-            if (!book) return res.status(404).json({ message: 'Book not found' });
-            res.json(book);
-        } catch (err) {
-            console.error('Error getting book by Name:', err);
-            res.status(500).json({ error: 'Failed to fetch book' });
-        }
-    },
+    // getByName: async (req, res) => {
+    //     try {
+    //         const book = await booksModel.getByName(req.params.Book_Name);
+    //         if (!book) return res.status(404).json({ message: 'Book not found' });
+    //         res.json(book);
+    //     } catch (err) {
+    //         console.error('Error getting book by Name:', err);
+    //         res.status(500).json({ error: 'Failed to fetch book' });
+    //     }
+    // },
 
     Create: async (req, res) => {
         const {
@@ -80,13 +80,16 @@ const Books = {
         }
     },
     update: async (req, res) => {
-
+console.log("books update");
         const bookId = req.params.id;
         const {
             Book_Name, author, number_Of_Page, Price,
             Category, Note, Status, Seller_Id, Editing_Date
         } = req.body;
-        const PreviousBookData = await getById(bookId).json();
+        const PreviousBookData = await booksModel.getById(bookId);
+        if (!PreviousBookData) {
+    return res.status(404).json({ error: "Book not found" });
+}
         // בדיקת שדות חובה
         if (!Book_Name || !author || !number_Of_Page || !Price ||
             !Category || !Note || !Status || !Seller_Id || !Editing_Date) {

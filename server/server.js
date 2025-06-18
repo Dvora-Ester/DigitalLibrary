@@ -17,6 +17,7 @@ import userRouter from "./routes/user.js";
 import booksRouter from './routes/books.js';
 import ordersRouter from "./routes/orders.js";
 import orderDetailRouter from './routes/orderDetail.js';
+import libraryRouter from './routes/library.js';
 // Create Express app
 const app = express();
 
@@ -28,7 +29,7 @@ console.log("ggggggg")
 // Routes
 app.use("/api/users", userRouter);
 app.use("/api/books", booksRouter);
-//app.use("/api/books", Library_Of_UserRouter);
+app.use("/api/library", libraryRouter);
 app.use("/api/orders", ordersRouter);
 app.use("/api/orderDetails", orderDetailRouter);
 app.get('/', (req, res) => {
