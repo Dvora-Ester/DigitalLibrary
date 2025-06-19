@@ -1,0 +1,117 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styleSheets/Register.css';
+
+function Register() {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordVerify, setPasswordVerify] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  localStorage.setItem("CurrentUser", '');
+  localStorage.setItem("Password", '')
+  localStorage.setItem("UserName", '')
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetch(`http://localhost:3000/users/${username}/${password}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => {
+        console.log(response);
+        return response.json();
+      })
+      .then(data => {
+        console.log(data)
+        if (data.length>0) {
+          setError("User already exists. Please go to the login page.");
+          console.log('User found:', data);
+          return;
+        } else {
+          console.log('User not found');
+
+
+          if (password !== passwordVerify) {
+            setError('Passwords do not match');
+            return;
+          }
+          if (!checkPassword(password)) {
+            setError('The password must contain 6 characters,at least one upperCase letter ,one lowercase lette and a special char');
+          }
+
+          console.log('Username:', username);
+          console.log('Password:', password);
+          localStorage.setItem('UserName', username)
+          localStorage.setItem('Password', password)
+          navigate('/full-registration');
+        }
+      })
+      .catch(error => console.error('Error fetching user:', error));
+  };
+  const handleLoginRedirect = () => {
+    navigate('/login');
+
+  };
+  const checkPassword = (password) => {
+    if (password.length < 6) { console.log("length"); return false; }
+
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*]/.test(password);
+
+    if (!hasLetter) console.log("letter");
+    if (!hasNumber) console.log("number");
+    if (!hasSpecialChar) console.log("specialChar");
+
+    return hasLetter && hasNumber && hasSpecialChar;
+  };
+  return (
+    <div className="register-container">
+      <div className="register-box">
+        <h2>Register</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="passwordVerify">Verify Password</label>
+            <input
+              type="password"
+              id="passwordVerify"
+              value={passwordVerify}
+              onChange={(e) => setPasswordVerify(e.target.value)}
+              required
+            />
+          </div>
+
+          {error && <div className="error">{error}</div>}
+          <button type="submit" className="register-button">
+            Register
+          </button>
+          <button onClick={handleLoginRedirect}>Go to Login</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default Register;

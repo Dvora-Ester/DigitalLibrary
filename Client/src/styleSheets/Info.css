@@ -1,0 +1,93 @@
+/* כלליים */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8; /* רקע בהיר */
+    background-image: linear-gradient(135deg, #4a90e2, #a7b9c7); /* צבעים בתכלת עם גרדיאנט */
+    min-height: 100vh; /* גובה מלא של העמוד */
+    display: flex;
+    justify-content: center; /* מרכז אופקי */
+    align-items: center; /* מרכז אנכי */
+    padding: 20px; /* ריווח פנימי */
+}
+
+/* הקונטיינר המרכזי */
+.info-container {
+    background-color: transparent;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 100%; /* תופס את כל הרוחב הזמין */
+    overflow-y: auto; /* גלילה במקרה הצורך */
+   
+}
+
+/* תיבת המידע */
+.login-box {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); /* צל עדין */
+    width: 100%;
+    max-width: 1000px; /* מגביל את הרוחב */
+    margin: 0 auto; /* מבטיח שהתיבה תתיישר למרכז בתוך הקונטיינר */
+    text-align: center;
+    background-color: azure;
+    border: 3px solid #4a90e2;
+}
+
+/* כותרות */
+h2 {
+    font-size: 40px;
+    color: #4a90e2; /* תכלת */
+    margin-bottom: 20px;
+    text-align: center;
+}
+h4{
+    font-size: 28px;
+}
+/* עיצוב שדות הקלט */
+.input-group {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column; /* סידור אנכי */
+    align-items: flex-start;
+}
+
+.input-group label {
+    font-size: 25px;
+    font-weight: bold;
+    color: #002540; /* צבע כסף כהה */
+    margin-bottom: 5px;
+}
+
+.input-group span {
+    font-size: 20px;
+    color: #333;
+}
+
+/* כפתור ההתחברות */
+.login-button {
+    background-color: #4a90e2; /* תכלת כהה */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    width: 100%;
+}
+
+.login-button:hover {
+    background-color: #357ab7; /* גוון כהה יותר */
+}
+
+.login-button:active {
+    background-color: #2c6fa0;
+}
