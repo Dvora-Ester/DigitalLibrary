@@ -186,7 +186,7 @@ const user = {
 
     login: async (req, res) => {
         console.log("Login request received");
-        const { email, password } = req.body;
+        const { email, password } = req.params;
 
         if (!email || !password) {
             return res.status(400).json({ error: "All fields are required" });

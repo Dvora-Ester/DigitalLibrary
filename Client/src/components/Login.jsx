@@ -3,7 +3,7 @@ import '../styleSheets/Login.css';
 import {useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -11,15 +11,16 @@ function Login() {
   localStorage.setItem("CurrentUser", '');
   localStorage.setItem("AlbumsToShowOfCurrentUser", []);
   localStorage.setItem("AllAlbumsOfCurrentUser", []);
-  },[username,password])
+  },[email,password])
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/users/${username}/${password}`, {
-        method: 'GET',
+    fetch(`http://localhost:3000/api/users/login/${email}/${password}`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(),
       })
         .then(response =>response.json())
         .then(data => {
@@ -28,14 +29,15 @@ function Login() {
             localStorage.setItem("CurrentUser", JSON.stringify(data[0]));
             const currentUser = data[0];
             console.log(data,currentUser);
-            navigate(`/${currentUser.username}/${currentUser.id}/home`,{ state: { username, password } })
+            let userName=currentUser.Full_Name;
+            navigate(`/${currentUser.Full_Name}/${currentUser.Id}/home`,{ state: { userName, password } })
           } else {
            setError('User not found pass to Registration');
           }
         })
         .catch(error => console.error('Error fetching user:', error));
     
-    console.log('Username:', username);
+    console.log('Email:', email);
     console.log('Password:', password);
   };
   
@@ -48,13 +50,13 @@ function Login() {
       <form onSubmit={handleSubmit} className="login-form">
       <h2>Login</h2>
         <div className="input-group">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="email">Email</label>
           <input
             type="text"
-            id="username"
-            placeholder="Enter user name"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            id="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>

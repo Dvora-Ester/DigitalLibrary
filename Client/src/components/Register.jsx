@@ -3,21 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import '../styleSheets/Register.css';
 
 function Register() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVerify, setPasswordVerify] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   localStorage.setItem("CurrentUser", '');
   localStorage.setItem("Password", '')
-  localStorage.setItem("UserName", '')
+  localStorage.setItem("email", '')
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(`http://localhost:3000/users/${username}/${password}`, {
-      method: 'GET',
+    //בדיקה אם המשתמש קיים לפני שהוא נרשם
+    fetch(`http://localhost:3000/api/users/login/${email}/${password}`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      body:JSON.stringify()
     })
       .then(response => {
         console.log(response);
@@ -41,9 +43,9 @@ function Register() {
             setError('The password must contain 6 characters,at least one upperCase letter ,one lowercase lette and a special char');
           }
 
-          console.log('Username:', username);
+          console.log('Email:', email);
           console.log('Password:', password);
-          localStorage.setItem('UserName', username)
+          localStorage.setItem('Email', email)
           localStorage.setItem('Password', password)
           navigate('/full-registration');
         }
@@ -73,12 +75,12 @@ function Register() {
         <h2>Register</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="email">email</label>
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>

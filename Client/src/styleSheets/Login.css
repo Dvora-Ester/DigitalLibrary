@@ -35,6 +35,11 @@ body {
   max-width: 400px;
   text-align: center;
   margin-top: 220px;
+  align-items: center;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 h2 {

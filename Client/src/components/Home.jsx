@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Navigate } from 'react-router-dom'; 
-import '../StyleSheet/Home.css';
+import '../styleSheets/Home.css';
 function Home() {
   let currentUser = '';
   try {
