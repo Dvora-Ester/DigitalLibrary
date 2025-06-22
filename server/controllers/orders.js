@@ -31,6 +31,12 @@ const ordersController = {
     };
 
     try {
+         for (const bookId of orderedBookIds) {
+            const book = await booksModel.getById(bookId);
+            if (!book) {
+                return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
+            }
+        }
       const result = await ordersModel.add(orderToSave);
       const resultOrderDetails = await orderDetailsController.add(
         result.orderId,orderedBookIds,res);

@@ -24,12 +24,12 @@ const orderDetailsController = {
         if (!orderId || !Array.isArray(orderedBookIds) || orderedBookIds.length === 0) {
             return res.status(400).json({ error: "All required fields must be filled" });
         }
-        for (const bookId of orderedBookIds) {
-            const book = await booksModel.getById(bookId);
-            if (!book) {
-                return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
-            }
-        }
+        // for (const bookId of orderedBookIds) {
+        //     const book = await booksModel.getById(bookId);
+        //     if (!book) {
+        //         return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
+        //     }
+        // }
 
         try {
             for (const bookId of orderedBookIds) {
