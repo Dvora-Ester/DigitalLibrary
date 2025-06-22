@@ -16,15 +16,15 @@ const user = {
   },
 
   register: async (userData) => {
-    const { name, email, phone, password } = userData;
+    const { name, email, phone, password,isManager } = userData;
     try {
       // הצפנת הסיסמה
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // הכנסת המשתמש לטבלת users
       const [userResult] = await promisePool.query(
-        "INSERT INTO users (Full_Name, email, Phone) VALUES (?, ?, ?)",
-        [name, email, phone]
+        "INSERT INTO users (Full_Name, email, Phone,Is_Manager) VALUES (?, ?, ?,?)",
+        [name, email, phone,isManager]
       );
       const userId = userResult.insertId;
       console.log("User ID:", userId);

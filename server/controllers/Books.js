@@ -38,9 +38,11 @@ const Books = {
     // },
 
     Create: async (req, res) => {
+        const Seller_Id = req.user.id;
+        console.log("Adding book for user ID:", Seller_Id);
         const {
             Book_Name, author, number_Of_Page, Price,
-            Category, Note, Status, Seller_Id, Editing_Date
+            Category, Note, Status, Editing_Date
         } = req.body;
 
         // בדיקת שדות חובה
@@ -81,7 +83,7 @@ const Books = {
     },
     update: async (req, res) => {
 console.log("books update");
-        const bookId = req.params.id;
+        const bookId = req.params.bookId;
         const {
             Book_Name, author, number_Of_Page, Price,
             Category, Note, Status, Seller_Id, Editing_Date
@@ -138,7 +140,7 @@ console.log("books update");
     }
     ,
     delete: async (req, res) => {
-        const bookId = req.params.id;
+        const bookId = req.bookId;
 
         try {
             const deleted = await booksModel.delete(bookId);
