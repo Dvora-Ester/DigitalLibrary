@@ -5,7 +5,7 @@ import { verifyToken } from "../middleware/outh.js"; // Ensure you have the corr
 const orderDetailRouter = express.Router();
 
 orderDetailRouter.get("/getOrdersDetailByOrdersrIdAndBookId/:orderId/:bookId",verifyToken, orderDetailsController.getOrderDetailsByOrdersrIdAndBookId);
-console.log("Order router initialized");
+orderDetailRouter.get("/getAllOrderDetailsByOrdersId/:orderId",verifyToken, orderDetailsController.getAllOrderDetailsByOrdersId)
 orderDetailRouter.post("/addOrderDetails",verifyToken ,orderDetailsController.add);
 // orderDetailRouter.addOrderDetailsdelete("/deleteOrdersDetail/:orderId",verifyToken, ordersDetailController.delete);
 // orderDetailRouter.put("/updateOrdersDetail/:orderId",verifyToken, ordersDetailController.update);

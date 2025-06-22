@@ -1,12 +1,17 @@
 import orderDetailsModel from "../modules/orderDetail.js";
+import express from "express";
 import ordersModel from "../modules/orders.js";
 import orderDetailsController from "./orderDetail.js";
+import booksModel from "../modules/books.js";
+import library from "./library.js";
+import libraryModel from "../modules/library.js";
+
 
 const ordersController = {
   getAllByUserId: async (req, res) => {
     // const { userId } = req.params;
   
-        const userId = req.userId;
+     const userId = req.user.id;
     const { sortBy } = req.query;
     console.log("Fetching orders for user ID:", userId);
 
@@ -20,8 +25,8 @@ const ordersController = {
 
   add: async (req, res) => {
     const { ccNumber, validity, cvv, date, orderedBookIds } = req.body;
-      const userId = req.userId;
-
+        const userId = req.user.id;
+     console.log("Adding order for user ID:", userId);
     if (!ccNumber || !validity || !cvv || !date) {
       return res.status(400).json({ error: "All required fields must be filled" });
     }
@@ -31,12 +36,21 @@ const ordersController = {
     };
 
     try {
+         for (const bookId of orderedBookIds) {
+            const book = await booksModel.getById(bookId);
+            if (!book) {
+                return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
+            }
+        }
       const result = await ordersModel.add(orderToSave);
-      const resultOrderDetails = await orderDetailsController.add(
-        result.orderId,orderedBookIds,res);
+      // const resultOrderDetails = await orderDetailsController.add(
+      //   result.orderId,orderedBookIds,res);
+      console.log("Order added successfully:", result);
+      const Bookmark_On_Page=0;
+       const resultLibraryDetails = await library.add(userId,
+        result.orderId,orderedBookIds,Bookmark_On_Page,res);
       res.status(201).json({ message: "order added successfully",
         orderId: result.orderId});
-      //, id: result.orderId,orderDetailsId: resultOrderDetails.insertId
     } catch (err) {
       console.error("Error adding the order to the database:", err);
       res.status(500).json({ error: "Error adding the order" });
@@ -45,9 +59,13 @@ const ordersController = {
 
   delete: async (req, res) => {
     const { orderId } = req.params;
-
+ 
     try {
-      const result = await ordersModel.delete(orderId);
+    const resultLibraryDetails = await libraryModel.deleteByOrderId(orderId);
+    let result=null;
+      if (!resultLibraryDetails) {
+       result = await ordersModel.delete(orderId);
+    }
       if (!result) return res.status(404).json({ error: "No orders found for this user" });
       res.json(result);
     } catch (err) {
@@ -74,7 +92,8 @@ const ordersController = {
   },
 
   search: async (req, res) => {
-     const userId = req.userId;
+       const userId = req.user.id;
+       
     const { filterBy, value } = req.query;
 
     if (!filterBy || value === undefined) {

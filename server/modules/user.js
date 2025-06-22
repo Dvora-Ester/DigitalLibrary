@@ -16,15 +16,15 @@ const user = {
   },
 
   register: async (userData) => {
-    const { name, email, phone, password } = userData;
+    const { name, email, phone, password,isManager } = userData;
     try {
       // הצפנת הסיסמה
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // הכנסת המשתמש לטבלת users
       const [userResult] = await promisePool.query(
-        "INSERT INTO users (Full_Name, email, Phone) VALUES (?, ?, ?)",
-        [name, email, phone]
+        "INSERT INTO users (Full_Name, email, Phone,Is_Manager) VALUES (?, ?, ?,?)",
+        [name, email, phone,isManager]
       );
       const userId = userResult.insertId;
       console.log("User ID:", userId);
@@ -56,6 +56,19 @@ console.log(addedUser);
      return results[0];
     } catch (err) {
       console.error("getUserByUsername error:", err);
+      throw err;
+    }
+  },
+  delete: async (userId) => {
+    try {
+      // מחיקת המשתמש מטבלת passwords
+      await promisePool.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
+      // מחיקת המשתמש מטבלת users
+      const [result] = await promisePool.query("DELETE FROM users WHERE Id = ?", [userId]);
+      console.log("User deleted:", result);
+      return result.affectedRows > 0;
+    } catch (err) {
+      console.error("Delete user error:", err);
       throw err;
     }
   }

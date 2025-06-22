@@ -159,7 +159,7 @@ const user = {
             }
         },
      register: async (req, res) => {
-        const { name, email, phone, password } = req.body;
+        const { name, email, phone, password,isManager } = req.body;
 
         if (!name || !email || !password || !phone) {
             return res.status(400).json({ error: "All fields are required" });
@@ -175,7 +175,7 @@ const user = {
         }
 
         try {
-            const result = await usersModel.register({ name, email, phone, password });
+            const result = await usersModel.register({ name, email, phone, password,isManager });
             console.log("User added successfully:", result);
             res.status(201).json({ message: "User added successfully", userId: result.userId });
         } catch (err) {
@@ -186,7 +186,7 @@ const user = {
 
     login: async (req, res) => {
         console.log("Login request received");
-        const { email, password } = req.params;
+        const { email, password } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({ error: "All fields are required" });
@@ -211,12 +211,32 @@ const user = {
 
             const userWithoutPassword = { ...dbUser };
             delete userWithoutPassword.password;
+            delete userWithoutPassword.Phone;
             let token = generateToken(userWithoutPassword);
             userWithoutPassword.token = token;
-            res.json({ message: "Login successful", user: userWithoutPassword });
+             delete userWithoutPassword.Id;
+             delete userWithoutPassword.Is_Manager;
+           // res.json({ message: "Login successful", user: userWithoutPassword });
+            res.json({ message: "Login successful", userWithoutPassword });
         } catch (err) {
             console.error("Login error:", err);
             res.status(500).json({ error: "Database error" });
+        }
+    },
+    delete: async (req, res) => {
+        try {
+            const userId = req.body.userId;
+            if (!userId) {
+                return res.status(400).json({ error: "User ID is required" });
+            }
+            const result = await usersModel.delete(userId);
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.json({ message: "User deleted successfully" });
+        } catch (err) {
+            console.error("Error deleting user:", err);
+            res.status(500).json({ error: "Failed to delete user" });
         }
     }
 };
