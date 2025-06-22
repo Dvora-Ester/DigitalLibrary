@@ -36,10 +36,11 @@ CREATE TABLE Books (
 -- טבלת ספריה אישית של משתמש
 CREATE TABLE Library_Of_User (
     User_Id INT,
+    Order_Id INT,
     Book_Id INT,
     Purchase_Date DATE,
     Bookmark_On_Page INT,
-    PRIMARY KEY (User_Id, Book_Id),
+    PRIMARY KEY (User_Id,Order_Id,Book_Id),
     FOREIGN KEY (User_Id) REFERENCES Users(Id) ON DELETE CASCADE,
     FOREIGN KEY (Book_Id) REFERENCES Books(Id) ON DELETE CASCADE
 );

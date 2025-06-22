@@ -222,6 +222,22 @@ const user = {
             console.error("Login error:", err);
             res.status(500).json({ error: "Database error" });
         }
+    },
+    delete: async (req, res) => {
+        try {
+            const userId = req.body.userId;
+            if (!userId) {
+                return res.status(400).json({ error: "User ID is required" });
+            }
+            const result = await usersModel.delete(userId);
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: "User not found" });
+            }
+            res.json({ message: "User deleted successfully" });
+        } catch (err) {
+            console.error("Error deleting user:", err);
+            res.status(500).json({ error: "Failed to delete user" });
+        }
     }
 };
 

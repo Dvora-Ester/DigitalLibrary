@@ -58,6 +58,19 @@ console.log(addedUser);
       console.error("getUserByUsername error:", err);
       throw err;
     }
+  },
+  delete: async (userId) => {
+    try {
+      // מחיקת המשתמש מטבלת passwords
+      await promisePool.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
+      // מחיקת המשתמש מטבלת users
+      const [result] = await promisePool.query("DELETE FROM users WHERE Id = ?", [userId]);
+      console.log("User deleted:", result);
+      return result.affectedRows > 0;
+    } catch (err) {
+      console.error("Delete user error:", err);
+      throw err;
+    }
   }
 };
 

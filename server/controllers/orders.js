@@ -1,7 +1,11 @@
 import orderDetailsModel from "../modules/orderDetail.js";
+import express from "express";
 import ordersModel from "../modules/orders.js";
 import orderDetailsController from "./orderDetail.js";
 import booksModel from "../modules/books.js";
+import library from "./library.js";
+import libraryModel from "../modules/library.js";
+
 
 const ordersController = {
   getAllByUserId: async (req, res) => {
@@ -39,8 +43,12 @@ const ordersController = {
             }
         }
       const result = await ordersModel.add(orderToSave);
-      const resultOrderDetails = await orderDetailsController.add(
-        result.orderId,orderedBookIds,res);
+      // const resultOrderDetails = await orderDetailsController.add(
+      //   result.orderId,orderedBookIds,res);
+      console.log("Order added successfully:", result);
+      const Bookmark_On_Page=0;
+       const resultLibraryDetails = await library.add(userId,
+        result.orderId,orderedBookIds,Bookmark_On_Page,res);
       res.status(201).json({ message: "order added successfully",
         orderId: result.orderId});
     } catch (err) {
@@ -51,9 +59,13 @@ const ordersController = {
 
   delete: async (req, res) => {
     const { orderId } = req.params;
-
+ 
     try {
-      const result = await ordersModel.delete(orderId);
+    const resultLibraryDetails = await libraryModel.deleteByOrderId(orderId);
+    let result=null;
+      if (!resultLibraryDetails) {
+       result = await ordersModel.delete(orderId);
+    }
       if (!result) return res.status(404).json({ error: "No orders found for this user" });
       res.json(result);
     } catch (err) {
