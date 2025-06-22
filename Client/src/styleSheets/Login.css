@@ -1,0 +1,140 @@
+/* Login.css */
+
+/* כלליים */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f4f8; /* רקע בהיר */
+  display: flex;
+  justify-content: flex-start; /* מבטל את המרכזיות */
+  align-items: center;
+  height: 100vh;
+  background-image: linear-gradient(135deg, #4a90e2, #a7b9c7); /* צבעים בתכלת עם גרדיאנט */
+}
+
+/* הקונטיינר המרכזי */
+.login-container {
+  display: flex;
+  justify-content: flex-start; /* מבטל את המרכזיות */
+  align-items: center;
+  height: 100%;
+}
+
+/* הקופסה שמכילה את הטופס */
+.login-form {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  margin-top: 220px;
+  align-items: center;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+h2 {
+  font-size: 28px;
+  color: #4a90e2; /* תכלת */
+  margin-bottom: 30px;
+}
+
+/* עיצוב שדות הקלט */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 16px;
+  font-weight: bold;
+  color: #7a8c99; /* צבע כסף כהה */
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 20px;
+  border: 2px solid #d1d8e1;
+  border-radius: 8px;
+  transition: 0.3s ease;
+  height: 50px;
+
+}
+
+.input-group input:focus {
+  border-color: #4a90e2; /* border תכלת */
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: #aaa;
+  font-size: 20px;
+}
+
+/* הודעות שגיאה */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+/* כפתור ההתחברות */
+.login-button {
+  background-color: #4a90e2; /* תכלת כהה */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  width: 100%;
+  cursor: pointer;
+  transition: 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.login-button:hover {
+  background-color: #357ab7; /* גוון כהה יותר כשלוחצים */
+}
+
+.login-button:active {
+  background-color: #2c6fa0;
+}
+
+/* כפתור הרישום */
+.register-button {
+  background-color: #a7b9c7; /* צבע בהיר לתצוגת כפתור הרישום */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: 0.3s ease;
+}
+
+.register-button:hover {
+  background-color: #8c9fa8; /* גוון כהה יותר כשלוחצים */
+}
+
+.register-button:active {
+  background-color: #6f7a87;
+}
+
+/* אפקט צללים למעבר */
+input:focus, .login-button:hover, .register-button:hover {
+  box-shadow: 0 0 10px rgba(74, 144, 226, 0.4); /* צללית קלה בגוון תכלת */
+}

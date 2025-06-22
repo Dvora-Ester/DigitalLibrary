@@ -1,0 +1,98 @@
+/* FullRegistration.css */
+
+/* כלליים */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: flex-start; /* מבטל את המרכזיות */
+    align-items: center;
+    height: 100vh;
+    background-image: linear-gradient(135deg, #4a90e2, #a7b9c7);
+  }
+  
+  /* הקונטיינר המרכזי */
+  .register-container {
+    display: flex;
+    justify-content: flex-start; /* מבטל את המרכזיות */
+    align-items: center;
+    height: 100%;
+  }
+  
+  /* הקופסה שמכילה את הטופס */
+  .register-box {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px; /* רוחב מקסימלי יותר */
+    text-align: left;
+  }
+  
+  h2, h3, h4 {
+    font-size: 18px;
+    color: #4a90e2;
+    margin-bottom: 15px;
+  }
+  
+  /* שדות הקלט עם עיצוב Grid */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* שני טורים */
+    gap: 15px; /* ריווח בין השדות */
+  }
+  
+  .input-group {
+    margin-bottom: 10px;
+  }
+  
+  .input-group label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #7a8c99;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 8px;
+    font-size: 12px;
+    border: 1px solid #d1d8e1;
+    border-radius: 5px;
+    transition: 0.3s ease;
+  }
+  
+  .input-group input:focus {
+    border-color: #4a90e2;
+    outline: none;
+  }
+  
+  /* כפתור הרישום */
+  .register-button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  .register-button:hover {
+    background-color: #357ab7;
+  }
+  
+  .register-button:active {
+    background-color: #2c6fa0;
+  }
+  
