@@ -1,140 +1,134 @@
-/* Login.css */
+/* Login.css - עיצוב מודרני בהתאם ל־Home */
 
 /* כלליים */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+ 
 }
-
-body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f4f8; /* רקע בהיר */
+.login-page {
   display: flex;
-  justify-content: flex-start; /* מבטל את המרכזיות */
+  justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-image: linear-gradient(135deg, #4a90e2, #a7b9c7); /* צבעים בתכלת עם גרדיאנט */
+  min-height: 100vh;
+  background-color: #f5f5f5;
 }
 
-/* הקונטיינר המרכזי */
+/* קונטיינר הטופס */
 .login-container {
-  display: flex;
-  justify-content: flex-start; /* מבטל את המרכזיות */
-  align-items: center;
-  height: 100%;
-}
-
-/* הקופסה שמכילה את הטופס */
-.login-form {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
+  background-color: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-top: 220px;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
   align-items: center;
-  position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  min-height: 100vh;
+  background-color: #f5f5f5;
 }
 
-h2 {
+/* כותרת */
+.login-container h2 {
   font-size: 28px;
-  color: #4a90e2; /* תכלת */
-  margin-bottom: 30px;
+  margin-bottom: 25px;
+  color: rgb(70, 126, 142);
 }
 
-/* עיצוב שדות הקלט */
+/* קבוצת שדה */
 .input-group {
   margin-bottom: 20px;
   text-align: left;
 }
 
 .input-group label {
-  font-size: 16px;
-  font-weight: bold;
-  color: #7a8c99; /* צבע כסף כהה */
-  margin-bottom: 8px;
   display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
 }
 
 .input-group input {
   width: 100%;
   padding: 12px;
-  font-size: 20px;
-  border: 2px solid #d1d8e1;
+  border: 2px solid #ccc;
   border-radius: 8px;
-  transition: 0.3s ease;
-  height: 50px;
-
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 }
 
 .input-group input:focus {
-  border-color: #4a90e2; /* border תכלת */
+  border-color: rgb(70, 126, 142);
   outline: none;
-}
-
-.input-group input::placeholder {
-  color: #aaa;
-  font-size: 20px;
 }
 
 /* הודעות שגיאה */
 .error {
   color: red;
   font-size: 14px;
+  margin-top: 8px;
+}
+
+/* כפתורי התחברות ורישום */
+.login-button,
+.register-button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
   margin-top: 10px;
 }
 
-/* כפתור ההתחברות */
 .login-button {
-  background-color: #4a90e2; /* תכלת כהה */
+  background-color: rgb(70, 126, 142);
   color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  width: 100%;
-  cursor: pointer;
-  transition: 0.3s ease;
-  margin-bottom: 10px;
 }
 
 .login-button:hover {
-  background-color: #357ab7; /* גוון כהה יותר כשלוחצים */
+  background-color: #1e5a68;
 }
 
 .login-button:active {
-  background-color: #2c6fa0;
+  background-color: #14424c;
 }
 
-/* כפתור הרישום */
 .register-button {
-  background-color: #a7b9c7; /* צבע בהיר לתצוגת כפתור הרישום */
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 18px;
-  width: 100%;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: 0.3s ease;
+  background-color: #d3dce0;
+  color: #222;
 }
 
 .register-button:hover {
-  background-color: #8c9fa8; /* גוון כהה יותר כשלוחצים */
+  background-color: #b7c4c8;
 }
 
 .register-button:active {
-  background-color: #6f7a87;
+  background-color: #a0b1b5;
 }
 
-/* אפקט צללים למעבר */
-input:focus, .login-button:hover, .register-button:hover {
-  box-shadow: 0 0 10px rgba(74, 144, 226, 0.4); /* צללית קלה בגוון תכלת */
+/* צל אפקטי */
+input:focus,
+.login-button:hover,
+.register-button:hover {
+  box-shadow: 0 0 8px rgba(70, 126, 142, 0.3);
+}
+.change-page-button{
+  color: rgb(70, 126, 142);
+  background-color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }

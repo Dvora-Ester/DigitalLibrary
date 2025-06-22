@@ -1,0 +1,22 @@
+.pageContainer{
+    display: flex;
+    flex-direction: row;
+
+}
+.nav-item-div{
+    color: rgb(82, 79, 79);
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  margin: 3px;
+  width: 100%;
+  min-height: 70px;
+  border: none;
+  border-bottom: 2px solid #1e5a68;
+  font-size: small;
+  
+  padding: 5px;
+}
+.aboutUsInfo{
+    font-size: 15px;
+    
+}

@@ -46,6 +46,7 @@ function Login() {
   };
   
   return (
+<div className="login-page">
     <div className="login-container">
       <form onSubmit={handleSubmit} className="login-form">
       <h2>Login</h2>
@@ -75,8 +76,9 @@ function Login() {
         <button type="submit" className="login-button">
           Login
         </button>
-        <button onClick={handleRegisterRedirect}>Go to Registration</button>
+        <button className='change-page-button' onClick={handleRegisterRedirect}>Go to Registration</button>
       </form>
+    </div>
     </div>
   );
 }

@@ -1,30 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import '../styleSheets/Home.css'; 
+import '../styleSheets/info.css';
 import Home from './Home.jsx'
 const Info = () => {
 
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-   
+
     const storedUser = localStorage.getItem('CurrentUser');
 
     if (storedUser) {
       try {
-        const parsedUser = JSON.parse(storedUser); 
-        setUser(parsedUser);  
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
       } catch (error) {
         console.error('Error parsing JSON:', error);
-        
+
       }
     } else {
       console.log('No user data in localStorage');
     }
   }, []);
 
-  
+
   if (!user) {
-    return <div>No user data available.</div>;
+    return <div className='noUserDiv'>
+              <Home />
+              <div className='noUserWarning'>No user data available.</div>
+            </div>;
   }
 
   return (
@@ -81,7 +84,7 @@ const Info = () => {
             <span>{user.address_zipcode}</span>
           </div>
 
-          
+
           <h4>Geographic location</h4>
           <div className="input-group">
             <label htmlFor="latitude">Latitude: </label>
@@ -93,7 +96,7 @@ const Info = () => {
             <span>{user.address_geo_lng}</span>
           </div>
 
-          
+
           <h4>Company</h4>
           <div className="input-group">
             <label htmlFor="companyName">Company Name: </label>
