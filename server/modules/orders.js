@@ -2,7 +2,7 @@ import promisePool from "../db.js";
 
 const ordersModel = {
     getAllByUserId: async (id, sortBy = "id") => {
-        console.log("getAllByUserId called with id:", id, "and sortBy:", sortBy);
+console.log("getAllByUserId called with id:", id, "and sortBy:", sortBy);
         const allowedSortFields = ["id"];
         const sortField = allowedSortFields.includes(sortBy) ? sortBy : "id";
         const [results] = await promisePool.query(`
