@@ -109,7 +109,7 @@ function Register() {
           <button type="submit" className="register-button">
             Register
           </button>
-          <button onClick={handleLoginRedirect}>Go to Login</button>
+          <button className="change-page-button" onClick={handleLoginRedirect}>Go to Login</button>
         </form>
       </div>
     </div>

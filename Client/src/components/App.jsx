@@ -6,11 +6,9 @@ import Login from './Login.jsx';
 import Register from './Register.jsx';
 import FullRegistration from './FullRegistration.jsx';
 import Info from './Info.jsx';
-// import Albums from './Albums.jsx';
-// import Todos from './Todos.jsx';
-// import Posts from './Posts.jsx';
-// import Photos from './Photos.jsx';
-// import Comments from './Comments.jsx';
+import BookStore from './BookStore.jsx';
+import AboutUs from './AboutUs.jsx';
+
 
 function App() {
 
@@ -21,6 +19,9 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/:user/:id/home' element={<Home />} />
+      <Route path='/:user/:id/book-store' element={<BookStore />} />
+      <Route path='/:user/:id/about-us' element={<AboutUs />} />
+
       <Route path="/full-registration" element={<FullRegistration />} />
       <Route path="/:user/:id/info" element={<Info />} />
       {/* <Route path="/:user/:id/albums" element={<Albums />}/>
