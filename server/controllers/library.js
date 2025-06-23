@@ -42,8 +42,8 @@
 //     // },
 
 //     add: async (userId, orderId, orderedBookIds, Bookmark_On_Page, res) => {
-    
-     
+
+
 //         // if (book == null) {
 //         //     return res.status(400).json({ error: "Invalid bookId" });
 //         // }
@@ -137,7 +137,6 @@ import libraryModel from "../modules/library.js";
 import booksModel from "../modules/books.js";
 import path from "path";
 import fs from "fs";
-import db from "../services/db.js"; // חיבור למסד נתונים
 
 const library = {
     getAll: async (req, res) => {
@@ -151,51 +150,116 @@ const library = {
         }
     },
 
-    getByUserIdAndBookId: async (req, res) => {
-        const {  bookId } = req.params;
-        const userId = req.user.id; // נשלף מה-token לאחר אימות
-        console.log("getByUserIdAndBookId controller", userId, bookId)
-        try {
-            const book = await libraryModel.getByUserIdAndBookId(userId, bookId);
-            if (!book) return res.status(404).json({ message: 'Book not found' });
-            res.json(book);
-        } catch (err) {
-            console.error('Error getting book by userID and bookId:', err);
-            res.status(500).json({ error: 'Failed to fetch book' });
-        }
-    },
+  
+   
 
-    streamBook: async (req, res) => {
-        const bookId = req.params.bookId;
-        const userId = req.user.id; // נשלף מה-token לאחר אימות
+    // streamBook: async (req, res) => {
+    //     const bookId = req.params.bookId;
+    //     const userId = req.user.id; // נשלף מה-token לאחר אימות
 
-        try {
-            const [rows] = await db.execute(
-                'SELECT * FROM Orders WHERE User_Id = ? AND Book_Id = ?',
-                [userId, bookId]
-            );
+    //     try {
+    //         const result = libraryModel.getByUserIdAndBookId(userId, bookId);
 
-            if (rows.length === 0) {
-                return res.status(403).json({ message: 'אין לך גישה לספר הזה' });
-            }
+    //         if (!result) {
+    //             return res.status(403).json({ message: 'אין לך גישה לספר הזה' });
+    //         }
 
-            const filePath = path.join(process.cwd(), `server/books_storage/${bookId}.pdf`);
+    //         const filePath = path.join(process.cwd(), `server/books_storage/${bookId}.pdf`);
 
-            if (!fs.existsSync(filePath)) {
-                return res.status(404).json({ message: 'הספר לא נמצא' });
-            }
+    //         if (!fs.existsSync(filePath)) {
+    //             return res.status(404).json({ message: 'הספר לא נמצא' });
+    //         }
 
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', 'inline; filename="book.pdf"');
+    //         res.setHeader('Content-Type', 'application/pdf');
+    //         res.setHeader('Content-Disposition', 'inline; filename="book.pdf"');
 
-            const stream = fs.createReadStream(filePath);
-            stream.pipe(res);
-        } catch (err) {
-            console.error('שגיאה בהזרמת ספר:', err);
-            res.status(500).json({ message: 'שגיאת שרת' });
-        }
-    },
+    //         const stream = fs.createReadStream(filePath);
+    //         stream.pipe(res);
+    //     } catch (err) {
+    //         console.error('שגיאה בהזרמת ספר:', err);
+    //         res.status(500).json({ message: 'שגיאת שרת' });
+    //     }
+    // },
 
+
+
+
+
+//     getByUserIdAndBookId: async (req, res) => {
+//   const { bookId } = req.params;
+//   const userId = req.user.id;
+
+//   console.log("getByUserIdAndBookId controller", userId, bookId);
+
+//   try {
+//     const book = await libraryModel.getByUserIdAndBookId(userId, bookId);
+//     console.log("getByUserIdAndBookId controller book", book);
+
+//     if (!book) {
+//       return res.status(404).json({ message: 'Book not found' });
+//     }
+
+//     // בנה את הנתיב לפי ה־bookId
+//     const filePath = path.join(process.cwd(), `books_storage/${bookId}.pdf`);
+
+//     if (!fs.existsSync(filePath)) {
+//       return res.status(404).json({ message: 'הספר לא נמצא' });
+//     }
+
+//     // החזר את הקובץ ללקוח (תצוגה ישירה בדפדפן)
+//     res.setHeader('Content-Type', 'application/pdf');
+//     res.setHeader('Content-Disposition', 'inline; filename="book.pdf"');
+
+//     const stream = fs.createReadStream(filePath);
+//     stream.pipe(res);
+
+//     // ❌ אל תשתמשי ב־res.json אחרי pipe – זה שובר את התגובה
+//     // res.json(book); ← למחוק!
+
+//   } catch (err) {
+//     console.error('Error getting book by userID and bookId:', err);
+//     res.status(500).json({ error: 'Failed to fetch book' });
+//   }
+// },
+getByUserIdAndBookId: async (req, res) => {
+  const { bookId } = req.params;
+  const userId = req.user.id;
+
+  console.log("🔍 getByUserIdAndBookId controller", { userId, bookId });
+
+  try {
+    // שלב 1: בדיקת הרשאה
+    const book = await libraryModel.getByUserIdAndBookId(userId, bookId);
+    if (!book) {
+      return res.status(404).json({ message: 'הספר לא נמצא או אין הרשאה לצפות בו' });
+    }
+
+    // שלב 2: בנה נתיב לקובץ לפי ה־ID
+    const filePath = path.join(process.cwd(), `books_storage/${bookId}.pdf`);
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ message: 'קובץ PDF לא נמצא' });
+    }
+
+    // שלב 3: הגדרות צפייה בלבד (לא הורדה)
+    res.setHeader('Content-Type', 'application/pdf');
+
+    // הצגה בתוך הדפדפן - לא הורדה
+    res.setHeader('Content-Disposition', 'inline; filename="book.pdf"');
+
+    // ❗ הגבל את האפשרות לבצע caching
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
+    // שלב 4: שליחת הקובץ
+    const stream = fs.createReadStream(filePath);
+    stream.pipe(res);
+
+  } catch (err) {
+    console.error('❌ שגיאה בעת שליפת הספר:', err);
+    res.status(500).json({ error: 'שגיאה בשרת, נסה שוב מאוחר יותר' });
+  }
+},
     add: async (userId, orderId, orderedBookIds, Bookmark_On_Page, res) => {
         if (!orderId || !Array.isArray(orderedBookIds) || orderedBookIds.length === 0) {
             return res.status(400).json({ error: "All required fields must be filled" });
