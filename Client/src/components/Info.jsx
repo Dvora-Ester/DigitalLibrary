@@ -1,14 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import '../styleSheets/info.css';
 import Home from './Home.jsx'
+import defaultProfile from '../Assets/defaultProfile.webp';
+
 const Info = () => {
 
   const [user, setUser] = useState(null);
+  const [edit, setEdit] = useState(false);
+  const [disable, setDisable] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [role, setRole] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+  useEffect(() => {
+    const storedUser = localStorage.getItem('CurrentUser');
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
+        setName(parsedUser.Full_Name || '');
+        setEmail(parsedUser.Email || '');
+        setPhone(parsedUser.Phone || '');
+        setRole(parsedUser.Is_Manager ? 'Manager' : 'Customer');
+        setProfileImage(parsedUser.picture || defaultProfile);
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
 
     const storedUser = localStorage.getItem('CurrentUser');
-
+    //const role=storedUser.Is_Manager? "Manager" : "Customer";
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -21,101 +46,95 @@ const Info = () => {
       console.log('No user data in localStorage');
     }
   }, []);
+ useEffect(() => {
 
+ },[ name, email, phone, profileImage]);
 
   if (!user) {
     return <div className='noUserDiv'>
-              <Home />
-              <div className='noUserWarning'>No user data available.</div>
-            </div>;
+      <Home />
+      <div className='noUserWarning'>No user data available.</div>
+    </div>;
   }
 
   return (
-    <div>
+    <div className="info-page">
       <Home />
       <div className="info-container">
-
+        
         <div className="login-box">
-          <h2>User Information</h2>
-
-          <h4>Basic Information</h4>
+          <h1>User Information<br /><br /><br /></h1>
+          <br />
+          <br />
+          <br />
+          <div className="input-group profile-group">
+          
+          <div className="profile-image-wrapper">
+            <img src={profileImage || defaultProfile} alt="Profile" className="profile-image" />
+            {edit && (
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setProfileImage(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            )}
+          </div>
+        </div> 
+        
           <div className="input-group">
-            <label htmlFor="id">ID: </label>
-            <span>{user.id}</span>
+            <label className='data-label' htmlFor="id">ID: </label>
+            <span>{user.Id || "invalid"}</span>
           </div>
 
           <div className="input-group">
-            <label htmlFor="name">Name: </label>
-            <span>{user.name}</span>
+            <label className='data-label'>Name:</label>
+            {edit ? (
+              <input value={name} onChange={(e) => setName(e.target.value)} />
+            ) : (
+              <span>{name || "invalid"}</span>
+            )}
           </div>
 
           <div className="input-group">
-            <label htmlFor="username">Username: </label>
-            <span>{user.username}</span>
+            <label className='data-label'>Email:</label>
+            {edit ? (
+              <input value={email} onChange={(e) => setEmail(e.target.value)} />
+            ) : (
+              <span>{email || "invalid"}</span>
+            )}
           </div>
 
           <div className="input-group">
-            <label htmlFor="email">Email: </label>
-            <span>{user.email}</span>
+            <label className='data-label'>Phone:</label>
+            {edit ? (
+              <input value={phone} onChange={(e) => setPhone(e.target.value)} />
+            ) : (
+              <span>{phone || "invalid"}</span>
+            )}
           </div>
 
           <div className="input-group">
-            <label htmlFor="phone">Phone: </label>
-            <span>{user.phone}</span>
-          </div>
-          <h4>Address</h4>
-          <div className="input-group">
-            <label htmlFor="street">Street: </label>
-            <span>{user.address_street}</span>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="suite">Suite: </label>
-            <span>{user.address_suite}</span>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="city">City: </label>
-            <span>{user.address_city}</span>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="zipcode">Zipcode: </label>
-            <span>{user.address_zipcode}</span>
-          </div>
-
-
-          <h4>Geographic location</h4>
-          <div className="input-group">
-            <label htmlFor="latitude">Latitude: </label>
-            <span>{user.address_geo_lat}</span>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="longitude">Longitude: </label>
-            <span>{user.address_geo_lng}</span>
-          </div>
-
-
-          <h4>Company</h4>
-          <div className="input-group">
-            <label htmlFor="companyName">Company Name: </label>
-            <span>{user.company_name}</span>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="catchPhrase">Catch phrase: </label>
-            <span>{user.company_catchPhrase}</span>
-          </div>
-
-          <div className="input-group">
-            <label htmlFor="bs">Business: </label>
-            <span>{user.company_bs}</span>
+            <label className='data-label'>Role:</label>
+            <span>{role || "invalid"}</span> {/* לא ניתן לערוך תפקיד כאן */}
           </div>
 
         </div>
+        <br />
+        <br />
+        <button disabled={!disable} className="Edit-btn" onClick={() => {setEdit(true);setDisable(false)}}>Edit</button>
+        <button disabled={disable} className="Save-btn" onClick={() => {setEdit(false);setDisable(true);}}>Save</button>
       </div>
     </div>
+
   );
 };
 

@@ -59,7 +59,7 @@ h4 {
   flex-direction: column;
 }
 
-.input-group label {
+.input-group-label {
   font-size: 14px;
   font-weight: 600;
   color: #333;

@@ -58,17 +58,20 @@ function Home() {
           </button>
           {isMenuOpen && (
             <div className="dropdown-menu">
-              <div className="dropdown-item" onClick={() => {navigate(`/${currentUser.Full_Name}/info`);setMenuOpen(false)}}>
+              <div className="dropdown-item" >
+                <button className="logout-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/info`)}>
                 <img src={ProfileResume} alt="Profile" className="dropdown-icon" />
-                My Profile
+                My Profile</button>
               </div>
               <div className="dropdown-item">
+                <button className="logout-btn" onClick={handleLogout}>
                 <img src={shoppingBag} alt="Orders" className="dropdown-icon" />
-                My Orders
+                My Orders</button>
               </div>
               <div className="dropdown-item">
+                <button className="logout-btn" onClick={handleLogout}>
                 <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
-                My Library
+                My Library</button>
               </div>
               <div className="dropdown-item">
                 <button className="logout-btn" onClick={handleLogout}>

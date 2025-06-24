@@ -127,7 +127,7 @@ function FullRegistration() {
 
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="name">Full Name</label>
+              <label className='input-group-label' htmlFor="name">Full Name</label>
               <input
                 type="text"
                 id="name"
@@ -145,7 +145,7 @@ function FullRegistration() {
 
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="email">Email</label>
+              <label className='input-group-label' htmlFor="email">Email</label>
               <input
                 type="email"
                 id="email"
@@ -155,13 +155,13 @@ function FullRegistration() {
               />
             </div>
             <div className="input-group">
-              <input type="password" value={password} disabled />
+              <input className='input-group-label' type="password" value={password} disabled />
             </div>
           </div>
 
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="website">Website</label>
+              <label className='input-group-label' htmlFor="website">Website</label>
               <input
                 type="text"
                 id="website"
@@ -180,7 +180,7 @@ function FullRegistration() {
           <h3>Address:</h3>
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="street">Street</label>
+              <label className='input-group-label' htmlFor="street">Street</label>
               <input
                 type="text"
                 id="street"
@@ -190,7 +190,7 @@ function FullRegistration() {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="suite">Suite</label>
+              <label className='input-group-label' htmlFor="suite">Suite</label>
               <input
                 type="text"
                 id="suite"
@@ -203,7 +203,7 @@ function FullRegistration() {
 
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="city">City</label>
+              <label className='input-group-label' htmlFor="city">City</label>
               <input
                 type="text"
                 id="city"
@@ -213,7 +213,7 @@ function FullRegistration() {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="zipcode">Zipcode</label>
+              <label className='input-group-label' htmlFor="zipcode">Zipcode</label>
               <input
                 type="text"
                 id="zipcode"
@@ -227,7 +227,7 @@ function FullRegistration() {
           <h4>Geography location:</h4>
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="latitude">Latitude</label>
+              <label className='input-group-label' htmlFor="latitude">Latitude</label>
               <input
                 type="text"
                 id="latitude"
@@ -237,7 +237,7 @@ function FullRegistration() {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="longtitude">Longitude</label>
+              <label className='input-group-label' htmlFor="longtitude">Longitude</label>
               <input
                 type="text"
                 id="longtitude"
@@ -250,7 +250,7 @@ function FullRegistration() {
 
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="phone">Phone</label>
+              <label className='input-group-label' htmlFor="phone">Phone</label>
               <input
                 type="text"
                 id="phone"
@@ -264,7 +264,7 @@ function FullRegistration() {
           <h3>Company:</h3>
           <div className="form-row">
             <div className="input-group">
-              <label htmlFor="companyName">Company Name</label>
+              <label className='input-group-label' htmlFor="companyName">Company Name</label>
               <input
                 type="text"
                 id="companyName"
@@ -274,7 +274,7 @@ function FullRegistration() {
               />
             </div>
             <div className="input-group">
-              <label htmlFor="CompanyCatchPhrase">Company Catch Phrase</label>
+              <label className='input-group-label' htmlFor="CompanyCatchPhrase">Company Catch Phrase</label>
               <input
                 type="text"
                 id="CompanyCatchPhrase"
@@ -286,8 +286,8 @@ function FullRegistration() {
           </div>
 
           <div className="form-row">
-            <div className="input-group">
-              <label htmlFor="CompanyBs">Company Bs</label>
+            <div  className="input-group">
+              <label className='input-group-label' htmlFor="CompanyBs">Company Bs</label>
               <input
                 type="text"
                 id="CompanyBs"

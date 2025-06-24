@@ -171,7 +171,7 @@ background-color: transparent;
 }
 
 .cart-btn:hover {
-    background-color: #f3f3f3;
+    
     transform: scale(1.05);
 }
 
