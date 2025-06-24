@@ -214,7 +214,7 @@ const user = {
             delete userWithoutPassword.Phone;
             let token = generateToken(userWithoutPassword);
             userWithoutPassword.token = token;
-             delete userWithoutPassword.Id;
+            //  delete userWithoutPassword.Id;
              delete userWithoutPassword.Is_Manager;
            // res.json({ message: "Login successful", user: userWithoutPassword });
             res.json({ message: "Login successful", userWithoutPassword });
