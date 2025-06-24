@@ -10,7 +10,7 @@ function BookDetailsModal() {
     const navigate = useNavigate();
     const location = useLocation();
     const { book } = location.state || {};
-    console.log('Book details:', book, book.Id, book.Book_Name, book.author, book.picture, book.number_Of_Page, book.Category, book.Price, book.Note, book.Editing_Date);
+    console.log('Book details:', book, book.Id, book.Book_Name, book.author, book.imageUrl, book.number_Of_Page, book.Category, book.Price, book.Note, book.Editing_Date);
     let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
 
   if (!currentUser) {
@@ -32,7 +32,7 @@ function BookDetailsModal() {
                 <div className="modal-content">
                     <div className='book-details-page'>
                         <div>
-                            <img className="modal-image" src={book.picture || noImage} alt="Book cover" />
+                            <img className="modal-image" src={`http://localhost:3000${book.imageUrl}` || noImage} alt="Book cover" />
                             <button onClick={addToCart} className="cart-button">🛒 Add to Cart</button>
                         </div>
                         <div className="book-details-info">
