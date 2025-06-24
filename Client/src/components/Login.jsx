@@ -59,7 +59,7 @@ function Login() {
         <form onSubmit={handleSubmit} className="login-form">
           <h2>Login</h2>
           <div className="input-group">
-            <label htmlFor="email">Email</label>
+            <label className='input-group-label' htmlFor="email">Email</label>
             <input
               type="text"
               id="email"
@@ -70,7 +70,7 @@ function Login() {
             />
           </div>
           <div className="input-group">
-            <label htmlFor="password">Password</label>
+            <label className='input-group-label' htmlFor="password">Password</label>
             <input
               type="password"
               id="password"

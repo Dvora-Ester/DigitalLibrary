@@ -37,7 +37,9 @@ const libraryModel = {
   //       throw err;
   //     }
   //   },
+getByUserId:async (User_Id) => {
 
+},
   getByUserIdAndBookId: async (User_Id, Book_Id) => {
     try {
       console.log("getByUserIdAndBookId Model", User_Id, Book_Id)

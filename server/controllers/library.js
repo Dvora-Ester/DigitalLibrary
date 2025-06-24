@@ -218,6 +218,45 @@ const library = {
 //     res.status(500).json({ error: 'Failed to fetch book' });
 //   }
 // },
+getByUserId:async (req, res) => {
+    const userId = req.user.id;
+
+  console.log("📚 getByUserId controller", { userId });
+
+  try {
+    // שלב 1: שליפת כל הספרים של המשתמש
+    const books = await libraryModel.getByUserId(userId);
+
+    if (!books || books.length === 0) {
+      return res.status(404).json({ message: 'לא נמצאו ספרים עבור המשתמש' });
+    }
+
+    // שלב 2: סינון ספרים עם קובץ PDF קיים בלבד
+    const booksWithFile = books
+      .map(book => {
+        const filePath = path.join(process.cwd(), `books_storage/${book.Id}.pdf`);
+        if (fs.existsSync(filePath)) {
+          return {
+            ...book,
+            filePath: `/books/${book.Id}/read`, // נתיב שתואם לשרת שלך לצפייה
+          };
+        }
+        return null;
+      })
+      .filter(book => book !== null);
+
+    if (booksWithFile.length === 0) {
+      return res.status(404).json({ message: 'לא נמצאו קבצי PDF לספרים של המשתמש' });
+    }
+
+    // שלב 3: החזרת הספרים עם נתיב צפייה לכל אחד
+    return res.status(200).json(booksWithFile);
+
+  } catch (err) {
+    console.error('❌ שגיאה בשליפת ספרי המשתמש:', err);
+    return res.status(500).json({ error: 'שגיאה בשרת, נסה שוב מאוחר יותר' });
+  }
+},
 getByUserIdAndBookId: async (req, res) => {
   const { bookId } = req.params;
   const userId = req.user.id;
