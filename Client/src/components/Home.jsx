@@ -6,7 +6,9 @@ import logo from '../Assets/logo.png';
 import defaultProfile from '../Assets/defaultProfile.webp';
 import onlinelibrary from '../Assets/online-library.png';
 import shoppingBag from '../Assets/shopping-bag.png';
+import shoppingCart from '../Assets/shopping_cart.png';
 import ProfileResume from '../Assets/profile-resume.png';
+import logout from '../Assets/logout.png';
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
@@ -68,13 +70,19 @@ function Home() {
                 <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
                 My Library
               </div>
-              
+              <div className="dropdown-item">
+                <img src={logout} alt="LogOut" className="dropdown-icon" onClick={handleLogout}/>
+                Log-Out
+              </div>
             </div>
 
           )}
         </div>
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-        <button className="logout-btn" >My Cart</button>
+        <div className='cart-container'>
+          <img src={shoppingCart} alt="shoppingCart" className="cart-icon" />
+          <button className="cart-btn" >My Cart</button>
+
+        </div>
       </div>
 
       <div className="home-content" >
