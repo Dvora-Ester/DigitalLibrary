@@ -177,7 +177,7 @@ const Books = {
   //     res.status(500).json({ error: 'Failed to fetch books' });
   //   }
   // },
-  getAll: async (req, res) => {
+  begingetAll: async (req, res) => {
 
 
   try {
@@ -210,27 +210,47 @@ const Books = {
     res.status(500).json({ error: 'Failed to fetch books' });
   }
 },
-// getAll: async (req, res) => {
-//   try {
-//     const books = await booksModel.getAll() || [];
+getAll: async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 10;
+  const offset = (page - 1) * limit;
+console.log("getAll books controller", page, limit, offset);
+  try {
+    const books = await booksModel.getAllPaginated(limit, offset) || [];
+     const totalCount = await booksModel.getTotalCount(); // סך כל הספרים
 
-//     // מוסיפה לכל ספר שדה עם קישור לתמונה
-//     const booksWithImage = books.map(book => {
-//       const imageUrl = `/book-images/${book.Id}.jpg`; // או .png/.webp אם רלוונטי
-//       return {
-//         ...book,
-//         imageUrl // ← שדה חדש שמכיל את קישור התמונה
-//       };
-//     });
-//     res.json(booksWithImage);
+    const booksWithImage = books.map(book => {
+      const id = book.Id;
+      const possibleExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+      let imageUrl = null;
 
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ error: 'Failed to fetch books' });
-//   }
-// },
+      for (const ext of possibleExtensions) {
+        const imagePath = path.join(picturesDir, `${id}${ext}`);
+        if (fs.existsSync(imagePath)) {
+          imageUrl = `/book-images/${id}${ext}`;
+          break;
+        }
+      }
 
+      return {
+        ...book,
+        imageUrl
+      };
+    });
 
+    res.json({
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+      books: booksWithImage
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch books' });
+  }
+}
+,
   getById: async (req, res) => {
     try {
       const book = await booksModel.getById(req.params.bookId);

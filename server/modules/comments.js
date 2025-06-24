@@ -1,15 +1,17 @@
 import promisePool from "../db.js"; 
 const commentsModel = {
 add: async (commentData) => {
+  console.log("hello");
+  console.log("Adding comment:", commentData);
     const {
-             Book_Id, User_Id, title, content, Created_At
+            bookId, userId, title, content, Created_At
         } = commentData;
     try {
       
       // הכנסת המשתמש לטבלת comments
       const [commentResult] = await promisePool.query(
-        "INSERT INTO comments (Book_Id, User_Id, title, content,Created_At) VALUES (?,?, ?,?,?,?)",
-        [ Book_Id, User_Id, title, content, Created_At]
+        "INSERT INTO comments (Book_Id, User_Id, title, content,Created_At) VALUES (?,?, ?,?,?)",
+        [ bookId, userId, title, content, Created_At]
       );
       const commentId = commentResult.insertId;
       console.log("comment ID:", commentId);

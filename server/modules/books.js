@@ -51,21 +51,43 @@ getById: async (book_Id) => {
       throw err;
     }
   },
+getAllPaginated: async (limit, offset) => {
+  try {
+    console.log("getAllPaginated of modules");
+    const [results] = await promisePool.query(`
+      SELECT * FROM Books
+      ORDER BY Id DESC
+      LIMIT ? OFFSET ?
+    `, [limit, offset]);
 
-getAll: async () => {
-    try {
-      console.log("getAll of modules")
-      const [results] = await promisePool.query(`
-        SELECT * FROM Books`);
-      console.log("SQL RESULTS:", results);
-      if (results.length === 0) return null;
-     return results;
-    } catch (err) {
-      console.error("getAllBooks error:", err);
-      throw err;
-    }
+    console.log("SQL RESULTS:", results);
+    // תמיד תחזיר מערך (גם אם ריק)
+    return results;
+  } catch (err) {
+    console.error("getAllPaginated error:", err);
+    throw err;
   }
-,
+},
+getTotalCount: async () => {
+  const [results] = await promisePool.query(`
+    SELECT COUNT(*) AS count FROM Books
+  `);
+  return results[0].count;
+},
+// getAll: async () => {
+//     try {
+//       console.log("getAll of modules")
+//       const [results] = await promisePool.query(`
+//         SELECT * FROM Books`);
+//       console.log("SQL RESULTS:", results);
+//       if (results.length === 0) return null;
+//      return results;
+//     } catch (err) {
+//       console.error("getAllBooks error:", err);
+//       throw err;
+//     }
+//   }
+// ,
 update: async (book_Id, bookData) => {
   const {
     Book_Name, author, number_Of_Page, Price,
