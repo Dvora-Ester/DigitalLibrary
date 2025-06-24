@@ -68,6 +68,12 @@ getAllPaginated: async (limit, offset) => {
     throw err;
   }
 },
+getTotalCount: async () => {
+  const [results] = await promisePool.query(`
+    SELECT COUNT(*) AS count FROM Books
+  `);
+  return results[0].count;
+},
 // getAll: async () => {
 //     try {
 //       console.log("getAll of modules")

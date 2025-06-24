@@ -217,7 +217,7 @@ getAll: async (req, res) => {
 console.log("getAll books controller", page, limit, offset);
   try {
     const books = await booksModel.getAllPaginated(limit, offset) || [];
-    // const totalCount = await booksModel.getTotalCount(); // סך כל הספרים
+     const totalCount = await booksModel.getTotalCount(); // סך כל הספרים
 
     const booksWithImage = books.map(book => {
       const id = book.Id;
@@ -239,9 +239,9 @@ console.log("getAll books controller", page, limit, offset);
     });
 
     res.json({
-      // totalCount,
+      totalCount,
       currentPage: page,
-      // totalPages: Math.ceil(totalCount / limit),
+      totalPages: Math.ceil(totalCount / limit),
       books: booksWithImage
     });
 
