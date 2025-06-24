@@ -1,0 +1,135 @@
+/* Comments.css */
+
+/* כלליים */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  /* background-image: linear-gradient(135deg, #f3f4f6, #a7b9c7); */
+  margin: 0;
+  padding: 0;
+  height: auto;
+  display: block;
+}
+
+/* עיצוב הקונטיינר של הדף */
+.comments-page-container {
+  width: 100%;
+  margin: 0px auto;
+  padding: 20px;
+  /* background-color: #ffffff; */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.comments-container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+/* כפתור חזרה לפוסטים */
+.back-to-posts-button {
+  background-color: #15464e;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 20px;
+}
+
+.back-to-posts-button:hover {
+  background-color: #15464e;
+}
+
+/* כותרת הדף */
+.comments-title {
+  text-align: center;
+  font-size: 28px;
+  color: #15464e;
+  margin: 20px 0;
+}
+
+/* רשימת התגובות */
+.comments-list {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* כרטיס תגובה */
+.comment-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment-card p {
+  margin: 5px 0;
+}
+
+.comment-card strong {
+  font-size: 16px;
+  color: #15464e;
+}
+
+/* כפתורים לעריכת ומחיקת תגובה */
+.edit-comment-button,
+.delete-comment-button {
+  background-color: #15464e;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.edit-comment-button:hover {
+  background-color: #15464e;
+}
+
+.delete-comment-button:hover {
+  background-color: #d9534f;
+}
+
+/* טקסט-אזור חדש להוספה או עריכה */
+.new-comment-textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  font-size: 14px;
+  resize: none;
+}
+
+/* כפתור הוספת תגובה */
+.add-comment-button {
+  margin-top: 10px;
+  background-color: #15464e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  text-align: center;
+}
+
+.add-comment-button:hover {
+  background-color: #15464e;
+}

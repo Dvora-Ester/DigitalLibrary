@@ -8,6 +8,7 @@ import FullRegistration from './FullRegistration.jsx';
 import Info from './Info.jsx';
 import BookStore from './BookStore.jsx';
 import AboutUs from './AboutUs.jsx';
+import BookDetailsModal from './BookDetail.jsx';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <Route path='/:user/:id/home' element={<Home />} />
       <Route path='/:user/:id/book-store' element={<BookStore />} />
       <Route path='/:user/:id/about-us' element={<AboutUs />} />
+      <Route path='/:user/:id/book-details/:bookId' element={<BookDetailsModal />} />
 
       <Route path="/full-registration" element={<FullRegistration />} />
       <Route path="/:user/info" element={<Info />} />
