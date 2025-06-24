@@ -6,7 +6,7 @@
 // const Books = {
 //     getAll: async (req, res) => {
 //         try {
-            
+
 //             const books = await booksModel.getAll() ||[];
 //             console.log(books);
 //             res.json(books);
@@ -161,6 +161,9 @@
 import bcrypt from "bcrypt";
 import usersModel from "../modules/user.js";
 import booksModel from "../modules/books.js";
+  import path from "path";
+import fs from "fs";
+
 
 const Books = {
   // 📚 קבלת כל הספרים של המשתמש הנוכחי
@@ -186,19 +189,77 @@ const Books = {
     }
   },
 
-  Create: async (req, res) => {
+  // add: async (req, res) => {
+  //   const Seller_Id = req.user.id;
+
+  //   const {
+  //     Book_Name, author, number_Of_Page, Price,
+  //     Category, Note, Status, Editing_Date
+  //   } = req.body;
+
+  //   if (!Book_Name || !author || !number_Of_Page || !Price ||
+  //       !Category || !Note || !Status || !Editing_Date) {
+  //     return res.status(400).json({ error: "All fields are required" });
+  //   }
+
+  //   const validStatuses = ['offered', 'approved', 'available', 'sold'];
+  //   if (!validStatuses.includes(Status)) {
+  //     return res.status(400).json({ error: "Invalid status" });
+  //   }
+
+  //   if (number_Of_Page < 1 || Price < 1) {
+  //     return res.status(400).json({ error: "Pages and price must be positive" });
+  //   }
+
+  //   const user = await usersModel.getById(Seller_Id);
+  //   if (!user) {
+  //     return res.status(400).json({ error: "Seller not found" });
+  //   }
+
+  //   try {
+  //     const result = await booksModel.add({
+  //       Book_Name,
+  //       author,
+  //       number_Of_Page,
+  //       Price,
+  //       Category,
+  //       Note,
+  //       Status,
+  //       Seller_Id,
+  //       Editing_Date
+  //     });
+
+  //     res.status(201).json({ message: "Book added successfully", bookId: result.bookId });
+  //   } catch (err) {
+  //     console.error("Error adding book:", err);
+  //     res.status(500).json({ error: "Error adding the book" });
+  //   }
+  // },
+
+// ...existing code...
+
+add: async (req, res) => {
+       console.log("📁 req.file:", req.file); // ← כאן את רואה את כל פרטי הקובץ שהגיע
+  console.log("📝 req.body:", req.body); // ← כאן תראי את שדות הטופס האחרים
+    console.log("BODY:", req.body);
+    // console.log("FILE:", req.file);
+
     const Seller_Id = req.user.id;
 
     const {
       Book_Name, author, number_Of_Page, Price,
       Category, Note, Status, Editing_Date
     } = req.body;
+    console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
+      Category, Note, Status, Editing_Date);
 
+    // אימות שדות חובה
     if (!Book_Name || !author || !number_Of_Page || !Price ||
-        !Category || !Note || !Status || !Editing_Date) {
+      !Category || !Note || !Status || !Editing_Date) {
       return res.status(400).json({ error: "All fields are required" });
     }
 
+    // בדיקת סטטוס חוקי
     const validStatuses = ['offered', 'approved', 'available', 'sold'];
     if (!validStatuses.includes(Status)) {
       return res.status(400).json({ error: "Invalid status" });
@@ -213,25 +274,152 @@ const Books = {
       return res.status(400).json({ error: "Seller not found" });
     }
 
-    try {
-      const result = await booksModel.Create({
-        Book_Name,
-        author,
-        number_Of_Page,
-        Price,
-        Category,
-        Note,
-        Status,
-        Seller_Id,
-        Editing_Date
-      });
-
-      res.status(201).json({ message: "Book added successfully", bookId: result.bookId });
-    } catch (err) {
-      console.error("Error adding book:", err);
-      res.status(500).json({ error: "Error adding the book" });
+    // בדיקת קובץ שהועלה
+    if (!req.file) {
+      return res.status(400).json({ error: "PDF file is required" });
     }
-  },
+
+    const filePath = req.file.path;
+
+    console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
+  Category, Note, Status, Editing_Date, filePath);
+  try {
+    // שלב 1 – שמור את הספר במסד הנתונים, עדיין עם שם קובץ זמני
+    const result = await booksModel.add({
+      Book_Name,
+      author,
+      number_Of_Page,
+      Price,
+      Category,
+      Note,
+      Status,
+      Seller_Id,
+      Editing_Date,
+      // File_Path: filePath  // זמני
+    });
+
+    const newBookId = result.bookId;
+
+    // ודא שהנתיב לתיקייה נכון:
+    const uploadFolder = path.join(process.cwd(),'books_storage');
+    // שלב 2 – בנה שם קובץ חדש לפי ה־ID
+    const newFileName = `${newBookId}.pdf`;
+    const newFilePath = path.join(uploadFolder, newFileName);
+
+    // שלב 3 – שנה את שם הקובץ בפועל
+    fs.renameSync(filePath, newFilePath);
+
+    // שלב 4 – עדכן את השם החדש במסד הנתונים (אם צריך)
+    // await booksModel.updateFilePath(newBookId, newFileName);
+
+    res.status(201).json({ message: "Book added successfully", bookId: newBookId });
+  } catch (err) {
+    console.error("Error adding book:", err);
+    res.status(500).json({ error: "Error adding the book" });
+  }
+},
+
+
+
+//   add: async (req, res) => {
+//       console.log("📁 req.file:", req.file); // ← כאן את רואה את כל פרטי הקובץ שהגיע
+//   console.log("📝 req.body:", req.body); // ← כאן תראי את שדות הטופס האחרים
+//     console.log("BODY:", req.body);
+//     // console.log("FILE:", req.file);
+
+//     const Seller_Id = req.user.id;
+
+//     const {
+//       Book_Name, author, number_Of_Page, Price,
+//       Category, Note, Status, Editing_Date
+//     } = req.body;
+//     console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
+//       Category, Note, Status, Editing_Date);
+
+//     // אימות שדות חובה
+//     if (!Book_Name || !author || !number_Of_Page || !Price ||
+//       !Category || !Note || !Status || !Editing_Date) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
+
+//     // בדיקת סטטוס חוקי
+//     const validStatuses = ['offered', 'approved', 'available', 'sold'];
+//     if (!validStatuses.includes(Status)) {
+//       return res.status(400).json({ error: "Invalid status" });
+//     }
+
+//     if (number_Of_Page < 1 || Price < 1) {
+//       return res.status(400).json({ error: "Pages and price must be positive" });
+//     }
+
+//     const user = await usersModel.getById(Seller_Id);
+//     if (!user) {
+//       return res.status(400).json({ error: "Seller not found" });
+//     }
+
+//     // בדיקת קובץ שהועלה
+//     if (!req.file) {
+//       return res.status(400).json({ error: "PDF file is required" });
+//     }
+
+//     const filePath = req.file.path;
+
+//     console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
+//   Category, Note, Status, Editing_Date, filePath);
+// try {
+//   // שלב 1 – שמור את הספר במסד הנתונים, עדיין עם שם קובץ זמני
+//   const result = await booksModel.add({
+//     Book_Name,
+//     author,
+//     number_Of_Page,
+//     Price,
+//     Category,
+//     Note,
+//     Status,
+//     Seller_Id,
+//     Editing_Date,
+//     // File_Path: filePath  // זמני
+//   });
+
+//   const newBookId = result.bookId;
+
+//   // שלב 2 – בנה שם קובץ חדש לפי ה־ID
+//   const newFileName = `${newBookId}.pdf`;
+//   const newFilePath = path.join(uploadFolder, newFileName);
+
+//   // שלב 3 – שנה את שם הקובץ בפועל
+//   fs.renameSync(filePath, newFilePath);
+
+//   // שלב 4 – עדכן את השם החדש במסד הנתונים
+//   //await booksModel.updateFilePath(newBookId, newFilePath);
+
+//   res.status(201).json({ message: "Book added successfully", bookId: newBookId });
+// } catch (err) {
+//   console.error("Error adding book:", err);
+//   res.status(500).json({ error: "Error adding the book" });
+// }
+
+//     // try {
+//     //   const result = await booksModel.add({
+//     //     Book_Name,
+//     //     author,
+//     //     number_Of_Page,
+//     //     Price,
+//     //     Category,
+//     //     Note,
+//     //     Status,
+//     //     Seller_Id,
+//     //     Editing_Date,
+//     //     File_Path: filePath  // הוספת הנתיב למסד נתונים
+//     //   });
+
+//     //   res.status(201).json({ message: "Book added successfully", bookId: result.bookId });
+//     // } catch (err) {
+//     //   console.error("Error adding book:", err);
+//     //   res.status(500).json({ error: "Error adding the book" });
+//     // }
+//   },
+
 
   update: async (req, res) => {
     const bookId = req.params.bookId;

@@ -1,5 +1,5 @@
 
-import promisePool from "../db.js";
+import promisePool from "../db.js"; // ודא שהנתיב נכון
 import bcrypt from 'bcrypt';
 const libraryModel = {
   add: async (libraryData) => {
@@ -44,7 +44,7 @@ const libraryModel = {
 
       const [results] = await promisePool.query(`
         SELECT * FROM Library_Of_User WHERE User_Id = ? AND Book_Id=?`, [User_Id, Book_Id]);
-      console.log("SQL RESULTS:", results);
+      console.log("SQL RESULTS:", results,results[0],results);
       if (results.length === 0) return null;
       return results[0];
     } catch (err) {

@@ -27,11 +27,16 @@ function Login() {
     })
       .then(response => response.json())
       .then(data => {
-        if (data !== undefined) {
-          console.log('User found:', data[0]);
-          localStorage.setItem("CurrentUser", JSON.stringify(data[0]));
-          const currentUser = data[0];
-          console.log(data, currentUser);
+        // if (data !== undefined) {
+        // console.log('User found:', data[0]);
+        // // localStorage.setItem("CurrentUser", JSON.stringify(data[0]));
+        // localStorage.setItem("CurrentUser", JSON.stringify(data));
+        // const currentUser = data;
+        // console.log(data, currentUser);
+        if (data && data.userWithoutPassword) {
+          const currentUser = data.userWithoutPassword;
+          localStorage.setItem("CurrentUser", JSON.stringify(currentUser));
+          console.log('User found:', currentUser);
           let userName = currentUser.Full_Name;
           navigate(`/${currentUser.Full_Name}/${currentUser.Id}/home`, { state: { userName, password } })
         } else {
@@ -49,39 +54,39 @@ function Login() {
   };
 
   return (
-<div className="login-page">
-    <div className="login-container">
-      <form onSubmit={handleSubmit} className="login-form">
-        <h2>Login</h2>
-        <div className="input-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="text"
-            id="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <p>{error}</p>
-        <button type="submit" className="login-button">
-          Login
-        </button>
-        <button className='change-page-button' onClick={handleRegisterRedirect}>Go to Registration</button>
-      </form>
-    </div>
+    <div className="login-page">
+      <div className="login-container">
+        <form onSubmit={handleSubmit} className="login-form">
+          <h2>Login</h2>
+          <div className="input-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="text"
+              id="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <p>{error}</p>
+          <button type="submit" className="login-button">
+            Login
+          </button>
+          <button className='change-page-button' onClick={handleRegisterRedirect}>Go to Registration</button>
+        </form>
+      </div>
     </div>
   );
 }

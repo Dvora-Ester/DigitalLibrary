@@ -35,7 +35,10 @@ app.use("/api/orderDetails", orderDetailRouter);
 app.get('/', (req, res) => {
   res.send('Welcome to the server!');
 });
-
+app.use((err, req, res, next) => {
+  console.error("MULTER ERROR:", err);
+  res.status(400).json({ error: err.message });
+});
 // Start the server
 const PORT = 3000;
 app.listen(PORT, () => {
