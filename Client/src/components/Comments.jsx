@@ -1,74 +1,127 @@
-import React, { useState, useEffect } from 'react';
-import {  useNavigate,useLocation } from 'react-router-dom';
+import React, { useState, useEffect,useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '../styleSheets/Comments.css';
 import Home from './Home';
 
-const Comments = ({bookId}) => {
+const Comments = ({ bookId }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
+   const titleRef = useRef(null);
   const [editingComment, setEditingComment] = useState(null);
   const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
+  const token = currentUser?.token;
 
-  useEffect(() => {
-    fetch(`http://localhost:3000/api/comments/${bookId}`)
-      .then((response) => response.json())
-      .then(data=>{setComments(data);
-        console.log(data);
-        console.log(comments);
-      })
-      .catch(console.error);
-  }, [bookId]);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`)
+  //     .then((response) => response.json())
+  //     .then(data => {
+  //       setComments(data);
+  //       console.log(data);
+  //       console.log(comments);
+  //     })
+  //     .catch(console.error);
+  // }, [bookId]);
+useEffect(() => {
+  fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`, // 👈 הטוקן נשלח כאן
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      setComments(data);
+      console.log('data from server:', data);
+    })
+    .catch((err) => {
+      console.error('Error fetching comments:', err);
+    });
+}, [bookId]);
 
- 
   const handleAddComment = () => {
+    const commentData = {
+      title: titleRef.current?.value || '',  // אפשר לשים כאן newComment או משתנים דינמיים
+      content: newComment,  // או למשל newComment או currentUser.name
+    };
 
-    let nextCommentId;
-    let comment;
-    fetch(`http://localhost:3000/api/comments`)
-      .then(response => response.json())
+    fetch(`http://localhost:3000/api/comments/addComment/${bookId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,  
+      },
+      body: JSON.stringify(commentData),
+    })
+
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to add comment');
+        return response.json();
+      })
       .then(data => {
-        if (data.length > 0) {
-
-          nextCommentId = Number(data[data.length - 1].id) + 1;
-
-        } else {
-          nextCommentId = 1;
-        }
-
-        comment = {
-          bookId: bookId,
-          id: String(nextCommentId),
-          name: currentUser?.name || 'Guest',
-          email: currentUser?.email || 'guest@example.com',
-          body: newComment,
-          userId: currentUser?.id || 'guest',
-        };
+        console.log('Comment added:', data);
+        // כאן אפשר לרוקן את התיבה או לעדכן את ה־state
       })
-      .then(() => {
-
-        console.log("comment",comment); 
-        fetch('http://localhost:3000/comments/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(comment),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            console.log(data);
-            setComments([...comments, data]);
-            setNewComment('');
-          })
-          .catch(console.error);
-      })
-      .catch(console.error);
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
+
+  // const handleAddComment = () => {
+
+  //   let nextCommentId;
+  //   let comment;
+  //   console.log(bookId);
+  //   fetch(`http://localhost:3000/api/comments/addComment/${bookId}`)
+  //     .then(response => response.json())
+  //     .then(data => {
+  //       if (data.length > 0) {
+
+  //         nextCommentId = Number(data[data.length - 1].id) + 1;
+
+  //       } else {
+  //         nextCommentId = 1;
+  //       }
+
+  //       comment = {
+  //         bookId: bookId,
+  //         id: String(nextCommentId),
+  //         name: currentUser?.name || 'Guest',
+  //         email: currentUser?.email || 'guest@example.com',
+  //         body: newComment,
+  //         userId: currentUser?.id || 'guest',
+  //       };
+  //     })
+  //     .then(() => {
+
+  //       console.log("comment",comment); 
+  //       fetch('http://localhost:3000/comments/', {
+  //         method: 'POST',
+  //         headers: { 'Content-Type': 'application/json' },
+  //         body: JSON.stringify(comment),
+  //       })
+  //         .then((response) => {
+  //           if (!response.ok) {
+  //             throw new Error(`HTTP error! Status: ${response.status}`);
+  //           }
+  //           return response.json();
+  //         })
+  //         .then((data) => {
+  //           console.log(data);
+  //           setComments([...comments, data]);
+  //           setNewComment('');
+  //         })
+  //         .catch(console.error);
+  //     })
+  //     .catch(console.error);
+  // };
 
   const handleDeleteComment = (commentId) => {
     const commentToDelete = comments.find((comment) => comment.id === commentId);
@@ -135,7 +188,7 @@ const Comments = ({bookId}) => {
           */}
         </div>
 
-       
+
         {editingComment ? (
           <>
             <textarea
@@ -149,6 +202,7 @@ const Comments = ({bookId}) => {
           </>
         ) : (
           <>
+           <input id="titleOfComment" ref={titleRef} />
             <textarea
               placeholder="Add a comment..."
               value={newComment}
