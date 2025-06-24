@@ -161,22 +161,75 @@
 import bcrypt from "bcrypt";
 import usersModel from "../modules/user.js";
 import booksModel from "../modules/books.js";
-  import path from "path";
+ import path from "path";
 import fs from "fs";
-
+const picturesDir = path.join(process.cwd(), 'pictures_of_books');
 
 const Books = {
   // 📚 קבלת כל הספרים של המשתמש הנוכחי
+  // getAll: async (req, res) => {
+  //   const userId = req.user.id;
+  //   try {
+  //     const books = await booksModel.getAllByUserId(userId) || [];
+  //     res.json(books);
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(500).json({ error: 'Failed to fetch books' });
+  //   }
+  // },
   getAll: async (req, res) => {
-    const userId = req.user.id;
-    try {
-      const books = await booksModel.getAllByUserId(userId) || [];
-      res.json(books);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Failed to fetch books' });
-    }
-  },
+
+
+  try {
+    const books = await booksModel.getAll() || [];
+
+    const booksWithImage = books.map(book => {
+      const id = book.Id;
+      const possibleExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+
+      let imageUrl = null;
+
+      for (const ext of possibleExtensions) {
+        const imagePath = path.join(picturesDir, `${id}${ext}`);
+        if (fs.existsSync(imagePath)) {
+          imageUrl = `/book-images/${id}${ext}`;
+          break;
+        }
+      }
+
+      return {
+        ...book,
+        imageUrl  // null אם לא קיימת תמונה
+      };
+    });
+
+    res.json(booksWithImage);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch books' });
+  }
+},
+// getAll: async (req, res) => {
+//   try {
+//     const books = await booksModel.getAll() || [];
+
+//     // מוסיפה לכל ספר שדה עם קישור לתמונה
+//     const booksWithImage = books.map(book => {
+//       const imageUrl = `/book-images/${book.Id}.jpg`; // או .png/.webp אם רלוונטי
+//       return {
+//         ...book,
+//         imageUrl // ← שדה חדש שמכיל את קישור התמונה
+//       };
+//     });
+//     res.json(booksWithImage);
+
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: 'Failed to fetch books' });
+//   }
+// },
+
 
   getById: async (req, res) => {
     try {
@@ -188,137 +241,181 @@ const Books = {
       res.status(500).json({ error: 'Failed to fetch book' });
     }
   },
+//העליון גרסה קודמת
+// add: async (req, res) => {
+//        console.log("📁 req.file:", req.file); // ← כאן את רואה את כל פרטי הקובץ שהגיע
+//   console.log("📝 req.body:", req.body); // ← כאן תראי את שדות הטופס האחרים
+//     console.log("BODY:", req.body);
+//     // console.log("FILE:", req.file);
 
-  // add: async (req, res) => {
-  //   const Seller_Id = req.user.id;
+//     const Seller_Id = req.user.id;
 
-  //   const {
-  //     Book_Name, author, number_Of_Page, Price,
-  //     Category, Note, Status, Editing_Date
-  //   } = req.body;
+//     const {
+//       Book_Name, author, number_Of_Page, Price,
+//       Category, Note, Status, Editing_Date
+//     } = req.body;
+//     console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
+//       Category, Note, Status, Editing_Date);
 
-  //   if (!Book_Name || !author || !number_Of_Page || !Price ||
-  //       !Category || !Note || !Status || !Editing_Date) {
-  //     return res.status(400).json({ error: "All fields are required" });
-  //   }
+//     // אימות שדות חובה
+//     if (!Book_Name || !author || !number_Of_Page || !Price ||
+//       !Category || !Note || !Status || !Editing_Date) {
+//       return res.status(400).json({ error: "All fields are required" });
+//     }
 
-  //   const validStatuses = ['offered', 'approved', 'available', 'sold'];
-  //   if (!validStatuses.includes(Status)) {
-  //     return res.status(400).json({ error: "Invalid status" });
-  //   }
+//     // בדיקת סטטוס חוקי
+//     const validStatuses = ['offered', 'approved', 'available', 'sold'];
+//     if (!validStatuses.includes(Status)) {
+//       return res.status(400).json({ error: "Invalid status" });
+//     }
 
-  //   if (number_Of_Page < 1 || Price < 1) {
-  //     return res.status(400).json({ error: "Pages and price must be positive" });
-  //   }
+//     if (number_Of_Page < 1 || Price < 1) {
+//       return res.status(400).json({ error: "Pages and price must be positive" });
+//     }
 
-  //   const user = await usersModel.getById(Seller_Id);
-  //   if (!user) {
-  //     return res.status(400).json({ error: "Seller not found" });
-  //   }
+//     const user = await usersModel.getById(Seller_Id);
+//     if (!user) {
+//       return res.status(400).json({ error: "Seller not found" });
+//     }
 
-  //   try {
-  //     const result = await booksModel.add({
-  //       Book_Name,
-  //       author,
-  //       number_Of_Page,
-  //       Price,
-  //       Category,
-  //       Note,
-  //       Status,
-  //       Seller_Id,
-  //       Editing_Date
-  //     });
+//     // בדיקת קובץ שהועלה
+//     if (!req.file) {
+//       return res.status(400).json({ error: "PDF file is required" });
+//     }
 
-  //     res.status(201).json({ message: "Book added successfully", bookId: result.bookId });
-  //   } catch (err) {
-  //     console.error("Error adding book:", err);
-  //     res.status(500).json({ error: "Error adding the book" });
-  //   }
-  // },
+//     const filePath = req.file.path;
 
-// ...existing code...
+//     console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
+//   Category, Note, Status, Editing_Date, filePath);
+//   try {
+//     // שלב 1 – שמור את הספר במסד הנתונים, עדיין עם שם קובץ זמני
+//     const result = await booksModel.add({
+//       Book_Name,
+//       author,
+//       number_Of_Page,
+//       Price,
+//       Category,
+//       Note,
+//       Status,
+//       Seller_Id,
+//       Editing_Date,
+//       // File_Path: filePath  // זמני
+//     });
 
+//     const newBookId = result.bookId;
+
+//     // ודא שהנתיב לתיקייה נכון:
+//     const uploadFolder = path.join(process.cwd(),'books_storage');
+//     // שלב 2 – בנה שם קובץ חדש לפי ה־ID
+//     const newFileName = `${newBookId}.pdf`;
+//     const newFilePath = path.join(uploadFolder, newFileName);
+
+//     // שלב 3 – שנה את שם הקובץ בפועל
+//     fs.renameSync(filePath, newFilePath);
+
+//     // שלב 4 – עדכן את השם החדש במסד הנתונים (אם צריך)
+//     // await booksModel.updateFilePath(newBookId, newFileName);
+
+//     res.status(201).json({ message: "Book added successfully", bookId: newBookId });
+//   } catch (err) {
+//     console.error("Error adding book:", err);
+//     res.status(500).json({ error: "Error adding the book" });
+//   }
+// },
+//שתי תיקיות-לא עובד
+// add: async (req, res) => {
+//   console.log("📁 PDF file:", req.file); 
+//   console.log("🖼️ Image file:", req.files?.bookImage); 
+//   console.log("📝 Form body:", req.body);
+
+//   const Seller_Id = req.user.id;
+//   const {
+//     Book_Name, author, number_Of_Page, Price,
+//     Category, Note, Status, Editing_Date
+//   } = req.body;
+
+//   if (!Book_Name || !author || !number_Of_Page || !Price ||
+//       !Category || !Note || !Status || !Editing_Date) {
+//     return res.status(400).json({ error: "All fields are required" });
+//   }
+
+//   const validStatuses = ['offered', 'approved', 'available', 'sold'];
+//   if (!validStatuses.includes(Status)) {
+//     return res.status(400).json({ error: "Invalid status" });
+//   }
+
+//   if (!req.file) {
+//     return res.status(400).json({ error: "PDF file is required" });
+//   }
+
+//   try {
+//     const result = await booksModel.add({
+//       Book_Name,
+//       author,
+//       number_Of_Page,
+//       Price,
+//       Category,
+//       Note,
+//       Status,
+//       Seller_Id,
+//       Editing_Date
+//     });
+
+//     const newBookId = result.bookId;
+
+//     // שמירת ספר PDF
+//     const pdfOldPath = req.file.path;
+//     const pdfNewPath = path.join(process.cwd(), 'books_storage', `${newBookId}.pdf`);
+//     fs.renameSync(pdfOldPath, pdfNewPath);
+
+//     // שמירת תמונה אם יש
+//     if (req.files?.bookImage || req.file?.fieldname === "bookImage") {
+//       const imageFile = req.files?.bookImage || req.file;
+//       const imageOldPath = imageFile.path;
+//       const imageExt = path.extname(imageFile.originalname);
+//       const imageNewPath = path.join(process.cwd(), 'pictures_of_books', `${newBookId}${imageExt}`);
+//       fs.renameSync(imageOldPath, imageNewPath);
+//     }
+
+//     res.status(201).json({ message: "Book added successfully", bookId: newBookId });
+//   } catch (err) {
+//     console.error("Error adding book:", err);
+//     res.status(500).json({ error: "Error adding the book" });
+//   }
+// },
 add: async (req, res) => {
-       console.log("📁 req.file:", req.file); // ← כאן את רואה את כל פרטי הקובץ שהגיע
-  console.log("📝 req.body:", req.body); // ← כאן תראי את שדות הטופס האחרים
-    console.log("BODY:", req.body);
-    // console.log("FILE:", req.file);
+  console.log("📁 PDF file:", req.files?.bookFile?.[0]);
+  console.log("🖼️ Image file:", req.files?.bookImage?.[0]);
+  console.log("📝 Body:", req.body);
 
-    const Seller_Id = req.user.id;
+  const pdfFile = req.files?.bookFile?.[0];
+  const imageFile = req.files?.bookImage?.[0];
 
-    const {
-      Book_Name, author, number_Of_Page, Price,
-      Category, Note, Status, Editing_Date
-    } = req.body;
-    console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
-      Category, Note, Status, Editing_Date);
-
-    // אימות שדות חובה
-    if (!Book_Name || !author || !number_Of_Page || !Price ||
-      !Category || !Note || !Status || !Editing_Date) {
-      return res.status(400).json({ error: "All fields are required" });
-    }
-
-    // בדיקת סטטוס חוקי
-    const validStatuses = ['offered', 'approved', 'available', 'sold'];
-    if (!validStatuses.includes(Status)) {
-      return res.status(400).json({ error: "Invalid status" });
-    }
-
-    if (number_Of_Page < 1 || Price < 1) {
-      return res.status(400).json({ error: "Pages and price must be positive" });
-    }
-
-    const user = await usersModel.getById(Seller_Id);
-    if (!user) {
-      return res.status(400).json({ error: "Seller not found" });
-    }
-
-    // בדיקת קובץ שהועלה
-    if (!req.file) {
-      return res.status(400).json({ error: "PDF file is required" });
-    }
-
-    const filePath = req.file.path;
-
-    console.log("Adding book for user ID:", Seller_Id, Book_Name, author, number_Of_Page, Price,
-  Category, Note, Status, Editing_Date, filePath);
-  try {
-    // שלב 1 – שמור את הספר במסד הנתונים, עדיין עם שם קובץ זמני
-    const result = await booksModel.add({
-      Book_Name,
-      author,
-      number_Of_Page,
-      Price,
-      Category,
-      Note,
-      Status,
-      Seller_Id,
-      Editing_Date,
-      // File_Path: filePath  // זמני
-    });
-
-    const newBookId = result.bookId;
-
-    // ודא שהנתיב לתיקייה נכון:
-    const uploadFolder = path.join(process.cwd(),'books_storage');
-    // שלב 2 – בנה שם קובץ חדש לפי ה־ID
-    const newFileName = `${newBookId}.pdf`;
-    const newFilePath = path.join(uploadFolder, newFileName);
-
-    // שלב 3 – שנה את שם הקובץ בפועל
-    fs.renameSync(filePath, newFilePath);
-
-    // שלב 4 – עדכן את השם החדש במסד הנתונים (אם צריך)
-    // await booksModel.updateFilePath(newBookId, newFileName);
-
-    res.status(201).json({ message: "Book added successfully", bookId: newBookId });
-  } catch (err) {
-    console.error("Error adding book:", err);
-    res.status(500).json({ error: "Error adding the book" });
+  if (!pdfFile) {
+    return res.status(400).json({ error: "PDF file is required" });
   }
-},
 
+  // המשך כמו קודם:
+  const result = await booksModel.add({
+    ...req.body,
+    Seller_Id: req.user.id,
+  });
+
+  const bookId = result.bookId;
+
+  // שמירת PDF
+  const newPdfPath = path.join(process.cwd(), 'books_storage', `${bookId}.pdf`);
+  fs.renameSync(pdfFile.path, newPdfPath);
+
+  // שמירת תמונה (אם קיימת)
+  if (imageFile) {
+    const imageExt = path.extname(imageFile.originalname);
+    const newImagePath = path.join(process.cwd(), 'pictures_of_books', `${bookId}${imageExt}`);
+    fs.renameSync(imageFile.path, newImagePath);
+  }
+
+  res.status(201).json({ message: "Book added successfully", bookId });
+},
 
 
 //   add: async (req, res) => {

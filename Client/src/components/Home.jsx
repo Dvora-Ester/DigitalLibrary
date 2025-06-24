@@ -9,15 +9,8 @@ import shoppingBag from '../Assets/shopping-bag.png';
 import ProfileResume from '../Assets/profile-resume.png';
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const sampleUser = {
-  Id: 1,
-  Full_Name: "Yael Bloch",
-  Email: "yael@example.com",
-  Phone: "050-1234567",
-  Is_Manager: false
-};
-localStorage.setItem("CurrentUser",JSON.stringify(sampleUser));
-  let currentUser = sampleUser;
+
+  let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
   //let currentUser = '';
   // try {
 
@@ -27,7 +20,7 @@ localStorage.setItem("CurrentUser",JSON.stringify(sampleUser));
   // }
 
   if (!currentUser) {
-    //return <Navigate to="/login" />;
+    return <Navigate to="/login" />;
   }
 
   const fullName = currentUser.name || 'User';
@@ -63,7 +56,7 @@ localStorage.setItem("CurrentUser",JSON.stringify(sampleUser));
           </button>
           {isMenuOpen && (
             <div className="dropdown-menu">
-              <div className="dropdown-item" onClick={() => {navigate(`/${currentUser.username}/${currentUser.id}/info`);setMenuOpen(false)}}>
+              <div className="dropdown-item" onClick={() => {navigate(`/${currentUser.Full_Name}/info`);setMenuOpen(false)}}>
                 <img src={ProfileResume} alt="Profile" className="dropdown-icon" />
                 My Profile
               </div>

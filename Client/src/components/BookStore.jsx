@@ -8,7 +8,16 @@ function BookStore() {
 
     useEffect(() => {
         // כאן אפשר לשים fetch לנתונים משרת
-        fetch('http://localhost:3000/api/books')
+        const userData = JSON.parse(localStorage.getItem('CurrentUser'));
+        const token = userData?.token;
+
+        fetch('http://localhost:3000/api/books/getAll', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // זה השורה החשובה
+                'Content-Type': 'application/json',
+            }
+        })
             .then(res => res.json())
             .then(data => setBooks(data))
             .catch(err => console.error('Failed to fetch books', err));

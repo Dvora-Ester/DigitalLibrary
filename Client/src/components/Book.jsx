@@ -13,7 +13,7 @@ console.log(book);
         <p className='bookDetail category'> {book.Category}</p>
 
       <img
-        src={'https://www.google.com/imgres?q=%D7%94%D7%90%D7%A8%D7%99%20%D7%A4%D7%95%D7%98%D7%A8%20%D7%95%D7%97%D7%93%D7%A8%20%D7%94%D7%A1%D7%95%D7%93%D7%95%D7%AA&imgurl=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F71HNHkrm-CL._UF894%2C1000_QL80_.jpg&imgrefurl=https%3A%2F%2Fwww.amazon.com%2F-%2Fhe%2FAta-Boy-%25D7%2594%25D7%25A1%25D7%2595%25D7%2593%25D7%2595%25D7%25AA-%25D7%259B%25D7%2599%25D7%25A1%25D7%2595%25D7%2599-%25D7%259C%25D7%259E%25D7%25A7%25D7%25A8%25D7%25A8%25D7%2599%25D7%259D-%25D7%2595%25D7%259C%25D7%2595%25D7%25A7%25D7%25A8%25D7%2599%25D7%259D%2Fdp%2FB07F611MGB&docid=6JaGw6t7q1FvfM&tbnid=6YxB9OsOugX4cM&vet=12ahUKEwjsoL2i9YWOAxXPlP0HHdpwMYUQM3oFCIQBEAA..i&w=714&h=1000&hcb=2&ved=2ahUKEwjsoL2i9YWOAxXPlP0HHdpwMYUQM3oFCIQBEAA'}
+        src={`http://localhost:3000${book.imageUrl}` || 'https://via.placeholder.com/150'}
         alt={book.Book_Name}
         className="book-image"
       />
