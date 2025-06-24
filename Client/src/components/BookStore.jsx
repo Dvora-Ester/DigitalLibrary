@@ -10,7 +10,11 @@ function BookStore() {
         // כאן אפשר לשים fetch לנתונים משרת
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
         const token = userData?.token;
+let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
 
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
         fetch('http://localhost:3000/api/books/getAll', {
             method: 'GET',
             headers: {

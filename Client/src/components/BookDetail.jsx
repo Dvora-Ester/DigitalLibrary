@@ -11,9 +11,11 @@ function BookDetailsModal() {
     const location = useLocation();
     const { book } = location.state || {};
     console.log('Book details:', book, book.Id, book.Book_Name, book.author, book.picture, book.number_Of_Page, book.Category, book.Price, book.Note, book.Editing_Date);
-    const goToComments = () => {
-        navigate(`/books/${book.Id}/comments`);
-    };
+    let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
+
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
 
     const addToCart = () => {
         // לדוגמה – עידכון עגלת קניות בלוקאל סטורג'

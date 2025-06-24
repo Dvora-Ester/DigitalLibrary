@@ -12,7 +12,6 @@ import logout from '../Assets/logout.png';
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
-  let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
   //let currentUser = '';
   // try {
 
@@ -20,12 +19,13 @@ function Home() {
   // } catch (e) {
   //   console.error('Error parsing CurrentUser:', e);
   // }
+  let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
 
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
 
-  const fullName = currentUser.name || 'User';
+  const fullName = currentUser.Full_Name || 'User';
 
   const navigate = useNavigate();
 
@@ -49,7 +49,7 @@ function Home() {
       </header>
       <div className="user-bar">
         <img src={currentUser.imageUrl || defaultProfile} alt="Profile" className="user-avatar" />
-        <span className="user-name">Welcome, {fullName}</span>
+        <span className="user-name">Welcome {fullName}!</span>
         <div className="user-dropdown-wrapper">
           <button className="user-dropdown-btn"
             onClick={() => setMenuOpen(prev => !prev)}>
@@ -71,8 +71,9 @@ function Home() {
                 My Library
               </div>
               <div className="dropdown-item">
-                <img src={logout} alt="LogOut" className="dropdown-icon" onClick={handleLogout}/>
-                Log-Out
+                <button className="logout-btn" onClick={handleLogout}>
+                <img src={logout} alt="LogOut" className="dropdown-icon" />
+                Log-Out</button>
               </div>
             </div>
 

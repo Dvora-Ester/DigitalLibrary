@@ -21,7 +21,7 @@ body {
     display: flex;
     flex-direction: column;
     width: auto;
-    max-width: 500px;
+    max-width: 550px;
     margin-left: 0;
 }
 
@@ -97,7 +97,10 @@ body {
     border: 2px solid rgb(70, 126, 142);
 
 }
-
+.logout-btn{
+    background: transparent;
+    border: none;
+}
 .user-name {
     font-size: 20px;
     font-weight: bold;

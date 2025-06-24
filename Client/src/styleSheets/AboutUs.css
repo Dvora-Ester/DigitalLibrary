@@ -1,4 +1,4 @@
-.pageContainer{
+ .pageContainer{
     display: flex;
     flex-direction: row;
 
@@ -8,15 +8,34 @@
   font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   margin: 3px;
-  width: 100%;
+  width: 90%;
   min-height: 70px;
   border: none;
-  border-bottom: 2px solid #1e5a68;
-  font-size: small;
-  
+  border: 3px solid #1e5a68;
+  font-size: 35px;
+  margin: auto;
+  align-items: center;
   padding: 5px;
+  height: 100%;
+  text-align: center;
+  border-radius: 10px;
 }
 .aboutUsInfo{
-    font-size: 15px;
-    
+    font-size: 25px;
+    padding: 30px;
+} 
+.nav-item-div h1{
+    width: auto;
+    align-items: center;
+    border-bottom: #1e5a68 2px solid;
+    text-align: center;
+    border-radius: 10px;
+    color: #1e5a68;
+}
+em{
+    color: #1e5a68;
+    font-size: 35px;
+}
+.nav-item-div p{
+    padding: 60px;
 }
