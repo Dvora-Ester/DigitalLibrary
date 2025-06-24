@@ -166,26 +166,26 @@ useEffect(() => {
         <h1 className="comments-title">Readers comments for book number: {bookId}</h1>
 
         <div className="comments-list">
-          {/*
+          
           { comments.map((comment) => (
-            <div key={comment.id} className="comment-card">
-              <p>{comment.id}</p>
-              <p><strong>{comment.name}</strong> ({comment.email})</p>
-              <p>{comment.body}</p>
+            <div key={comment.Id} className="comment-card">
+              <p>{comment.Id}</p>
+              <p><strong>{comment.title}</strong> ({comment.title})</p>
+              <p>{comment.content}</p>
               
               {comment.email === currentUser?.email && (
                 <div>
-                  <button className="edit-comment-button" onClick={() => handleEditComment(comment.id)}>
+                  <button className="edit-comment-button" onClick={() => handleEditComment(comment.Id)}>
                     Edit
                   </button>
-                  <button className="delete-comment-button" onClick={() => handleDeleteComment(comment.id)}>
+                  <button className="delete-comment-button" onClick={() => handleDeleteComment(comment.Id)}>
                     Delete
                   </button>
                 </div>
               )}
             </div>
           ))}
-          */}
+         
         </div>
 
 
