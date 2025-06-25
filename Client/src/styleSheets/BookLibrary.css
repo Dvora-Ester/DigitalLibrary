@@ -1,0 +1,73 @@
+.modal-overlay {
+    background-color: rgba(0, 0, 0, 0.6);
+    min-height: 100vh;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    max-width: 360px;
+    width: 100%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.book-details-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.modal-image {
+    width: 160px;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.book-details-info h2 {
+    font-size: 1.2rem;
+    color: #333;
+    margin: 0;
+    text-align: center;
+}
+
+.detail-container {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.cart-button {
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cart-button:hover {
+    background-color: #145ca0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
