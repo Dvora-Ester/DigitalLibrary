@@ -95,19 +95,6 @@ const ordersModel = {
         console.log("getById results:", results);
         if (results.length === 0) return null;
         return results[0];
-    },
-    getById: async (id) => {
-        console.log("getById called with id:", id);
-        if (!id) {
-            console.error("getById called with invalid id:", id);
-            return null;
-        }
-        const [results] = await promisePool.query(`
-      SELECT * FROM orders WHERE id = ?
-      `, [id]);
-        console.log("getById results:", results);
-        if (results.length === 0) return null;
-        return results[0];
     }
 };
 
