@@ -178,7 +178,6 @@ const library = {
   //         res.status(500).json({ message: 'שגיאת שרת' });
   //     }
   // },
-
   //     getByUserIdAndBookId: async (req, res) => {
   //   const { bookId } = req.params;
   //   const userId = req.user.id;
@@ -332,6 +331,49 @@ const library = {
       res.status(500).json({ error: 'שגיאה בשרת, נסה שוב מאוחר יותר' });
     }
   },
+  getBookPageImage: async (req, res) => {
+    const { bookId, pageNum } = req.params;
+    const userId = req.user.id;
+
+    try {
+      // 🛡️ שלב 1: בדיקת הרשאה
+      const book = await libraryModel.getByUserIdAndBookId(userId, bookId);
+      if (!book) {
+        return res.status(403).json({ message: "אין גישה לספר הזה" });
+      }
+
+      // 📂 שלב 2: חיפוש הקובץ
+      const imagePath = path.join(
+        process.cwd(),
+        'book_pages',
+        String(bookId),
+        `page${pageNum}.png`
+      );
+
+      if (!fs.existsSync(imagePath)) {
+        return res.status(404).json({ message: "עמוד לא נמצא" });
+      }
+
+      // 📷 שלב 3: שליחת הקובץ עם הגבלות
+      res.setHeader('Content-Type', 'image/png');
+
+      // ❌ חשוב: הצגה בלבד – לא הורדה
+      res.setHeader('Content-Disposition', 'inline; filename="page.png"');
+
+      // 🛑 הגבלת Caching ודפדוף
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+
+      const stream = fs.createReadStream(imagePath);
+      stream.pipe(res);
+
+    } catch (err) {
+      console.error("❌ שגיאה בשליפת תמונת עמוד:", err);
+      res.status(500).json({ error: "שגיאה בשרת" });
+    }
+  },
+
   add: async (userId, orderId, orderedBookIds, Bookmark_On_Page, res) => {
     if (!orderId || !Array.isArray(orderedBookIds) || orderedBookIds.length === 0) {
       return res.status(400).json({ error: "All required fields must be filled" });

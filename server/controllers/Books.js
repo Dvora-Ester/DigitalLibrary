@@ -161,6 +161,7 @@
 import bcrypt from "bcrypt";
 import usersModel from "../modules/user.js";
 import booksModel from "../modules/books.js";
+import { renderPdfToImages } from '../middleware/pdfToImages.js';
 import path from "path";
 import fs from "fs";
 const picturesDir = path.join(process.cwd(), 'pictures_of_books');
@@ -343,7 +344,7 @@ const Books = {
   //   }
   // },
 
-  add: async (req, res) => {
+  addWasGood: async (req, res) => {
     console.log("📁 PDF file:", req.files?.bookFile?.[0]);
     console.log("🖼️ Image file:", req.files?.bookImage?.[0]);
     console.log("📝 Body:", req.body);
@@ -375,6 +376,49 @@ const Books = {
     }
 
     res.status(201).json({ message: "Book added successfully", bookId });
+  },
+   add: async (req, res) => {
+    try {
+      console.log("📁 PDF file:", req.files?.bookFile?.[0]);
+      console.log("🖼️ Image file:", req.files?.bookImage?.[0]);
+      console.log("📝 Body:", req.body);
+
+      const pdfFile = req.files?.bookFile?.[0];
+      const imageFile = req.files?.bookImage?.[0];
+
+      if (!pdfFile) {
+        return res.status(400).json({ error: "חובה לצרף קובץ PDF של הספר" });
+      }
+
+      // 🧾 שלב 1: הוספת ספר למסד הנתונים
+      const result = await booksModel.add({
+        ...req.body,
+        Seller_Id: req.user.id,
+      });
+
+      const bookId = result.bookId;
+
+      // 📂 שלב 2: שמירת קובץ PDF בשם קבוע לפי bookId
+      const pdfTargetPath = path.join(process.cwd(), 'books_storage', `${bookId}.pdf`);
+      fs.renameSync(pdfFile.path, pdfTargetPath);
+
+      // 🖼️ שלב 3: שמירת תמונת עטיפה (אם יש)
+      if (imageFile) {
+        const imageExt = path.extname(imageFile.originalname).toLowerCase();
+        const imageTargetPath = path.join(process.cwd(), 'pictures_of_books', `${bookId}${imageExt}`);
+        fs.renameSync(imageFile.path, imageTargetPath);
+      }
+
+      // 🖼️ שלב 4: המרת PDF לתמונות (כל עמוד לתמונה)
+      await renderPdfToImages(pdfTargetPath, bookId);
+
+      // ✅ סיום
+      res.status(201).json({ message: "הספר נוסף והומר בהצלחה", bookId });
+
+    } catch (err) {
+      console.error("❌ שגיאה בהוספת ספר:", err);
+      res.status(500).json({ error: "שגיאת שרת בעת הוספת הספר" });
+    }
   },
 
 
