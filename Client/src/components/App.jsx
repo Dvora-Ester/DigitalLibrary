@@ -16,7 +16,7 @@ import WelcomePage from './WelcomePage.jsx';
 import Cart from './Cart.jsx';
 import BookSellingPage from './BookSellingPage.jsx';
 import NewBooksOffers from './NewBooksOffers.jsx';
-
+import CheckoutButton from './CheckoutButton.jsx';
 
 function App() {
 
@@ -39,6 +39,7 @@ function App() {
       <Route path="/:user/:id/my-library" element={<MyLibrary />} />
       <Route path="/:user/:id/my-orders" element={<MyOrders />} />
       <Route path="/bookReader" element={<BookReader />} />
+      <Route path="/checkout-button" element={<CheckoutButton />} />
       {/* <Route path="/:user/:id/albums" element={<Albums />}/>
       <Route path="/:user/:id/albums/:id/photos" element={<Photos />} />*/}
       {/* <Route path="/:user/:id/posts" element={<Posts />} /> 

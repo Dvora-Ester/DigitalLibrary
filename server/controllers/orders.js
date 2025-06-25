@@ -5,7 +5,8 @@ import orderDetailsController from "./orderDetail.js";
 import booksModel from "../modules/books.js";
 import library from "./library.js";
 import libraryModel from "../modules/library.js";
-
+import Stripe from "stripe";
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const ordersController = {
   getAllByUserId: async (req, res) => {
@@ -28,8 +29,8 @@ const ordersController = {
     }
   },
 
-  add: async (req, res) => {
-    const { ccNumber, validity, cvv, date, orderedBookIds,total } = req.body;
+  add1: async (req, res) => {
+    const { ccNumber, validity, cvv, date, orderedBookIds, total } = req.body;
     const userId = req.user.id;
     console.log("Adding order for user ID:", userId);
     if (!ccNumber || !validity || !cvv || !date) {
@@ -37,7 +38,7 @@ const ordersController = {
     }
 
     const orderToSave = {
-      userId, ccNumber, validity, cvv, date,total
+      userId, ccNumber, validity, cvv, date, total
     };
 
     try {
@@ -47,7 +48,16 @@ const ordersController = {
           return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
         }
       }
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items,
+        customer_email: email,
+        mode: "payment",
+        success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `http://localhost:5173/payment-cancel`,
+      });
       const result = await ordersModel.add(orderToSave);
+
       // const resultOrderDetails = await orderDetailsController.add(
       //   result.orderId,orderedBookIds,res);
       console.log("Order added successfully:", result);
@@ -63,12 +73,59 @@ const ordersController = {
       res.status(500).json({ error: "Error adding the order" });
     }
   },
+  add: async (req, res) => {
+    try {
+      const { orderedBookIds, email } = req.body;
+      const userId = req.user.id;
+
+      if (!orderedBookIds || !email) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const line_items = [];
+      for (const bookId of orderedBookIds) {
+        const book = await booksModel.getById(bookId);
+        if (!book) {
+          return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
+        }
+        line_items.push({
+          price_data: {
+            currency: "usd",
+            product_data: { name: book.title },
+            unit_amount: Math.round(book.price * 100),
+          },
+          quantity: 1,
+        });
+      }
+
+      // יצירת session תשלום ב-Stripe, ושמירת מידע מזהה להזמנה
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items,
+        customer_email: email,
+        mode: "payment",
+        success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `http://localhost:5173/payment-cancel`,
+        metadata: {
+          userId: userId,
+          orderedBookIds: JSON.stringify(orderedBookIds)
+        }
+      });
+
+      // מחזירים ללקוח את כתובת התשלום
+      res.status(200).json({ url: session.url });
+
+    } catch (error) {
+      console.error("Error creating checkout session:", error);
+      res.status(500).json({ error: "Failed to create checkout session" });
+    }
+  },
   getById: async (req, res) => {
-    const {orderId} = req.params;
+    const { orderId } = req.params;
     console.log("Fetching order with ID:", orderId);
     try {
       const order = await ordersModel.getById(orderId);
-     console.log("Order fetched successfully:", order);
+      console.log("Order fetched successfully:", order);
       res.json(order);
     } catch (err) {
       res.status(500).json({ error: "Database error" });
