@@ -9,6 +9,7 @@ import Info from './Info.jsx';
 import BookStore from './BookStore.jsx';
 import AboutUs from './AboutUs.jsx';
 import BookDetailsModal from './BookDetail.jsx';
+import MyLibrary from './MyLibrary.jsx';
 
 
 function App() {
@@ -23,9 +24,9 @@ function App() {
       <Route path='/:user/:id/book-store' element={<BookStore />} />
       <Route path='/:user/:id/about-us' element={<AboutUs />} />
       <Route path='/:user/:id/book-details/:bookId' element={<BookDetailsModal />} />
-
       <Route path="/full-registration" element={<FullRegistration />} />
       <Route path="/:user/:id/info" element={<Info />} />
+      <Route path="/:user/:id/my-library" element={<MyLibrary />} />
       {/* <Route path="/:user/:id/albums" element={<Albums />}/>
       <Route path="/:user/:id/albums/:id/photos" element={<Photos />} />*/}
       {/* <Route path="/:user/:id/posts" element={<Posts />} /> 

@@ -69,10 +69,15 @@ function Home() {
                 My Orders</button>
               </div>
               <div className="dropdown-item">
-                <button className="logout-btn" onClick={handleLogout}>
+                <button className="logout-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/my-library`)}>
                 <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
                 My Library</button>
               </div>
+                {/* <div className="dropdown-item">
+                <button className="logout-btn" onClick={handleLogout}>
+                <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
+                My Library</button>
+              </div> */}
               <div className="dropdown-item">
                 <button className="logout-btn" onClick={handleLogout}>
                 <img src={logout} alt="LogOut" className="dropdown-icon" />

@@ -37,9 +37,27 @@ const libraryModel = {
   //       throw err;
   //     }
   //   },
-getByUserId:async (User_Id) => {
+  getByUserId: async (User_Id) => {
+    try {
+      console.log("getAvailableBooksByUserId Model", User_Id);
 
-},
+      const [results] = await promisePool.query(`
+      SELECT b.*
+      FROM Library_Of_User l
+      INNER JOIN Books b ON l.Book_Id = b.Id
+      WHERE l.User_Id = ?
+        AND b.Status = 'offered'
+    `, [User_Id]);
+
+
+      console.log("SQL RESULTS:", results);
+      if (results.length === 0) return [];
+      return results;
+    } catch (err) {
+      console.error("getAvailableBooksByUserId error:", err);
+      throw err;
+    }
+  },
   getByUserIdAndBookId: async (User_Id, Book_Id) => {
     try {
       console.log("getByUserIdAndBookId Model", User_Id, Book_Id)
