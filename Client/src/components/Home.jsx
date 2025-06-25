@@ -11,6 +11,7 @@ import ProfileResume from '../Assets/profile-resume.png';
 import logout from '../Assets/logout.png';
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [isManager, setIsManager] = useState(true);//change to false
   //let currentUser = '';
   // try {
 
@@ -23,7 +24,8 @@ function Home() {
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
-
+// if(currentUser.Is_Manager === '1' )
+//   {setIsManager(true);}
   const fullName = currentUser.Full_Name || 'User';
 
   const navigate = useNavigate();
@@ -97,6 +99,7 @@ function Home() {
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/about-us`)}>About Us</button>
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-store`)}>Book Store</button>
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-selling`)}>sell A Book</button>
+        {isManager&&<button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-offers`)}>Watch at new books offers</button>}
         {/* <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/todos`)}>Todos</button>
         <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/posts`)}>Posts</button> */}
         {/* <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/albums`)}>Albums</button> */}
