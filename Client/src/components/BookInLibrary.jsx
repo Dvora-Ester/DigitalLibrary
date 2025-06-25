@@ -11,16 +11,16 @@ function Book({ book }) {
     if (!currentUser) {
         return <Navigate to="/login" />;
     }
- 
-    const addToCart = () => {
-          let isExsistingInCart= false;
+    const addToCart=()=>{
+        let isExsistingInCart= false;
         // Update cart in local storage
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         cart.forEach(itemInCart => {
             if (itemInCart.Id === book.Id) {
                 isExsistingInCart = true;
-                
-                alert(`the Book ${book.Book_Name} is already exxisting in your cart.`);
+                itemInCart.amount += 1; // Increase amount if book already in cart
+                localStorage.setItem('cart', JSON.stringify(cart));
+                alert(`${book.Book_Name} amount was increased in your cart.`);
             }
         });
         if (!isExsistingInCart) {
@@ -28,13 +28,13 @@ function Book({ book }) {
         localStorage.setItem('cart', JSON.stringify(cart));
         alert(`${book.Book_Name} was added to your cart.`);
         }
-    };
+    }
     return (
         <div className="book-card" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-details/${book.Id}`, { state: { book: book } })}>
             <p className='bookDetail category'> {book.Category}</p>
             <div>
                 <img className="book-image" src={`http://localhost:3000${book.imageUrl}` || noImage} alt={book.Book_Name} />
-                <button onClick={addToCart} className="cart-button">🛒 Add to Cart</button>
+                
             </div>
 
             <div className="book-details">

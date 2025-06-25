@@ -38,7 +38,7 @@ function Login() {
           localStorage.setItem("CurrentUser", JSON.stringify(currentUser));
           console.log('User found:', currentUser);
           let userName = currentUser.Full_Name;
-          navigate(`/${currentUser.Full_Name}/${currentUser.Id}/home`, { state: { userName, password } })
+          navigate(`/${currentUser.Full_Name}/${currentUser.Id}/welcome-page`, { state: { userName, password } })
         } else {
           setError('User not found pass to Registration');
         }

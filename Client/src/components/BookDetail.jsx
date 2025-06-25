@@ -18,11 +18,21 @@ function BookDetailsModal() {
   }
 
     const addToCart = () => {
-        // לדוגמה – עידכון עגלת קניות בלוקאל סטורג'
+          let isExsistingInCart= false;
+        // Update cart in local storage
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart.push(book);
+        cart.forEach(itemInCart => {
+            if (itemInCart.Id === book.Id) {
+                isExsistingInCart = true;
+                
+                alert(`the Book ${book.Book_Name} is already exxisting in your cart.`);
+            }
+        });
+        if (!isExsistingInCart) {
+        cart.push({...book,amount: 1}); // Add book to cart with default amount of 1
         localStorage.setItem('cart', JSON.stringify(cart));
         alert(`${book.Book_Name} was added to your cart.`);
+        }
     };
 
     return (
@@ -31,9 +41,9 @@ function BookDetailsModal() {
             {book != null ? (
                 <div className="modal-content">
                     <div className='book-details-page'>
-                        <div>
+                        <div className='image-container'>
                             <img className="modal-image" src={`http://localhost:3000${book.imageUrl}` || noImage} alt="Book cover" />
-                            <button onClick={addToCart} className="cart-button">🛒 Add to Cart</button>
+                            <button onClick={addToCart} className="cart-button-of-image">🛒 Add to Cart</button>
                         </div>
                         <div className="book-details-info">
                             <h2>{book.Book_Name}</h2>
