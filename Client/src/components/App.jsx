@@ -12,6 +12,9 @@ import BookDetailsModal from './BookDetail.jsx';
 import MyLibrary from './MyLibrary.jsx';
 import MyOrders from './MyOrders.jsx';
 import BookReader from './BookReader.jsx';
+import WelcomePage from './WelcomePage.jsx';
+import Cart from './Cart.jsx';
+
 
 function App() {
 
@@ -22,6 +25,8 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/:user/:id/home' element={<Home />} />
+      <Route path='/:user/:id/welcome-page' element={<WelcomePage />} />
+      <Route path='/:user/:id/cart' element={<Cart />} />
       <Route path='/:user/:id/book-store' element={<BookStore />} />
       <Route path='/:user/:id/about-us' element={<AboutUs />} />
       <Route path='/:user/:id/book-details/:bookId' element={<BookDetailsModal />} />

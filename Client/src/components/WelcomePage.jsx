@@ -1,8 +1,10 @@
 
 import React, { useEffect, useState } from 'react';
 import Book from './Book';
-import '../styleSheets/BookStore.css';
+import '../styleSheets/WelcomePage.css';
 import Home from './Home';
+import poster from '../Assets/poster.png'; // Placeholder image if book picture is not available
+import noImage from '../Assets/no-photo.png'; // Placeholder image if book picture is not available
 
 function BookStore() {
     const [books, setBooks] = useState([]);
@@ -12,7 +14,7 @@ function BookStore() {
     const fetchBooks = async (pageToFetch) => {
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
         const token = userData?.token;
-        let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
+let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
 
         try {
             const res = await fetch(`http://localhost:3000/api/books/getAll?page=${pageToFetch}`, {
@@ -47,34 +49,11 @@ function BookStore() {
     };
 
     return (
-        <div className="bookStorePage">
+        <div className="welcomePage">
             <Home />
-            <div className="bookstore-container">
-                <div className="bookstore-header">
-                    <h2>Book Store</h2>
-                    <div className="filters">
-                        <select>
-                            <option value="">Sort by</option>
-                            <option value="price-low-high">Price: Low to High</option>
-                            <option value="price-high-low">Price: High to Low</option>
-                            <option value="name">Name</option>
-                        </select>
-                        <input className="sorters" type="text" placeholder="Search by name..." />
-                    </div>
-                </div>
-
-                <div className="books-grid">
-                    {books.map(book => (
-                        <Book key={book.Id} book={book} />
-                    ))}
-                </div>
-
-                {hasMore && (
-                    <button onClick={handleLoadMore}>לתצוגת ספרים נוספים</button>
-                )}
-                {!hasMore && (
-                    <p>אין עוד ספרים להצגה</p>
-                )}
+            <div className="Welcome-img-container">
+                <img className='imagePoster' src={poster||noImage} alt='poster'/>
+                <h1 className='welcome-page-h1'>Welcome To Educational Digital libary</h1>
             </div>
         </div>
     );

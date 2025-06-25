@@ -11,7 +11,6 @@ import ProfileResume from '../Assets/profile-resume.png';
 import logout from '../Assets/logout.png';
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
-
   //let currentUser = '';
   // try {
 
@@ -43,7 +42,7 @@ function Home() {
             alt="Educational Library Book Logo"
             className="site-logo"
           />
-          <span className="site-name">Educational Library Book</span>
+          <span className="site-name">Educational Digital libary</span>
         </div>
 
       </header>
@@ -89,12 +88,12 @@ function Home() {
         </div>
         <div className='cart-container'>
           <img src={shoppingCart} alt="shoppingCart" className="cart-icon" />
-          <button className="cart-btn" >My Cart</button>
-
+          <button className="cart-btn" onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/cart`)}>My Cart</button>
         </div>
       </div>
 
       <div className="home-content" >
+        <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/Welcome-page`)}>Home</button>
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/about-us`)}>About Us</button>
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-store`)}>Book Store</button>
         <button className='nav-item'>sell A Book</button>
