@@ -96,7 +96,7 @@ function Home() {
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/Welcome-page`)}>Home</button>
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/about-us`)}>About Us</button>
         <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-store`)}>Book Store</button>
-        <button className='nav-item'>sell A Book</button>
+        <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-selling`)}>sell A Book</button>
         {/* <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/todos`)}>Todos</button>
         <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/posts`)}>Posts</button> */}
         {/* <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/albums`)}>Albums</button> */}

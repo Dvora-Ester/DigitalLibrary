@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import Home from './Home';
+import '../styleSheets/MyOrders.css';
 function MyOrders() {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -41,7 +42,7 @@ function MyOrders() {
             })
             .catch(err => {
                 console.error('❌ שגיאה בשליפת הזמנות:', err);
-                setError('שגיאה בטעינת ההזמנות');
+                setError('Error fetching orders' );
             })
             .finally(() => {
                 setLoading(false);
@@ -50,24 +51,26 @@ function MyOrders() {
 
     return (
         <div className="my-orders-container">
-            <h2>ההזמנות שלי</h2>
-
+            <Home />
+            <div className="my-orders-content">
+            <h2>My Orders </h2>
             {loading ? (
-                <p>טוען...</p>
+                <p>Load...</p>
             ) : error ? (
                 <p style={{ color: 'red' }}>{error}</p>
             ) : orders.length === 0 ? (
-                <p>לא נמצאו הזמנות.</p>
+                <p>orders wasn't found</p>
             ) : (
                 <ul>
                     {orders.map(order => (
                         <li key={order.Id}>
-                            מספר הזמנה: {order.Id} | תאריך:{order.date}
+                            order ID: {order.Id} | Purchas Date:{order.date}
                             <br />
                         </li>
                     ))}
                 </ul>
             )}
+            </div>
         </div>
     );
 }
