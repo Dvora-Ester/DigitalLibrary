@@ -179,10 +179,6 @@ const library = {
   //     }
   // },
 
-
-
-
-
   //     getByUserIdAndBookId: async (req, res) => {
   //   const { bookId } = req.params;
   //   const userId = req.user.id;
@@ -259,52 +255,44 @@ const library = {
   //   }
   // },
   getByUserId: async (req, res) => {
-  const userId = req.user.id;
-  console.log("📚 getByUserId controller", { userId });
+    const userId = req.user.id;
+    console.log("📚 getByUserId controller", { userId });
 
-  try {
-    // שליפת ספרים עם INNER JOIN
-    const books = await libraryModel.getByUserId(userId);
-    if (!books || books.length === 0) {
-      return res.status(404).json({ message: 'לא נמצאו ספרים עבור המשתמש' });
-    }
+    try {
+      // שליפת ספרים עם INNER JOIN
+      const books = await libraryModel.getByUserId(userId);
+      if (!books || books.length === 0) {
+        return res.status(404).json({ message: 'לא נמצאו ספרים עבור המשתמש' });
+      }
 
-    // עיבוד כל ספר – הוספת תמונה ו-PDF אם קיימים
-    const booksWithMedia = books.map(book => {
-      const id = book.Id;
-      let imageUrl = null;
-      let filePath = null;
+      // עיבוד כל ספר – הוספת תמונה אם קיימת
+      const booksWithMedia = books.map(book => {
+        const id = book.Id;
+        let imageUrl = null;
 
-      // חיפוש קובץ תמונה
-      const possibleExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
-      for (const ext of possibleExtensions) {
-        const imgPath = path.join(picturesDir, `${id}${ext}`);
-        if (fs.existsSync(imgPath)) {
-          imageUrl = `/book-images/${id}${ext}`;
-          break;
+        // חיפוש קובץ תמונה
+        const possibleExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+        for (const ext of possibleExtensions) {
+          const imgPath = path.join(picturesDir, `${id}${ext}`);
+          if (fs.existsSync(imgPath)) {
+            imageUrl = `/book-images/${id}${ext}`;
+            break;
+          }
         }
-      }
 
-      // בדיקת קובץ PDF
-      const pdfPath = path.join(booksPdfDir, `${id}.pdf`);
-      if (fs.existsSync(pdfPath)) {
-        filePath = `/books/${id}/read`;
-      }
+        return {
+          ...book,
+          imageUrl,
+        };
+      });
 
-      return {
-        ...book,
-        imageUrl,
-        filePath
-      };
-    });
+      return res.status(200).json(booksWithMedia);
 
-    return res.status(200).json(booksWithMedia);
-
-  } catch (err) {
-    console.error('❌ שגיאה בשליפת ספרי המשתמש:', err);
-    return res.status(500).json({ error: 'שגיאה בשרת, נסה שוב מאוחר יותר' });
-  }
-},
+    } catch (err) {
+      console.error('❌ שגיאה בשליפת ספרי המשתמש:', err);
+      return res.status(500).json({ error: 'שגיאה בשרת, נסה שוב מאוחר יותר' });
+    }
+  },
   getByUserIdAndBookId: async (req, res) => {
     const { bookId } = req.params;
     const userId = req.user.id;
