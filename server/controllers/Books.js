@@ -342,67 +342,7 @@ const Books = {
   //     res.status(500).json({ error: "Error adding the book" });
   //   }
   // },
-  //שתי תיקיות-לא עובד
-  // add: async (req, res) => {
-  //   console.log("📁 PDF file:", req.file); 
-  //   console.log("🖼️ Image file:", req.files?.bookImage); 
-  //   console.log("📝 Form body:", req.body);
 
-  //   const Seller_Id = req.user.id;
-  //   const {
-  //     Book_Name, author, number_Of_Page, Price,
-  //     Category, Note, Status, Editing_Date
-  //   } = req.body;
-
-  //   if (!Book_Name || !author || !number_Of_Page || !Price ||
-  //       !Category || !Note || !Status || !Editing_Date) {
-  //     return res.status(400).json({ error: "All fields are required" });
-  //   }
-
-  //   const validStatuses = ['offered', 'approved', 'available', 'sold'];
-  //   if (!validStatuses.includes(Status)) {
-  //     return res.status(400).json({ error: "Invalid status" });
-  //   }
-
-  //   if (!req.file) {
-  //     return res.status(400).json({ error: "PDF file is required" });
-  //   }
-
-  //   try {
-  //     const result = await booksModel.add({
-  //       Book_Name,
-  //       author,
-  //       number_Of_Page,
-  //       Price,
-  //       Category,
-  //       Note,
-  //       Status,
-  //       Seller_Id,
-  //       Editing_Date
-  //     });
-
-  //     const newBookId = result.bookId;
-
-  //     // שמירת ספר PDF
-  //     const pdfOldPath = req.file.path;
-  //     const pdfNewPath = path.join(process.cwd(), 'books_storage', `${newBookId}.pdf`);
-  //     fs.renameSync(pdfOldPath, pdfNewPath);
-
-  //     // שמירת תמונה אם יש
-  //     if (req.files?.bookImage || req.file?.fieldname === "bookImage") {
-  //       const imageFile = req.files?.bookImage || req.file;
-  //       const imageOldPath = imageFile.path;
-  //       const imageExt = path.extname(imageFile.originalname);
-  //       const imageNewPath = path.join(process.cwd(), 'pictures_of_books', `${newBookId}${imageExt}`);
-  //       fs.renameSync(imageOldPath, imageNewPath);
-  //     }
-
-  //     res.status(201).json({ message: "Book added successfully", bookId: newBookId });
-  //   } catch (err) {
-  //     console.error("Error adding book:", err);
-  //     res.status(500).json({ error: "Error adding the book" });
-  //   }
-  // },
   add: async (req, res) => {
     console.log("📁 PDF file:", req.files?.bookFile?.[0]);
     console.log("🖼️ Image file:", req.files?.bookImage?.[0]);
