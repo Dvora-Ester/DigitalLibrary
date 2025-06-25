@@ -1,0 +1,98 @@
+.book-selling-page{
+  display:flex;
+  flex-direction: row;
+}
+.add-book-form {
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #f8f8f8;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.add-book-form input,
+.add-book-form textarea {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.add-book-form button {
+  background-color: rgb(70, 126, 142);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-book-form button:hover {
+  background-color: rgb(50, 100, 120);
+}
+.book-selling-page {
+  padding: 20px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.add-book-form {
+  background: white;
+  padding: 20px 30px;
+  max-width: 600px;
+  margin: auto;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.add-book-form h2 {
+  text-align: center;
+  color: rgb(70, 126, 142);
+}
+
+.add-book-form input,
+.add-book-form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.add-book-form button {
+  padding: 12px;
+  background-color: rgb(70, 126, 142);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.add-book-form button:hover {
+  background-color: #2e5c6b;
+}
+
+.image-preview {
+  width: 150px;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 10px auto; /* מרכז את הריבוע אופקית */
+  border: 1px solid #ccc;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
