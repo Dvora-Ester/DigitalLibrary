@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Book from './Book';
 import Home from './Home';
+import BookLibrary from './BookLibrary';
 import '../styleSheets/MyLibrary.css';
 
 function MyLibrary() {
@@ -91,7 +92,7 @@ function MyLibrary() {
 
                 <div className="books-grid">
                     {filteredBooks.map(book => (
-                        <Book key={book.Id} book={book} />
+                        <BookLibrary key={book.Id} book={book} />
                     ))}
                 </div>
 
