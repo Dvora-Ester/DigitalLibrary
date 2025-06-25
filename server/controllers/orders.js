@@ -10,62 +10,81 @@ import libraryModel from "../modules/library.js";
 const ordersController = {
   getAllByUserId: async (req, res) => {
     // const { userId } = req.params;
-  
-     const userId = req.user.id;
+
+    const userId = req.user.id;
     const { sortBy } = req.query;
     console.log("Fetching orders for user ID:", userId);
 
     try {
       const orders = await ordersModel.getAllByUserId(userId, sortBy);
-      res.json(orders);
+      const filteredOrders = orders.map(order => ({
+        Id: order.Id,
+        date: order.date
+      }));
+
+      res.json(filteredOrders);
     } catch (err) {
       res.status(500).json({ error: "Database error" });
     }
   },
 
   add: async (req, res) => {
-    const { ccNumber, validity, cvv, date, orderedBookIds } = req.body;
-        const userId = req.user.id;
-     console.log("Adding order for user ID:", userId);
+    const { ccNumber, validity, cvv, date, orderedBookIds,total } = req.body;
+    const userId = req.user.id;
+    console.log("Adding order for user ID:", userId);
     if (!ccNumber || !validity || !cvv || !date) {
       return res.status(400).json({ error: "All required fields must be filled" });
     }
 
     const orderToSave = {
-      userId, ccNumber, validity, cvv, date
+      userId, ccNumber, validity, cvv, date,total
     };
 
     try {
-         for (const bookId of orderedBookIds) {
-            const book = await booksModel.getById(bookId);
-            if (!book) {
-                return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
-            }
+      for (const bookId of orderedBookIds) {
+        const book = await booksModel.getById(bookId);
+        if (!book) {
+          return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
         }
+      }
       const result = await ordersModel.add(orderToSave);
       // const resultOrderDetails = await orderDetailsController.add(
       //   result.orderId,orderedBookIds,res);
       console.log("Order added successfully:", result);
-      const Bookmark_On_Page=0;
-       const resultLibraryDetails = await library.add(userId,
-        result.orderId,orderedBookIds,Bookmark_On_Page,res);
-      res.status(201).json({ message: "order added successfully",
-        orderId: result.orderId});
+      const Bookmark_On_Page = 0;
+      const resultLibraryDetails = await library.add(userId,
+        result.orderId, orderedBookIds, Bookmark_On_Page, res);
+      res.status(201).json({
+        message: "order added successfully",
+        orderId: result.orderId
+      });
     } catch (err) {
       console.error("Error adding the order to the database:", err);
       res.status(500).json({ error: "Error adding the order" });
     }
   },
+  getById: async (req, res) => {
+    const {orderId} = req.params;
+    console.log("Fetching order with ID:", orderId);
+    try {
+      const order = await ordersModel.getById(orderId);
+     console.log("Order fetched successfully:", order);
+      res.json(order);
+    } catch (err) {
+      res.status(500).json({ error: "Database error" });
+    }
+
+  },
 
   delete: async (req, res) => {
     const { orderId } = req.params;
- 
+
     try {
-    const resultLibraryDetails = await libraryModel.deleteByOrderId(orderId);
-    let result=null;
+      const resultLibraryDetails = await libraryModel.deleteByOrderId(orderId);
+      let result = null;
       if (!resultLibraryDetails) {
-       result = await ordersModel.delete(orderId);
-    }
+        result = await ordersModel.delete(orderId);
+      }
       if (!result) return res.status(404).json({ error: "No orders found for this user" });
       res.json(result);
     } catch (err) {
@@ -92,8 +111,8 @@ const ordersController = {
   },
 
   search: async (req, res) => {
-       const userId = req.user.id;
-       
+    const userId = req.user.id;
+
     const { filterBy, value } = req.query;
 
     if (!filterBy || value === undefined) {

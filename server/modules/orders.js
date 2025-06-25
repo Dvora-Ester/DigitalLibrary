@@ -10,18 +10,18 @@ const ordersModel = {
       `, [id]);
 
         if (results.length === 0) return null;
-        return results[0];
+        return results;
     },
 
     add: async (orderData) => {
         console.log("hello");
-        const { userId, ccNumber, date } = orderData;
+        const { userId, ccNumber, date,total } = orderData;
         //טוקן של תשלום אמיתי
         console.log("Adding order with data:", orderData);
         const lastFour = ccNumber.slice(-4);
         const [orderResult] = await promisePool.query(
-            "INSERT INTO orders (User_Id, cc_Last_Four_Diggits, date) VALUES (?, ?, ?)",
-            [userId, lastFour, date]
+            "INSERT INTO orders (User_Id, cc_Last_Four_Diggits, date,total) VALUES (?, ?, ?,?)",
+            [userId, lastFour, date,total]
         );
         if (orderResult.length === 0) return null;
         return { orderId: orderResult.insertId };
@@ -82,6 +82,19 @@ const ordersModel = {
         const [results] = await promisePool.query(sql, params);
         return results;
 
+    },
+    getById: async (id) => {
+        console.log("getById called with id:", id);
+        if (!id) {
+            console.error("getById called with invalid id:", id);
+            return null;
+        }
+        const [results] = await promisePool.query(`
+      SELECT * FROM orders WHERE id = ?
+      `, [id]);
+        console.log("getById results:", results);
+        if (results.length === 0) return null;
+        return results[0];
     }
 };
 

@@ -5,6 +5,7 @@ import { isAdmin, verifyToken } from "../middleware/outh.js"; // Ensure you have
 const orderRouter = express.Router();
 
 orderRouter.get("/getAllOrdersByUserId",verifyToken, ordersController.getAllByUserId);
+orderRouter.get("/getOrderById/:orderId",verifyToken, ordersController.getById);
 console.log("Order router initialized");
 orderRouter.post("/addOrder",verifyToken ,ordersController.add);
 orderRouter.delete("/deleteOrder/:orderId",verifyToken,isAdmin, ordersController.delete);
