@@ -12,7 +12,7 @@ function BookStore() {
     const fetchBooks = async (pageToFetch) => {
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
         const token = userData?.token;
-let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
+        let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
 
         try {
             const res = await fetch(`http://localhost:3000/api/books/getAll?page=${pageToFetch}`, {

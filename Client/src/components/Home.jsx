@@ -63,7 +63,7 @@ function Home() {
                 My Profile</button>
               </div>
               <div className="dropdown-item">
-                <button className="logout-btn" onClick={handleLogout}>
+                <button className="logout-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/my-orders`)}>
                 <img src={shoppingBag} alt="Orders" className="dropdown-icon" />
                 My Orders</button>
               </div>
