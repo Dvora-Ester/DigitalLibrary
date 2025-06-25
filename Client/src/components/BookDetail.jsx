@@ -64,7 +64,8 @@ function BookDetailsModal() {
                             {/* <Comments/> */}
                         </div>
                     </div>
-                    <Comments bookId={book.Id} />
+                    <Comments className="  height: 100vh;
+" bookId={book.Id} />
                 </div>
             ) :
                 (<div className="modal-content">No book details available.</div>)}

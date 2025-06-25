@@ -8,6 +8,9 @@ function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
     const [showModal, setShowModal] = useState(false);
+    const [cardNumber, setCardNumber] = useState("");
+    const [cvv, setCvv] = useState("");
+    const [cardValidity, setValidity] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,8 +21,14 @@ function Cart() {
 
     const handlePay = () => {
         // אפשר להוסיף ולידציה כאן
+        if (cvv.length !== 3 || cardNumber.length !== 16 || !cardValidity) {
+            alert('Please enter valid payment details.');
+            return;
+        }
         setShowModal(false);
-        navigate('/'); // נווט לדף הבית
+        localStorage.setItem('cart', JSON.stringify([])); // Clear cart after payment
+        setCartItems([]);
+        navigate(`/${currentUser.Full_Name}/${currentUser.Id}/welcome-page`); // נווט לדף הבית
     };
 
     return (
@@ -43,12 +52,32 @@ function Cart() {
             </div>
 
             {showModal && (
-                <div className="modal-overlay">
+                <div className="PaymentModal">
                     <div className="modal">
                         <h3>Enter Payment Details</h3>
-                        <input type="text" placeholder="Card Number" className="modal-input" />
-                        <input type="text" placeholder="Expiry Date (MM/YY)" className="modal-input" />
-                        <input type="text" placeholder="CVV" className="modal-input" />
+                        <input
+                            type="text"
+                            placeholder="Card Number"
+                            className="modal-input"
+                            value={cardNumber}
+                            onChange={(e) => setCardNumber(e.target.value)}
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="Expiry Date (MM/YY)"
+                            className="modal-input"
+                            value={cardValidity}
+                            onChange={(e) => setValidity(e.target.value)}
+                        />
+
+                        <input
+                            type="text"
+                            placeholder="CVV"
+                            className="modal-input"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
+                        />
                         <button className="modal-pay" onClick={handlePay}>Pay</button>
                         <button className="modal-cancel" onClick={() => setShowModal(false)}>Cancel</button>
                     </div>
