@@ -22,7 +22,7 @@ import path from 'path';
 import multer from 'multer';
 import fs from 'fs';
 import commentsRouter from './routes/comments.js';
-import webhookRouter from './routes/webhookRouter.js';
+// import webhookRouter from './routes/webhookRouter.js';
 import dotenv from 'dotenv';
 dotenv.config();
 // Create Express app
@@ -30,7 +30,7 @@ const app = express();
 
 // Middlewares
 app.use(cors());
-app.use('/api/webhook', webhookRouter);
+// app.use('/api/webhook', webhookRouter);
 
 app.use(express.json());
 console.log("ggggggg")
