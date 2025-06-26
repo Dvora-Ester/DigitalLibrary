@@ -5,8 +5,15 @@ import noImage from '../Assets/no-photo.png';
 
 function BookLibrary({ book }) { // קבל book בפרופס
     const navigate = useNavigate();
-    const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
-
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}
     if (!currentUser) {
         return <Navigate to="/login" />;
     }

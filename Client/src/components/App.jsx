@@ -7,6 +7,7 @@ import Register from './Register.jsx';
 import FullRegistration from './FullRegistration.jsx';
 import Info from './Info.jsx';
 import BookStore from './BookStore.jsx';
+import BuyOfferedBooks from './BuyOfferedBooks.jsx';
 import AboutUs from './AboutUs.jsx';
 import BookDetailsModal from './BookDetail.jsx';
 import MyLibrary from './MyLibrary.jsx';
@@ -15,7 +16,6 @@ import BookReader from './BookReader.jsx';
 import WelcomePage from './WelcomePage.jsx';
 import Cart from './Cart.jsx';
 import BookSellingPage from './BookSellingPage.jsx';
-import NewBooksOffers from './NewBooksOffers.jsx';
 import CheckoutButton from './CheckoutButton.jsx';
 
 function App() {
@@ -27,10 +27,10 @@ function App() {
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
       <Route path='/:user/:id/home' element={<Home />} />
-      <Route path='/:user/:id/book-offers' element={<NewBooksOffers />} />
       <Route path='/:user/:id/welcome-page' element={<WelcomePage />} />
       <Route path='/:user/:id/cart' element={<Cart />} />
       <Route path='/:user/:id/book-store' element={<BookStore />} />
+      <Route path='/:user/:id/buy-offered-books' element={<BuyOfferedBooks />} />
       <Route path='/:user/:id/book-selling' element={<BookSellingPage />} />
       <Route path='/:user/:id/about-us' element={<AboutUs />} />
       <Route path='/:user/:id/book-details/:bookId' element={<BookDetailsModal />} />

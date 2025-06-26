@@ -37,7 +37,20 @@ getByName: async (Book_Name) => {
       throw err;
     }
   },
+getByStatus: async (Status) => {
+try {
+      console.log(Status)
+      const [results] = await promisePool.query(`
+        SELECT * FROM Books WHERE Status = ?`, [Status]);
+      console.log("SQL RESULTS:", results);
+      if (results.length === 0) return [];
+     return results;
+    } catch (err) {
+      console.error("getBooksByStatus error:", err);
+      throw err;
+    }
 
+},
 getById: async (book_Id) => {
     try {
       console.log(book_Id)

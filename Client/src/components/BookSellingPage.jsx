@@ -4,8 +4,15 @@ import Home from './Home';
 import { Navigate } from 'react-router-dom';
 
 function BookSellingPage() {
-    const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
-    if (!currentUser) {
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}    if (!currentUser) {
         return <Navigate to="/login" />;
     }
 
@@ -73,6 +80,10 @@ function BookSellingPage() {
         try {
             await fetch("http://localhost:3000/api/books", {
                 method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${currentUser.token}`,
+                    'Content-Type': 'application/json',
+                },
                 body: formData
             });
 

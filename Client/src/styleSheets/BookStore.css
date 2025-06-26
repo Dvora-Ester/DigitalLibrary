@@ -8,10 +8,21 @@
   padding: 20px;
   padding-top: 0; /* ⬅ לא מוסיף רווח למעלה */
   margin: 10px 0px;
-  max-width: 1200px;
   width: 100%;
 }
-
+.red-message{
+  font-size: 30px;
+  color: red;
+  padding: 40px;
+}
+.add-books-btn{
+  padding: 20px;
+  background-color: rgb(70, 126, 142);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
 .bookstore-header {
   display: flex;
   flex-direction: column;
@@ -20,7 +31,7 @@
   margin-bottom: 20px;
   flex-direction: row;
   border-bottom:2px solid rgb(70, 126, 142);
-  
+  justify-content: space-between;
 }
 
 .bookstore-header h2 {

@@ -1,9 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import '../styleSheets/AboutUs.css';
 import Home from './Home.jsx'
-const AboutUs=()=>{
-let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
+import { useNavigate,Navigate } from 'react-router-dom';
 
+const AboutUs=()=>{
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}
   if (!currentUser) {
     return <Navigate to="/login" />;
   }

@@ -14,8 +14,17 @@ function BookStore() {
     const fetchBooks = async (pageToFetch) => {
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
         const token = userData?.token;
-let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
-
+        let currentUser = null;
+        const rawUser = localStorage.getItem('CurrentUser');
+        if (rawUser) {
+            try {
+                currentUser = JSON.parse(rawUser);
+            } catch (e) {
+                console.error("Invalid JSON in CurrentUser:", e);
+            }
+        } if (!currentUser) {
+            return <Navigate to="/login" />;
+        }
         try {
             const res = await fetch(`http://localhost:3000/api/books/getAll?page=${pageToFetch}`, {
                 method: 'GET',
@@ -52,7 +61,7 @@ let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
         <div className="welcomePage">
             <Home />
             <div className="Welcome-img-container">
-                <img className='imagePoster' src={poster||noImage} alt='poster'/>
+                <img className='imagePoster' src={poster || noImage} alt='poster' />
                 <h1 className='welcome-page-h1'>Welcome To Educational Digital libary</h1>
             </div>
         </div>

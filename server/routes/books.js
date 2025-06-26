@@ -21,6 +21,7 @@ booksRouter.post("/addBook",verifyToken,isAdmin,uploadBoth.fields([
 );
 
 
+booksRouter.get("/getByStatus/:Status",verifyToken, books.getByStatus);
 booksRouter.get("/getAll",verifyToken, books.getAll);
 booksRouter.get("/:bookId",verifyToken ,books.getById);
 //booksRouter.get("/:book_name", books.getByName);

@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styleSheets/bookDetail.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Navigate } from 'react-router-dom';
 import Home from './Home';
 import Comments from './Comments';
 import { useLocation } from 'react-router-dom';
@@ -11,8 +11,15 @@ function BookDetailsModal() {
     const location = useLocation();
     const { book } = location.state || {};
     console.log('Book details:', book, book.Id, book.Book_Name, book.author, book.imageUrl, book.number_Of_Page, book.Category, book.Price, book.Note, book.Editing_Date);
-    let currentUser = JSON.parse(localStorage.getItem('CurrentUser')) || '';
-
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}
   if (!currentUser) {
     return <Navigate to="/login" />;
   }

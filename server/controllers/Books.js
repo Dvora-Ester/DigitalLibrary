@@ -252,11 +252,21 @@ const Books = {
     }
   }
   ,
+  getByStatus: async (req, res) => {
+try {
+      const books = await booksModel.getByStatus(req.params.Status);
+     // if (!books || books.length === 0) {res.json([]);}
+      res.json(books);
+    } catch (err) {
+      console.error('Error getting books by status:', err);
+      res.status(500).json({ error: 'Failed to fetch books' });
+    }
+  },
   getById: async (req, res) => {
     try {
       const book = await booksModel.getById(req.params.bookId);
       if (!book) return res.status(404).json({ message: 'Book not found' });
-      res.json(book);
+      res.json(book||[]);
     } catch (err) {
       console.error('Error getting book by ID:', err);
       res.status(500).json({ error: 'Failed to fetch book' });

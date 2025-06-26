@@ -10,7 +10,17 @@ function MyLibrary() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
     const [error, setError] = useState('');
-
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}    if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
     const fetchBooks = async () => {
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
         const token = userData?.token;

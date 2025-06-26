@@ -29,7 +29,17 @@ const Info = () => {
       }
     }
   }, []);
-
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}  if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
   useEffect(() => {
 
     const storedUser = localStorage.getItem('CurrentUser');

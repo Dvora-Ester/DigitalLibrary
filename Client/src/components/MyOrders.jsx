@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Navigate } from 'react-router-dom';
 import Home from './Home';
 import '../styleSheets/MyOrders.css';
 function MyOrders() {
@@ -7,7 +7,17 @@ function MyOrders() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}    if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
     useEffect(() => {
         const userData = localStorage.getItem('CurrentUser');
         if (!userData) {

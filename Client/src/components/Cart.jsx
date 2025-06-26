@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CartItem from './CartItem';
 import '../styleSheets/Cart.css';
 import Home from './Home';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Navigate } from 'react-router-dom';
 
 function Cart() {
     const [cartItems, setCartItems] = useState([]);
@@ -12,12 +12,30 @@ function Cart() {
     const [cvv, setCvv] = useState("");
     const [cardValidity, setValidity] = useState("");
     const navigate = useNavigate();
-
+let currentUser = null;
+const rawUser = localStorage.getItem('CurrentUser');
+if (rawUser) {
+  try {
+    currentUser = JSON.parse(rawUser);
+  } catch (e) {
+    console.error("Invalid JSON in CurrentUser:", e);
+  }
+}    if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
         setCartItems(storedCart);
-        setTotal(() => storedCart.reduce((acc, item) => acc + Number(item.Price), 0));
+        setTotal(() => calculateTotal(storedCart));
     }, []);
+    const calculateTotal = (cart) => {
+
+        if (cart.length === 0) {
+            return 0;
+        }
+        return cart.reduce((acc, item) => acc + Number(item.Price), 0);
+    }
+
 
     const handlePay = () => {
         // אפשר להוסיף ולידציה כאן
@@ -30,7 +48,16 @@ function Cart() {
         setCartItems([]);
         navigate(`/${currentUser.Full_Name}/${currentUser.Id}/welcome-page`); // נווט לדף הבית
     };
-
+    function removeItem(itemId) {
+        // Get the current cart from local storage
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        // Filter out the item to be removed
+        const cartAfterRemove = cart.filter(cartItem => cartItem.Id !== itemId);
+        setCartItems(cartAfterRemove);
+        setTotal(() => calculateTotal(cartAfterRemove));
+        // Update the cart in local storage
+        localStorage.setItem('cart', JSON.stringify(cartAfterRemove));
+    }
     return (
         <div className="cart-page">
             <Home />
@@ -38,14 +65,18 @@ function Cart() {
                 <div className='cart-page-header'>
                     <h2 className="cart-page-title">🛒 Your Shopping Cart</h2>
                     <h3><span>Total after tax:</span> ${total.toFixed(2)} </h3>
-                    <button className="checkout-button" onClick={() => setShowModal(true)}>Checkout</button>
+                    <button className="checkout-button" onClick={() => {
+                        if (total === 0)
+                            return alert('Your cart is empty. Please add items to your cart before proceeding to payment.');
+                        setShowModal(true)
+                    }}>Checkout</button>
                 </div>
                 {cartItems.length === 0 ? (
                     <p className="empty-message">Your cart is empty.</p>
                 ) : (
                     <div className="cart-page-items-container">
                         {cartItems.map((item, index) => (
-                            <CartItem key={index} item={item} />
+                            <CartItem key={index} item={item} onRemoveItem={removeItem} />
                         ))}
                     </div>
                 )}

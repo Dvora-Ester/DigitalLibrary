@@ -13,16 +13,7 @@ const Comments = ({ bookId }) => {
   const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
   const token = currentUser?.token;
 
-  // useEffect(() => {
-  //   fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`)
-  //     .then((response) => response.json())
-  //     .then(data => {
-  //       setComments(data);
-  //       console.log(data);
-  //       console.log(comments);
-  //     })
-  //     .catch(console.error);
-  // }, [bookId]);
+ 
 useEffect(() => {
   fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`, {
     method: 'GET',
@@ -74,54 +65,7 @@ useEffect(() => {
       });
   };
 
-  // const handleAddComment = () => {
-
-  //   let nextCommentId;
-  //   let comment;
-  //   console.log(bookId);
-  //   fetch(`http://localhost:3000/api/comments/addComment/${bookId}`)
-  //     .then(response => response.json())
-  //     .then(data => {
-  //       if (data.length > 0) {
-
-  //         nextCommentId = Number(data[data.length - 1].id) + 1;
-
-  //       } else {
-  //         nextCommentId = 1;
-  //       }
-
-  //       comment = {
-  //         bookId: bookId,
-  //         id: String(nextCommentId),
-  //         name: currentUser?.name || 'Guest',
-  //         email: currentUser?.email || 'guest@example.com',
-  //         body: newComment,
-  //         userId: currentUser?.id || 'guest',
-  //       };
-  //     })
-  //     .then(() => {
-
-  //       console.log("comment",comment); 
-  //       fetch('http://localhost:3000/comments/', {
-  //         method: 'POST',
-  //         headers: { 'Content-Type': 'application/json' },
-  //         body: JSON.stringify(comment),
-  //       })
-  //         .then((response) => {
-  //           if (!response.ok) {
-  //             throw new Error(`HTTP error! Status: ${response.status}`);
-  //           }
-  //           return response.json();
-  //         })
-  //         .then((data) => {
-  //           console.log(data);
-  //           setComments([...comments, data]);
-  //           setNewComment('');
-  //         })
-  //         .catch(console.error);
-  //     })
-  //     .catch(console.error);
-  // };
+  
 
   const handleDeleteComment = (commentId) => {
     const commentToDelete = comments.find((comment) => comment.id === commentId);
