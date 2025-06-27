@@ -1,3 +1,4 @@
+import { useId } from "react";
 import promisePool from "../db.js"; 
 import bcrypt from 'bcrypt';
 const user = {
@@ -59,6 +60,34 @@ console.log(addedUser);
       throw err;
     }
   },
+  update: async (User_Id, data) => {
+        const fields = [];
+        const values = [];
+
+        // עדכון לפי השדות הקיימים בטבלה שלך
+       
+        if (data.Full_Name != null) {
+            fields.push("Full_Name = ?");
+            values.push(data.Full_Name);
+        }
+        if (data.Email != null) {
+            fields.push("Email = ?");
+            values.push(data.Email);
+        }
+         if (data.Is_Manager != null) {
+            fields.push("Is_Manager = ?");
+            values.push(data.Is_Manager);
+        }
+
+        // אם אין שדות לעדכן, החזר 0
+        if (fields.length === 0) return { affectedRows: 0 };
+
+        const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
+        values.push(User_Id);
+
+        const [result] = await promisePool.query(query, values);
+        return result;
+    },
   delete: async (userId) => {
     try {
       // מחיקת המשתמש מטבלת passwords

@@ -9,8 +9,11 @@ function BookStore() {
     const [books, setBooks] = useState([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(true); // כדי להבחין בין טוען לבין ריק
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const [sortBy, setSortBy] = useState('');
+    const [searchText, setSearchText] = useState('');
 
     let currentUser = null;
     const rawUser = localStorage.getItem('CurrentUser');
@@ -28,7 +31,6 @@ function BookStore() {
 
     const fetchBooks = async (pageToFetch) => {
         const token = currentUser?.token;
-
         setLoading(true);
         try {
             const res = await fetch(`http://localhost:3000/api/books/getByStatus/approved?page=${pageToFetch}`, {
@@ -39,12 +41,9 @@ function BookStore() {
                 }
             });
 
-            if (!res.ok) {
-                throw new Error('Server returned status ' + res.status);
-            }
+            if (!res.ok) throw new Error('Server returned status ' + res.status);
 
-            const data = await res.json()||[];
-console.log(data);
+            const data = await res.json() || [];
             if (!data || !Array.isArray(data.books)) {
                 console.warn("Unexpected response:", data);
                 setHasMore(false);
@@ -67,14 +66,25 @@ console.log(data);
 
     useEffect(() => {
         fetchBooks(page);
-
     }, []);
 
     const handleLoadMore = () => {
-        setPage(prev => prev + 1);
-        fetchBooks(page + 1);
-        console.log("Loading more books for page:", page + 1);
+        const nextPage = page + 1;
+        setPage(nextPage);
+        fetchBooks(nextPage);
     };
+
+    // סינון בזמן אמת
+    const filteredBooks = books
+        .filter(book =>
+            book.Book_Name?.toLowerCase().includes(searchText.toLowerCase())
+        )
+        .sort((a, b) => {
+            if (sortBy === 'price-low-high') return a.Price - b.Price;
+            if (sortBy === 'price-high-low') return b.Price - a.Price;
+            if (sortBy === 'name') return a.Book_Name.localeCompare(b.Book_Name);
+            return 0;
+        });
 
     return (
         <div className="bookStorePage">
@@ -83,29 +93,35 @@ console.log(data);
                 <div className="bookstore-header">
                     <h2>Books Store</h2>
                     <div className="filters">
-                        <select>
+                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                             <option value="">Sort by</option>
                             <option value="price-low-high">Price: Low to High</option>
                             <option value="price-high-low">Price: High to Low</option>
                             <option value="name">Name</option>
                         </select>
-                        <input className="sorters" type="text" placeholder="Search by name..." />
+                        <input
+                            className="sorters"
+                            type="text"
+                            placeholder="Search by name..."
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                        />
                     </div>
                 </div>
 
                 <div className="books-grid">
-                    {books.map(book => (
-                        <Book key={book.Id} book={book} commingFrom="BookStore" onApprove={fetchBooks}/>
+                    {filteredBooks.map(book => (
+                        <Book key={book.Id} book={book} commingFrom="BookStore" onApprove={fetchBooks} />
                     ))}
                 </div>
 
                 {loading && <p className="loading-message">Loading books...</p>}
 
-                {!loading && books.length === 0 && (
-                    <p className='red-message'>Any Available books</p>
+                {!loading && filteredBooks.length === 0 && (
+                    <p className='red-message'>No matching books found.</p>
                 )}
 
-                {hasMore && !loading &&books.length !== 0&& (
+                {hasMore && !loading && (
                     <button className='add-books-btn' onClick={handleLoadMore}>Show more books</button>
                 )}
 

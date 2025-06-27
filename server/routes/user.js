@@ -8,6 +8,7 @@ userRouter.post("/register",user.register);
 userRouter.post("/login", user.login);
 userRouter.get("/:user_Id",verifyToken, user.getById);
 userRouter.delete("/deleteUser",verifyToken,isAdmin, user.delete);
+userRouter.put("/:user_Id",verifyToken,isAdmin, user.update);
 
 
 export default userRouter;

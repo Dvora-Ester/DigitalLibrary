@@ -31,15 +31,14 @@
     width: 90%;
     margin: 20px;
     padding: 20px;
-    background-color: #c3f3fd35;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    border: 2px solid #1e5a68;
+    border: 0.5px solid #1e5a68;
 }
 .login-box h1{
     color:#1e5a68;
     border-radius: 10px;
-    border-bottom: 2px solid #1e5a68;
+    border-bottom: 0.5px solid #1e5a68;
 }
 .data-label{
     font-size: 30px;

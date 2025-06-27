@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
-import Book from './Book';
-import Home from './Home';
+import { Navigate } from 'react-router-dom'; // הוספתי את זה
 import BookLibrary from './BookLibrary';
+import Home from './Home';
 import '../styleSheets/MyLibrary.css';
 
 function MyLibrary() {
@@ -10,19 +9,22 @@ function MyLibrary() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
     const [error, setError] = useState('');
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
-  }
-}    if (!currentUser) {
+
+    let currentUser = null;
+    const rawUser = localStorage.getItem('CurrentUser');
+    if (rawUser) {
+        try {
+            currentUser = JSON.parse(rawUser);
+        } catch (e) {
+            console.error("Invalid JSON in CurrentUser:", e);
+        }
+    }
+    if (!currentUser) {
         return <Navigate to="/login" />;
     }
+
     const fetchBooks = async () => {
-        const userData = JSON.parse(localStorage.getItem('CurrentUser'));
+        const userData = currentUser; // כבר פרשנו
         const token = userData?.token;
 
         try {
