@@ -31,7 +31,7 @@ function BookStore() {
 
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/api/books/getByStatus/approved`, {
+            const res = await fetch(`http://localhost:3000/api/books/getByStatus/approved?page=${pageToFetch}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -44,19 +44,19 @@ function BookStore() {
             }
 
             const data = await res.json()||[];
+console.log(data);
+            if (!data || !Array.isArray(data.books)) {
+                console.warn("Unexpected response:", data);
+                setHasMore(false);
+                setBooks([]);
+                return;
+            }
 
-            // if (!data || !Array.isArray(data.books)) {
-            //     console.warn("Unexpected response:", data);
-            //     setHasMore(false);
-            //     setBooks([]);
-            //     return;
-            // }
-
-            if (data.length === 0 || pageToFetch >= data.totalPages) {
+            if (data.books.length === 0 || pageToFetch >= data.totalPages) {
                 setHasMore(false);
             }
 
-            setBooks(prev => [...prev, ...data]);
+            setBooks(prev => [...prev, ...data.books]);
         } catch (err) {
             console.error('Failed to fetch books', err);
             setError("Failed to load books: " + err.message);
@@ -67,10 +67,13 @@ function BookStore() {
 
     useEffect(() => {
         fetchBooks(page);
-    }, [page]);
+
+    }, []);
 
     const handleLoadMore = () => {
         setPage(prev => prev + 1);
+        fetchBooks(page + 1);
+        console.log("Loading more books for page:", page + 1);
     };
 
     return (
@@ -92,7 +95,7 @@ function BookStore() {
 
                 <div className="books-grid">
                     {books.map(book => (
-                        <Book key={book.Id} book={book} />
+                        <Book key={book.Id} book={book} commingFrom="BookStore" onApprove={fetchBooks}/>
                     ))}
                 </div>
 
@@ -107,7 +110,7 @@ function BookStore() {
                 )}
 
                 {!hasMore && books.length > 0 && (
-                    <p>No more books to show</p>
+                    <p className='red-message'>No more books to show</p>
                 )}
 
                 {error && <p className="error-message red-message">{error}</p>}

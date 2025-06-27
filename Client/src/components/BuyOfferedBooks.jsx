@@ -28,10 +28,10 @@ function BuyOfferedBooks() {
 
     const fetchBooks = async (pageToFetch) => {
         const token = currentUser?.token;
-        const Status = 'offered';
+
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/api/books/getByStatus/offered`, {
+            const res = await fetch(`http://localhost:3000/api/books/getByStatus/offered?page=${pageToFetch}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -43,34 +43,36 @@ function BuyOfferedBooks() {
                 throw new Error('Server returned status ' + res.status);
             }
 
-            const data = await res.json();
-            console.log(data);  
-            // if (!data || !Array.isArray(data.books)) {
-            //     console.warn("Unexpected response:", data);
-            //     setHasMore(false);
-            //     setBooks([]);
-            //     return;
-            // }
+            const data = await res.json() || [];
+            console.log(data);
+            if (!data || !Array.isArray(data.books)) {
+                console.warn("Unexpected response:", data);
+                setHasMore(false);
+                setBooks([]);
+                return;
+            }
 
-            if (data.length === 0 || pageToFetch >= data.totalPages) {
+            if (data.books.length === 0 || pageToFetch >= data.totalPages) {
                 setHasMore(false);
             }
 
-            setBooks(prev => [...prev, ...data]);
+            setBooks(prev => [...prev, ...data.books]);
         } catch (err) {
             console.error('Failed to fetch books', err);
-            setError("Failed to load books.");
+            setError("Failed to load books: " + err.message);
         } finally {
             setLoading(false);
         }
     };
-
+    const handleApprove = (bookIdToRemove) => {
+        setBooks(prevBooks => prevBooks.filter(b => b.Id !== bookIdToRemove));
+    };
     useEffect(() => {
-        fetchBooks(page);
+        fetchBooks(page); // תתרחש תמיד כשמשתנה page
     }, [page]);
 
     const handleLoadMore = () => {
-        setPage(prev => prev + 1);
+        setPage(prev => prev + 1); // לא לקרוא ישירות ל־fetchBooks
     };
 
     return (
@@ -92,26 +94,26 @@ function BuyOfferedBooks() {
 
                 <div className="books-grid">
                     {books.map(book => (
-                        <Book key={book.Id} book={book} />
+                        <Book key={book.Id} book={book} commingFrom="BuyOfferedBooks" onApprove={handleApprove}/>
                     ))}
                 </div>
 
-                   {loading && <p className="loading-message">Loading books...</p>}
+                {loading && <p className="loading-message">Loading books...</p>}
 
                 {!loading && books.length === 0 && (
                     <p className='red-message'>Any Available books</p>
                 )}
 
-                {hasMore && !loading &&books.length !== 0&& (
+                {hasMore && !loading && books.length !== 0 && (
                     <button className='add-books-btn' onClick={handleLoadMore}>Show more books</button>
                 )}
 
                 {!hasMore && books.length > 0 && (
-                    <p>No more books to show</p>
+                    <p className='red-message'>No more books to show</p>
                 )}
 
                 {error && <p className="error-message red-message">{error}</p>}
-             </div>
+            </div>
         </div>
     );
 }

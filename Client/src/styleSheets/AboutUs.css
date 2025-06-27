@@ -1,7 +1,7 @@
  .pageContainer{
     display: flex;
     flex-direction: row;
-
+min-height: 620px;
 }
 .nav-item-div{
     color: rgb(82, 79, 79);
@@ -80,4 +80,20 @@ em{
 }
 .nav-item-div p{
     padding: 60px;
+}
+@media (max-width: 900px) {
+  .pageContainer {
+      display: flex;
+      flex-direction: column;
+  }
+  
+}
+
+/* tablets and up */
+@media (min-width: 900px) {
+  .pageContainer {
+    display: flex;
+    flex-direction: row;
+  }
+  
 }

@@ -73,53 +73,87 @@ const ordersController = {
       res.status(500).json({ error: "Error adding the order" });
     }
   },
-  add: async (req, res) => {
+  createCheckoutSession: async (req, res) => {
     try {
-      const { orderedBookIds, email } = req.body;
+      const { orderedBookIds } = req.body;
       const userId = req.user.id;
-
-      if (!orderedBookIds || !email) {
-        return res.status(400).json({ error: "Missing required fields" });
+      const email = req.user.Email;
+      console.log("Creating checkout session for user ID:", userId);
+      if (!orderedBookIds || !userId) {
+        return res.status(400).json({ error: 'Missing required fields' });
       }
 
       const line_items = [];
       for (const bookId of orderedBookIds) {
         const book = await booksModel.getById(bookId);
         if (!book) {
-          return res.status(400).json({ error: `Book with ID ${bookId} does not exist` });
+          return res.status(400).json({ error: `Book ID ${bookId} not found` });
         }
         line_items.push({
           price_data: {
-            currency: "usd",
-            product_data: { name: book.title },
-            unit_amount: Math.round(book.price * 100),
+            currency: 'usd',
+            product_data: { name: book.Book_Name },
+            unit_amount: Math.round(Number(book.Price) * 100),
           },
           quantity: 1,
         });
       }
 
-      // יצירת session תשלום ב-Stripe, ושמירת מידע מזהה להזמנה
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
+      
+        payment_method_types: ['card'],
         line_items,
         customer_email: email,
-        mode: "payment",
-        success_url: `http://localhost:5173/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+        mode: 'payment',
+        success_url: `http://localhost:5173/${email}/${userId}/my-library`,
         cancel_url: `http://localhost:5173/payment-cancel`,
         metadata: {
-          userId: userId,
-          orderedBookIds: JSON.stringify(orderedBookIds)
-        }
+          userId,
+          orderedBookIds: JSON.stringify(orderedBookIds),
+        },
       });
-
-      // מחזירים ללקוח את כתובת התשלום
-      res.status(200).json({ url: session.url });
-
+      console.log("Checkout session created successfully:", session.id);
+       res.status(200).json({ url: session.url });
     } catch (error) {
-      console.error("Error creating checkout session:", error);
-      res.status(500).json({ error: "Failed to create checkout session" });
+      console.error('Error creating session:', error);
+      res.status(500).json({ error: 'Failed to create checkout session' });
     }
   },
+  add: async (req, res) => {
+    console.log("AddHitting add endpoint for orders");
+    try {
+      const { userId, email, orderedBookIds, stripeSessionId, date } = req.body;
+
+      if (!orderedBookIds || !userId || !email || !stripeSessionId) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+
+      // בדיקה: האם כבר קיימת הזמנה עם אותו session?
+      // const existingOrder = await ordersModel.getBySessionId(stripeSessionId);
+      // if (existingOrder) {
+      //   console.log("⛔ הזמנה כבר קיימת עבור session זה");
+      //   return res.status(200).json({ message: "Order already exists" });
+      const stripeSession = await stripe.checkout.sessions.retrieve(stripeSessionId);
+      const amountTotal = stripeSession.amount_total / 100; // בדולרים
+
+      // שמירת ההזמנה במסד הנתונים
+      const orderResult = await ordersModel.add({
+        userId,
+        date: date || new Date(),
+        total: amountTotal,
+        stripeSessionId: stripeSessionId,
+      });
+      const Bookmark_On_Page = 0;
+      const resultLibraryDetails = await library.add(userId,
+        orderResult.orderId, orderedBookIds, Bookmark_On_Page, res);
+      console.log("✔ הזמנה נשמרה בהצלחה:", orderResult);
+      res.status(201).json({ message: "Order saved" });
+    } catch (error) {
+      console.error("❌ שגיאה בשמירת ההזמנה:", error);
+      res.status(500).json({ error: "Failed to save order" });
+    }
+  },
+
   getById: async (req, res) => {
     const { orderId } = req.params;
     console.log("Fetching order with ID:", orderId);

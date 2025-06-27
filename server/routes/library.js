@@ -10,9 +10,10 @@ libraryRouter.get("/", library.getAll);
 
 // 🔍 קבלת ספר לפי משתמש וספר (עבור סימניה וכו')
 libraryRouter.get("/getBook/:bookId",verifyToken ,library.getByUserIdAndBookId);
-libraryRouter.get("/getAllBookByUserId",verifyToken ,library.getByUserId);
+libraryRouter.get("/getAllBookByUserId/:userId",verifyToken ,library.getByUserId);
 // דוגמה: GET /api/library/book/123/page/4
 libraryRouter.get('/book/:bookId/page/:pageNum', verifyToken, library.getBookPageImage);
+libraryRouter.post('/', verifyToken, library.add);
 
 
 // 📖 הזרמת ספר למשתמש שמורשה לכך (שימוש בקובץ PDF בלבד)

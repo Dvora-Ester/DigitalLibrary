@@ -3,7 +3,28 @@
     flex-direction: row;
     width: 100%;
 }
+@media (max-width: 768px) {
+  .bookStorePage {
+      display: flex;
+      flex-direction: column;
+  }
+  .bookstore-header{
+      display: flex;
+      flex-direction: column;
+  }
+}
 
+/* tablets and up */
+@media (min-width: 768px) {
+  .bookStorePage {
+    display: flex;
+    flex-direction: row;
+  }
+  .bookstore-header{
+      display: flex;
+      flex-direction: row;
+  }
+}
 .bookstore-container {
   padding: 20px;
   padding-top: 0; /* ⬅ לא מוסיף רווח למעלה */

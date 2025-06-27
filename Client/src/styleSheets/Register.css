@@ -18,13 +18,16 @@
 
 /* קונטיינר מרכזי */
 .register-container {
-  width: 100%;
+  width: 75%;
   max-width: 450px;
   background-color: white;
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   text-align: center;
+  margin: auto;
+   max-width: 450px;
+   
 }
 
 /* כותרת */
@@ -38,6 +41,7 @@
 .input-group {
   margin-bottom: 20px;
   text-align: left;
+ 
 }
 
 .input-group-label {

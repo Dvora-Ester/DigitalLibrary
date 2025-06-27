@@ -1,12 +1,35 @@
 .modal-overlay {
   display: flex;
-  height: 100vh;
   width: 100vw;
   background-color: #f4f4f4;
   font-family: 'Segoe UI', sans-serif;
   color: #1e1e1e;
   overflow: hidden;
 }
+/* smartphones */
+@media (max-width: 768px) {
+  .modal-overlay {
+      display: flex;
+      flex-direction: column;
+  }
+  .book-details-page{
+      display: flex;
+      flex-direction: column;
+  }
+}
+
+/* tablets and up */
+@media (min-width: 768px) {
+  .modal-overlay {
+    display: flex;
+    flex-direction: row;
+  }
+  .book-details-page{
+      display: flex;
+      flex-direction: row;
+  }
+}
+
 
 /* קומפוננטת Home */
 /* .modal-overlay > .Home {
@@ -33,7 +56,6 @@
   border-radius: 0 10px 10px 0;
   box-shadow: -2px 0 10px rgba(0, 0, 0, 0.05);
   position: relative;
-    height: 100vh;
 
 }
 

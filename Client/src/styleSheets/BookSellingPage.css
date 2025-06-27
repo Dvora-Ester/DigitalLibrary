@@ -81,7 +81,12 @@
 .add-book-form button:hover {
   background-color: #2e5c6b;
 }
-
+.loading{
+  text-align: center;
+  font-size: 38px;
+  color: #2e5c6b;
+  margin-top: 20px;
+}
 .image-preview {
   width: 150px;
   height: 150px;
@@ -95,4 +100,19 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+/* smartphones */
+@media (max-width: 768px) {
+  .book-selling-page {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* tablets and up */
+@media (min-width: 768px) {
+  .book-selling-page {
+    display: flex;
+    flex-direction: row;
+  }
 }

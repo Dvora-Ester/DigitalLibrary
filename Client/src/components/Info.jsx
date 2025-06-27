@@ -12,7 +12,6 @@ const Info = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [role, setRole] = useState('');
-  const [profileImage, setProfileImage] = useState('');
   useEffect(() => {
     const storedUser = localStorage.getItem('CurrentUser');
     if (storedUser) {
@@ -23,23 +22,22 @@ const Info = () => {
         setEmail(parsedUser.Email || '');
         setPhone(parsedUser.Phone || '');
         setRole(parsedUser.Is_Manager ? 'Manager' : 'Customer');
-        setProfileImage(parsedUser.picture || defaultProfile);
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
     }
   }, []);
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
-  }
-}  if (!currentUser) {
-        return <Navigate to="/login" />;
+  let currentUser = null;
+  const rawUser = localStorage.getItem('CurrentUser');
+  if (rawUser) {
+    try {
+      currentUser = JSON.parse(rawUser);
+    } catch (e) {
+      console.error("Invalid JSON in CurrentUser:", e);
     }
+  } if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
   useEffect(() => {
 
     const storedUser = localStorage.getItem('CurrentUser');
@@ -56,9 +54,9 @@ if (rawUser) {
       console.log('No user data in localStorage');
     }
   }, []);
- useEffect(() => {
+  useEffect(() => {
 
- },[ name, email, phone, profileImage]);
+  }, [name, email, phone]);
 
   if (!user) {
     return <div className='noUserDiv'>
@@ -71,35 +69,20 @@ if (rawUser) {
     <div className="info-page">
       <Home />
       <div className="info-container">
-        
+
         <div className="login-box">
           <h1>User Information<br /><br /><br /></h1>
           <br />
           <br />
           <br />
           <div className="input-group profile-group">
-          
-          <div className="profile-image-wrapper">
-            <img src={profileImage || defaultProfile} alt="Profile" className="profile-image" />
-            {edit && (
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onloadend = () => {
-                      setProfileImage(reader.result);
-                    };
-                    reader.readAsDataURL(file);
-                  }
-                }}
-              />
-            )}
+
+            <div className="profile-image-wrapper">
+              <img src={defaultProfile} alt="Profile" className="profile-image" />
+
+            </div>
           </div>
-        </div> 
-        
+
           <div className="input-group">
             <label className='data-label' htmlFor="id">ID: </label>
             <span>{user.Id || "invalid"}</span>
@@ -140,8 +123,8 @@ if (rawUser) {
         </div>
         <br />
         <br />
-        <button disabled={!disable} className="Edit-btn" onClick={() => {setEdit(true);setDisable(false)}}>Edit</button>
-        <button disabled={disable} className="Save-btn" onClick={() => {setEdit(false);setDisable(true);}}>Save</button>
+        <button disabled={!disable} className="Edit-btn" onClick={() => { setEdit(true); setDisable(false) }}>Edit</button>
+        <button disabled={disable} className="Save-btn" onClick={() => { setEdit(false); setDisable(true); saveAndUpdate(); }}>Save</button>
       </div>
     </div>
 

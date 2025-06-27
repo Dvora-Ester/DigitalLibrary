@@ -25,7 +25,7 @@ booksRouter.get("/getByStatus/:Status",verifyToken, books.getByStatus);
 booksRouter.get("/getAll",verifyToken, books.getAll);
 booksRouter.get("/:bookId",verifyToken ,books.getById);
 //booksRouter.get("/:book_name", books.getByName);
-booksRouter.put("/updateOrder/:bookId",verifyToken ,books.update);
+booksRouter.put("/updateBook/:bookId",verifyToken ,books.update);
 booksRouter.delete("/:bookId",verifyToken,books.delete);
 
 export default booksRouter;

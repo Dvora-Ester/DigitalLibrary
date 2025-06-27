@@ -4,29 +4,32 @@ import Home from './Home';
 import { Navigate } from 'react-router-dom';
 
 function BookSellingPage() {
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
-  }
-}    if (!currentUser) {
+    let currentUser = null;
+    const rawUser = localStorage.getItem('CurrentUser');
+    if (rawUser) {
+        try {
+            currentUser = JSON.parse(rawUser);
+        } catch (e) {
+            console.error("Invalid JSON in CurrentUser:", e);
+        }
+    }
+
+    if (!currentUser) {
         return <Navigate to="/login" />;
     }
 
     const [newBookData, setNewBookData] = useState({
         Book_Name: '',
         author: '',
-        number_Of_Page: '',
+        numberOfPage: '',
         Price: '',
         Category: '',
         Note: '',
         Editing_Date: '',
-        Seller_Id: currentUser.Id,
+        sellerId: currentUser.Id,
         Status: 'offered'
     });
+    const [loading, setLoading] = useState(true); // כדי להבחין בין טוען לבין ריק
 
     const [imageFile, setImageFile] = useState(null);
     const [pdfFile, setPdfFile] = useState(null);
@@ -34,7 +37,7 @@ if (rawUser) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setNewBookData((prev) => ({ ...prev, [name]: value }));
+        setNewBookData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleImageChange = (e) => {
@@ -58,54 +61,59 @@ if (rawUser) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!newBookData.Book_Name || !newBookData.Price) {
-            alert("Book name and price are required.");
-            return;
-        }
-
+        setLoading(true);
         const formData = new FormData();
-        for (const key in newBookData) {
-            formData.append(key, newBookData[key]);
+        const bookToSend = {
+            ...newBookData,
+            number_Of_Page: Number(newBookData.numberOfPage),
+            Editing_Date: newBookData.Editing_Date || new Date().toISOString().split("T")[0]
+        };
+        console.log("bookToSend", bookToSend);
+        // הוספת כל שדות הספר
+        for (const key in bookToSend) {
+            formData.append(key, bookToSend[key]);
         }
-
-        if (imageFile) {
-            formData.append("image", imageFile);
-        }
-
-        if (pdfFile) {
-            formData.append("pdf", pdfFile);
-        }
+        console.log("formData", formData);
+        // הוספת קבצים
+        if (imageFile) formData.append("bookImage", imageFile);
+        if (pdfFile) formData.append("bookFile", pdfFile);
 
         try {
-            await fetch("http://localhost:3000/api/books", {
+            const res = await fetch("http://localhost:3000/api/books/addBook", {
                 method: "POST",
                 headers: {
-                    'Authorization': `Bearer ${currentUser.token}`,
-                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${currentUser.token}`,
                 },
-                body: formData
+                body: formData,
             });
 
-            alert("Book submitted successfully!");
+            if (!res.ok) throw new Error("Failed to add book");
+
+            const result = await res.json();
+            console.log("Book added:", result);
+            alert(`Book "${newBookData.Book_Name}" added successfully!`);
+
+            // איפוס טופס
             setNewBookData({
                 Book_Name: '',
                 author: '',
-                number_Of_Page: '',
+                numberOfPage: '',
                 Price: '',
                 Category: '',
                 Note: '',
                 Editing_Date: '',
-                Seller_Id: currentUser.Id,
+                sellerId: currentUser.Id,
                 Status: 'offered'
-            });
+            })
             setImageFile(null);
             setPdfFile(null);
             setPreviewImage(null);
+            setLoading(false); // סיום הטעינה
         } catch (err) {
             console.error("Error submitting book:", err);
-            alert("Error submitting book.");
+            alert("Error submitting book: " + err.message);
         }
+
     };
 
     return (
@@ -113,9 +121,10 @@ if (rawUser) {
             <Home />
             <form className="add-book-form" onSubmit={handleSubmit}>
                 <h2>Add a New Book</h2>
+
                 <input name="Book_Name" placeholder="Book Name" value={newBookData.Book_Name} onChange={handleChange} required />
                 <input name="author" placeholder="Author" value={newBookData.author} onChange={handleChange} />
-                <input name="number_Of_Page" type="number" placeholder="Number of Pages" value={newBookData.number_Of_Page} onChange={handleChange} />
+                <input name="numberOfPage" type="number" placeholder="Number of Pages" value={newBookData.numberOfPage} onChange={handleChange} />
                 <input name="Price" type="number" step="0.01" placeholder="Price" value={newBookData.Price} onChange={handleChange} required />
                 <input name="Category" placeholder="Category" value={newBookData.Category} onChange={handleChange} />
                 <textarea name="Note" placeholder="Summary" value={newBookData.Note} onChange={handleChange} />
@@ -132,7 +141,7 @@ if (rawUser) {
 
                 <label>Upload Book PDF:</label>
                 <input type="file" accept="application/pdf" onChange={handlePdfChange} />
-
+                {loading && <p className='loading'>Loading...</p>}
                 <button type="submit">Add Book</button>
             </form>
         </div>

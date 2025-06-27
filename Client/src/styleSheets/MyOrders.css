@@ -14,3 +14,19 @@
     display: flex;
     flex-direction: row;
 }
+@media (max-width: 768px) {
+  .my-orders-container {
+      display: flex;
+      flex-direction: column;
+  }
+  
+}
+
+/* tablets and up */
+@media (min-width: 768px) {
+  .my-orders-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+}

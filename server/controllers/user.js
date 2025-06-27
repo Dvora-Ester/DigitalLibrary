@@ -150,7 +150,7 @@ import { generateToken } from "../middleware/outh.js";
 const user = {
     getById: async (req, res) => {
             try {
-                const user = await usersModel.getById(req.params.id);
+                const user = await usersModel.getById(req.params.user_Id);
                 if (!user) return res.status(404).json({ message: 'User not found' });
                 res.json(user);
             } catch (err) {

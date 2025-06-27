@@ -17,11 +17,11 @@ body {
 
 /* Container */
 .home-container {
-    min-height: 100vh;
+    min-height: auto;
     display: flex;
     flex-direction: column;
     width: auto;
-    max-width: 550px;
+    min-width: 600px;
     margin-left: 0;
 }
 
