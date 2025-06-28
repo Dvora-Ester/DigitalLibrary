@@ -64,11 +64,9 @@ function MyOrders() {
             });
     }, [navigate]);
 
-    // פונקציה למיון ההזמנות לפי השדה הנבחר
     const sortedOrders = [...orders].sort((a, b) => {
         switch (sortBy) {
             case 'price-low-high':
-                // אם יש שדה מחיר בהזמנה, החלף לפי הצורך
                 return (a.Price || 0) - (b.Price || 0);
             case 'price-high-low':
                 return (b.Price || 0) - (a.Price || 0);
@@ -83,26 +81,22 @@ function MyOrders() {
         }
     });
 
-    // סינון ההזמנות לפי הטקסט שהמשתמש הקליד, בהתאם לשדה מיון רלוונטי
     const filteredOrders = sortedOrders.filter(order => {
-        if (!filterText) return true; // אם אין טקסט סינון, להראות את כולם
-
+        if (!filterText) return true;
         const lowerFilter = filterText.toLowerCase();
 
         switch (sortBy) {
             case 'price-low-high':
             case 'price-high-low':
-                // אם יש שדה מחיר - אפשר לסנן לפי מחיר כתווך מספרי, או לא לסנן כאן
                 return order.Price?.toString().includes(lowerFilter);
             case 'name':
                 return order.Name?.toLowerCase().includes(lowerFilter);
             case 'id':
-                return order.Id.toString().toLowerCase().includes(lowerFilter);
+                return order.Id.toString().includes(lowerFilter);
             case 'date':
                 return order.date?.toLowerCase().includes(lowerFilter);
             default:
-                // ברירת מחדל - סינון לפי מזהה
-                return order.Id.toString().toLowerCase().includes(lowerFilter);
+                return order.Id.toString().includes(lowerFilter);
         }
     });
 
@@ -113,10 +107,7 @@ function MyOrders() {
                 <div className="bookstore-header">
                     <h2>My Orders</h2>
                     <div className="filters">
-                        <select
-                            value={sortBy}
-                            onChange={e => setSortBy(e.target.value)}
-                        >
+                        <select value={sortBy} onChange={e => setSortBy(e.target.value)}>
                             <option value="">Sort by</option>
                             <option value="price-low-high">Price: Low to High</option>
                             <option value="price-high-low">Price: High to Low</option>
@@ -133,18 +124,20 @@ function MyOrders() {
                         />
                     </div>
                 </div>
+
                 {loading ? (
                     <p>Loading...</p>
                 ) : error ? (
-                    <p style={{ color: 'red' }}>{error}</p>
+                    <p className="error-text">{error}</p>
                 ) : filteredOrders.length === 0 ? (
                     <p>No orders found</p>
                 ) : (
-                    <ul>
+                    <ul className="orders-list">
                         {filteredOrders.map(order => (
-                            <li key={order.Id}>
-                                Order ID: {order.Id} | Purchase Date: {order.date}
-                            </li>
+                            <button key={order.Id} className="order-button">
+                                <strong>Order ID:</strong> {order.Id}<br />
+                                <strong>Purchase Date:</strong> {order.date}
+                            </button>
                         ))}
                     </ul>
                 )}

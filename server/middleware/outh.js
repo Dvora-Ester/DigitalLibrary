@@ -7,6 +7,7 @@ const generateToken = (user) => {
     const payload = {
         id: user.Id,
         isManager: user.Is_Manager,
+        Email: user.Email,
     };
     return jwt.sign(payload, secretKey, { expiresIn: '1h' });
 };
@@ -27,7 +28,8 @@ const verifyToken = (req, res, next) => {
         // };
         req.user = {
             id: decoded.id,
-            isManager: decoded.isManager
+            isManager: decoded.isManager,
+            Email: decoded.Email
         };
         next();
     } catch (error) {

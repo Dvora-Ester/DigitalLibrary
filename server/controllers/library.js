@@ -21,7 +21,7 @@ const library = {
 
  
   getByUserId: async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.user.id; // נניח שהמשתמש מחובר
     console.log("📚 getByUserId controller", { userId });
 
     try {

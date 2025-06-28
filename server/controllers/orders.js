@@ -105,7 +105,7 @@ const ordersController = {
         line_items,
         customer_email: email,
         mode: 'payment',
-        success_url: `http://localhost:5173/${email}/${userId}/my-library`,
+        success_url: `http://localhost:5173/${email}/${userId}/cart?status=success`,
         cancel_url: `http://localhost:5173/payment-cancel`,
         metadata: {
           userId,

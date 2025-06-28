@@ -37,18 +37,38 @@ const libraryModel = {
   //       throw err;
   //     }
   //   },
+  // getByUserId: async (User_Id) => {
+  //   try {
+  //     console.log("getAvailableBooksByUserId Model", User_Id);
+
+  //     const [results] = await promisePool.query(`
+  //     SELECT b.*
+  //     FROM Library_Of_User l
+  //     INNER JOIN Books b ON l.Book_Id = b.Id
+  //     WHERE l.User_Id = ?
+  //       AND b.Status = 'offered'
+  //   `, [User_Id]);
+
+
+  //     console.log("SQL RESULTS:", results);
+  //     if (results.length === 0) return [];
+  //     return results;
+  //   } catch (err) {
+  //     console.error("getAvailableBooksByUserId error:", err);
+  //     throw err;
+  //   }
+  // },
   getByUserId: async (User_Id) => {
     try {
       console.log("getAvailableBooksByUserId Model", User_Id);
-
       const [results] = await promisePool.query(`
-      SELECT b.*
+     SELECT DISTINCT b.*
       FROM Library_Of_User l
       INNER JOIN Books b ON l.Book_Id = b.Id
       WHERE l.User_Id = ?
-        AND b.Status = 'offered'
-    `, [User_Id]);
+      AND b.Status = 'offered'
 
+    `, [User_Id]);
 
       console.log("SQL RESULTS:", results);
       if (results.length === 0) return [];
@@ -64,7 +84,7 @@ const libraryModel = {
 
       const [results] = await promisePool.query(`
         SELECT * FROM Library_Of_User WHERE User_Id = ? AND Book_Id=?`, [User_Id, Book_Id]);
-      console.log("SQL RESULTS:", results,results[0],results);
+      console.log("SQL RESULTS:", results, results[0], results);
       if (results.length === 0) return null;
       return results[0];
     } catch (err) {
@@ -113,8 +133,8 @@ const libraryModel = {
       DELETE FROM Library_Of_User WHERE User_Id = ? AND Book_Id=?
     `, [userId, bookId]);
 
-         if (orderResult.length === 0) return null;
-        return true;
+      if (orderResult.length === 0) return null;
+      return true;
     } catch (err) {
       console.error("delete Library Book error:", err);
       throw err;

@@ -30,7 +30,7 @@ const app = express();
 
 // Middlewares
 app.use(cors());
-// app.use('/api/webhook', webhookRouter);
+app.use('/api/webhook', webhookRouter);
 
 app.use(express.json());
 console.log("ggggggg")

@@ -1,4 +1,4 @@
-import validation from "../middleware/validation.js";
+// import validation from "../middleware/validation.js";
 import bcrypt from "bcrypt";
 import usersModel from "../modules/user.js";
 import { generateToken } from "../middleware/outh.js";
