@@ -154,18 +154,36 @@ const ordersController = {
     }
   },
 
-  getById: async (req, res) => {
-    const { orderId } = req.params;
-    console.log("Fetching order with ID:", orderId);
-    try {
-      const order = await ordersModel.getById(orderId);
-      console.log("Order fetched successfully:", order);
-      res.json(order);
-    } catch (err) {
-      res.status(500).json({ error: "Database error" });
+// ordersController.js
+getById: async (req, res) => {
+  const { orderId } = req.params;
+  console.log("Fetching order with ID:", orderId);
+
+  try {
+    const results = await ordersModel.getById(orderId);
+
+    if (!results || results.length === 0) {
+      return res.status(404).json({ error: "Order not found" });
     }
 
-  },
+    const order = {
+      Id: results[0].Order_Id,
+      User_Id: results[0].User_Id,
+      date: results[0].Order_Date,
+      total: results[0].Total_Amount,
+      books: results.map(row => ({
+        Id: row.Book_Id,
+        Book_Name: row.Book_Name,
+        Price: row.Price
+      }))
+    };
+console.log(order);
+    res.json(order);
+  } catch (err) {
+    console.error("❌ Error in getById:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+},
 
   delete: async (req, res) => {
     const { orderId } = req.params;

@@ -81,7 +81,7 @@ const ordersModel = {
         return results;
 
     },
-    getById: async (id) => {
+    getByIdaa: async (id) => {
         console.log("getById called with id:", id);
         if (!id) {
             console.error("getById called with invalid id:", id);
@@ -94,30 +94,43 @@ const ordersModel = {
         if (results.length === 0) return null;
         return results[0];
     },
-    getByIdaa: async (orderId) => {
+    getById: async (orderId) => {
         console.log("getById called with id:", orderId);
-        if (!id) {
+
+        if (!orderId) {
             console.error("getById called with invalid id:", orderId);
             return null;
         }
-        const [results] = await pool.query(`
-       SELECT 
-         o.Id AS Order_Id,
-         o.date AS Order_Date,
-         b.Book_Name,
-         b.Author,
-         b.Price,
-         l.Purchase_Date
-       FROM Orders o
-       JOIN Library_Of_User l ON o.Id = l.Order_Id
-       JOIN Books b ON l.Book_Id = b.Id
-       WHERE o.Id = ?
-`, [orderId]);
 
-        console.log("getById results:", results);
-        if (results.length === 0) return null;
-        return results[0];
+        try {
+            const [results] = await promisePool.query(`
+            SELECT 
+                o.Id AS Order_Id,
+                o.User_Id,
+                o.date AS Order_Date,
+                o.total AS Total_Amount,
+                b.Id AS Book_Id,
+                b.Book_Name,
+                b.Price
+            FROM Orders o
+            JOIN Library_Of_User l ON o.Id = l.Order_Id
+            JOIN Books b ON l.Book_Id = b.Id
+            WHERE o.Id = ?
+        `, [orderId]);
+
+            console.log("getById results:", results);
+            return results;
+            if (results.length === 0) {
+                console.warn("No order found with id:", orderId);
+                return null;
+            }
+
+        } catch (err) {
+            console.error("❌ Error in getById:", err);
+            return null;
+        }
     }
+
 };
 
 export default ordersModel;
