@@ -83,7 +83,7 @@ const ordersModel = {
         return results;
 
     },
-    getByIdaa: async (id) => {
+    getById: async (id) => {
         console.log("getById called with id:", id);
         if (!id) {
             console.error("getById called with invalid id:", id);
