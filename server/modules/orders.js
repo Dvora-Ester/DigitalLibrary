@@ -1,19 +1,19 @@
 import promisePool from "../db.js";
 
 const ordersModel = {
-    getAllByUserId: async (id, sortBy = "Id") => {
-        console.log("getAllByUserId called with Id:", id, "and sortBy:", sortBy);
-        const allowedSortFields = ["Id"];
-        //const sortField = allowedSortFields.includes(sortBy) ? sortBy : "Id";
+    getAllByUserId: async (id, sortBy = "id") => {
+        console.log("getAllByUserId called with id:", id, "and sortBy:", sortBy);
+        const allowedSortFields = ["id"];
+        const sortField = allowedSortFields.includes(sortBy) ? sortBy : "id";
         const [results] = await promisePool.query(`
-     SELECT * FROM orders WHERE User_Id = ? ORDER BY Id
+     SELECT * FROM orders WHERE user_id = ? ORDER BY ${sortField}
       `, [id]);
 
         if (results.length === 0) return null;
         return results;
     },
 
-    add: async (orderData) => {
+     add: async (orderData) => {
         console.log("hello");
         const { userId, ccNumber, date,total } = orderData;
         //טוקן של תשלום אמיתי
@@ -83,7 +83,7 @@ const ordersModel = {
         return results;
 
     },
-    getByIdaa: async (id) => {
+    getById: async (id) => {
         console.log("getById called with id:", id);
         if (!id) {
             console.error("getById called with invalid id:", id);
@@ -95,44 +95,7 @@ const ordersModel = {
         console.log("getById results:", results);
         if (results.length === 0) return null;
         return results[0];
-    },
-    getById: async (orderId) => {
-        console.log("getById called with id:", orderId);
-
-        if (!orderId) {
-            console.error("getById called with invalid id:", orderId);
-            return null;
-        }
-
-        try {
-            const [results] = await promisePool.query(`
-            SELECT 
-                o.Id AS Order_Id,
-                o.User_Id,
-                o.date AS Order_Date,
-                o.total AS Total_Amount,
-                b.Id AS Book_Id,
-                b.Book_Name,
-                b.Price
-            FROM Orders o
-            JOIN Library_Of_User l ON o.Id = l.Order_Id
-            JOIN Books b ON l.Book_Id = b.Id
-            WHERE o.Id = ?
-        `, [orderId]);
-
-            console.log("getById results:", results);
-            return results;
-            if (results.length === 0) {
-                console.warn("No order found with id:", orderId);
-                return null;
-            }
-
-        } catch (err) {
-            console.error("❌ Error in getById:", err);
-            return null;
-        }
     }
-
 };
 
 export default ordersModel;
