@@ -186,7 +186,7 @@ const libraryModel = {
       FROM Library_Of_User l
       INNER JOIN Books b ON l.Book_Id = b.Id
       WHERE l.User_Id = ?
-      AND b.Status = 'approved'
+      AND b.Status = 'available'
 
     `, [User_Id]);
       return results;

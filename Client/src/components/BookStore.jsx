@@ -35,7 +35,7 @@ function BookStore() {
     const fetchBooks = async (pageToFetch) => {
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/api/books/getByStatus/approved?page=${pageToFetch}`, {
+            const res = await fetch(`http://localhost:3000/api/books/getByStatus/available?page=${pageToFetch}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
