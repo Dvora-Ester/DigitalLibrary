@@ -14,32 +14,26 @@ const user = {
             res.status(500).json({ error: 'Failed to fetch user' });
         }
     },
-  register: async (req, res) => {
-        const { name, email, phone, password } = req.body;
-        const isManager = 0;
+register: async (req, res) => {
+        const { name, email, phone, password,isManager } = req.body;
+
         if (!name || !email || !password || !phone) {
             return res.status(400).json({ error: "All fields are required" });
         }
 
+        
+        if (!validation.isValidEmail(email)) {
+            return res.status(400).json({ error: "Invalid email address" });
+        }
 
-        // if (!validation.isValidEmail(email)) {
-        //     return res.status(400).json({ error: "Invalid email address" });
-        // }
-
-
-        // if (!validation.isValidPassword(password)) {
-        //     return res.status(400).json({ error: "Password must be at least 6 characters long" });
-        // }
-
+        if (!validation.isValidPassword(password)) {
+            return res.status(400).json({ error: "Password must be at least 6 characters long" });
+        }
 
         try {
-            const result = await usersModel.register({ name, email, phone, password, isManager });
-            const userId = result.userId;
-            const user = { name, email, isManager, userId };
-            let token = generateToken(user);
-            user.token = token;
-            console.log("user", user);
-            res.status(201).json({ message: "User added successfully", user });
+            const result = await usersModel.register({ name, email, phone, password,isManager });
+            console.log("User added successfully:", result);
+            res.status(201).json({ message: "User added successfully", userId: result.userId });
         } catch (err) {
             console.error("Error adding the user to the database:", err);
             res.status(500).json({ error: "Error adding the user" });
@@ -87,34 +81,57 @@ const user = {
             res.status(500).json({ error: "Database error" });
         }
     },
-    update: async (User_Id, data) => {
-        const fields = [];
-        const values = [];
-        console.log("Updating user:", User_Id, data);
-        // עדכון לפי השדות הקיימים בטבלה שלך
+     update: async (req, res) => {
+    const  user_Id  = req.params.user_Id;
+    const {Full_Name,Email,Is_Manager } = req.body;
+    const phone="0548440911";
+    if ( !Full_Name&&!Email&&Is_Manager===null) {
+      return res.status(400).json({ error: "At least one field must be provided for update" });
+    }
+    if (!validation.isValidEmail(Email)) {
+        return res.status(400).json({ error: "Invalid email address" });
+    }
+    try {
+      const result = await usersModel.update(user_Id, { Full_Name, Email,phone, Is_Manager });
+      console.log("result controller", result)
+      if(result===true)
+      {res.json({ message: "User updated successfully" });}
+      else
+      {
+        return res.status(404).json({ message: 'User was not update' });
+      }
+    } catch (err) {
+      res.status(500).json({ error: "Database error" });
+    }
+  },
+    // update: async (User_Id, data) => {
+    //     const fields = [];
+    //     const values = [];
+    //     console.log("Updating user:", User_Id, data);
+    //     // עדכון לפי השדות הקיימים בטבלה שלך
        
-        if (data.Full_Name != null) {
-            fields.push("Full_Name = ?");
-            values.push(data.Full_Name);
-        }
-        if (data.Email != null) {
-            fields.push("Email = ?");
-            values.push(data.Email);
-        }
-         if (data.Is_Manager != null) {
-            fields.push("Is_Manager = ?");
-            values.push(data.Is_Manager);
-        }
+    //     if (data.Full_Name != null) {
+    //         fields.push("Full_Name = ?");
+    //         values.push(data.Full_Name);
+    //     }
+    //     if (data.Email != null) {
+    //         fields.push("Email = ?");
+    //         values.push(data.Email);
+    //     }
+    //      if (data.Is_Manager != null) {
+    //         fields.push("Is_Manager = ?");
+    //         values.push(data.Is_Manager);
+    //     }
 
-        // אם אין שדות לעדכן, החזר 0
-        if (fields.length === 0) return { affectedRows: 0 };
+    //     // אם אין שדות לעדכן, החזר 0
+    //     if (fields.length === 0) return { affectedRows: 0 };
 
-        const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
-        values.push(User_Id);
+    //     const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
+    //     values.push(User_Id);
 
-        const [result] = await promisePool.query(query, values);
-        return result;
-    },
+    //     const [result] = await promisePool.query(query, values);
+    //     return result;
+    // },
     delete: async (req, res) => {
         try {
             const userId = req.body.userId;

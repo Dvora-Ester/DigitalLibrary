@@ -1,4 +1,4 @@
-import { useId } from "react";
+
 import promisePool from "../db.js";
 import bcrypt from 'bcrypt';
 const user = {
@@ -7,7 +7,8 @@ const user = {
 
       const [results] = await promisePool.query(`
         SELECT * FROM Users WHERE Id = ?`, [user_Id]);
-      console.log("SQL RESULTS:", results);
+      console.log("SQL RESULTS:", results,results.length,results[0]);
+
       if (results.length === 0) return null;
       return results[0];
     } catch (err) {
@@ -63,8 +64,11 @@ const user = {
 
       await conn.commit();
       conn.release();
+const [results] = await promisePool.query(`
+        SELECT * FROM Users WHERE Id = ?`, [userId]);
+      console.log("SQL RESULTS:", results,results.length,results[0]);
 
-      return { userId };
+      return results[0];
     } catch (err) {
       await conn.rollback();
       conn.release();
@@ -91,34 +95,56 @@ const user = {
       throw err;
     }
   },
-  update: async (User_Id, data) => {
-    const fields = [];
-    const values = [];
+  update: async (User_Id, Data) => {
+    const {
+      Full_Name, Email,phone, Is_Manager
+    } = Data;
+  console.log(Data,"User_Id", User_Id)
+    try {
+      const result = await promisePool.query(`
+      UPDATE users
+      SET Full_Name = ?, Email = ?, Phone = ?, Is_Manager = ?
+      WHERE Id = ?
+    `, [
+        Full_Name,Email,phone,Is_Manager,User_Id
 
-    // עדכון לפי השדות הקיימים בטבלה שלך
+      ]);
+       console.log("result", result)
+      return result[0].affectedRows > 0; // מחזיר true אם עודכן, false אם לא
 
-    if (data.Full_Name != null) {
-      fields.push("Full_Name = ?");
-      values.push(data.Full_Name);
+    } catch (err) {
+      console.error("updateBook error:", err);
+      throw err;
     }
-    if (data.Email != null) {
-      fields.push("Email = ?");
-      values.push(data.Email);
-    }
-    if (data.Is_Manager != null) {
-      fields.push("Is_Manager = ?");
-      values.push(data.Is_Manager);
-    }
-
-    // אם אין שדות לעדכן, החזר 0
-    if (fields.length === 0) return { affectedRows: 0 };
-
-    const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
-    values.push(User_Id);
-
-    const [result] = await promisePool.query(query, values);
-    return result;
   },
+  // update: async (User_Id, data) => {
+  //   const fields = [];
+  //   const values = [];
+
+  //   // עדכון לפי השדות הקיימים בטבלה שלך
+
+  //   if (data.Full_Name != null) {
+  //     fields.push("Full_Name = ?");
+  //     values.push(data.Full_Name);
+  //   }
+  //   if (data.Email != null) {
+  //     fields.push("Email = ?");
+  //     values.push(data.Email);
+  //   }
+  //   if (data.Is_Manager != null) {
+  //     fields.push("Is_Manager = ?");
+  //     values.push(data.Is_Manager);
+  //   }
+
+  //   // אם אין שדות לעדכן, החזר 0
+  //   if (fields.length === 0) return { affectedRows: 0 };
+
+  //   const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
+  //   values.push(User_Id);
+
+  //   const [result] = await promisePool.query(query, values);
+  //   return result;
+  // },
   // delete: async (userId) => {
   //   try {
   //     // מחיקת המשתמש מטבלת passwords

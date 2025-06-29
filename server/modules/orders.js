@@ -6,7 +6,7 @@ const ordersModel = {
         const allowedSortFields = ["id"];
         const sortField = allowedSortFields.includes(sortBy) ? sortBy : "id";
         const [results] = await promisePool.query(`
-     SELECT * FROM orders WHERE user_id = ? ORDER BY ${sortField}
+     SELECT * FROM orders WHERE User_Id = ? ORDER BY Id
       `, [id]);
 
         if (results.length === 0) return null;

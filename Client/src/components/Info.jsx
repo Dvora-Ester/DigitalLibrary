@@ -35,7 +35,7 @@ const Info = () => {
       Email: email,
       Is_Manager: role === 'Manager' ? 1 : 0,
     };
-     console.log('Updating user:', updatedUser, JSON.stringify(updatedUser), user.Id);
+    console.log('Updating user:', updatedUser, JSON.stringify(updatedUser), user.Id);
     try {
       const response = await fetch(`http://localhost:3000/api/users/${user.Id}`, {
         method: 'PUT',
@@ -44,20 +44,25 @@ const Info = () => {
           'Authorization': `Bearer ${user.token}`,
         },
         body: JSON.stringify(updatedUser),
-      });
-
-      if (!response.ok) {
-        console.error('Failed to update user:', response.message);
-        return;
-      }
-
-      const updated = await response.json();
-      setUser(updated);
-      setName(updated.Full_Name);
-      setEmail(updated.Email);
-      setRole(updated.Is_Manager ? 'Manager' : 'Customer');
-      localStorage.setItem('CurrentUser', JSON.stringify(updated));
-    } catch (error) {
+      })
+        .then((response) => {
+          if (!response.ok) {
+            console.error('Failed to update user:', response.message);
+            return;
+          }
+          else{
+            console.log(updatedUser)
+          setUser(updatedUser);
+          setName(updatedUser.Full_Name);
+          setEmail(updatedUser.Email);
+          setRole(updatedUser.Is_Manager ? 'Manager' : 'Customer');
+          localStorage.setItem('CurrentUser', JSON.stringify(updatedUser));
+          alert("user updated successfully");
+          }
+        })
+        
+    }
+    catch (error) {
       console.error('Error updating user:', error);
     }
   };
