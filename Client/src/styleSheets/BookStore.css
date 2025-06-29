@@ -14,7 +14,6 @@
   }
 }
 
-/* tablets and up */
 @media (min-width: 768px) {
   .modal-overlay {
     display: flex;
@@ -27,7 +26,7 @@
 }
 .bookstore-container {
   padding: 20px;
-  padding-top: 0; /* ⬅ לא מוסיף רווח למעלה */
+  padding-top: 0; 
   margin: 10px 0px;
   width: 100%;
 }
@@ -74,7 +73,6 @@
   border: 1px solid #ccc;
 }
 
-/* גריד הספרים */
 .books-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));

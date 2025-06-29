@@ -7,7 +7,6 @@
   overflow: hidden;
 }
 
-/* smartphones */
 @media (max-width: 768px) {
   .modal-overlay {
     display: flex;
@@ -20,7 +19,6 @@
   }
 }
 
-/* tablets and up */
 @media (min-width: 768px) {
   .modal-overlay {
     display: flex;
@@ -33,24 +31,10 @@
   }
 }
 
-
-/* קומפוננטת Home */
-/* .modal-overlay > .Home {
-  flex-shrink: 0;
-  min-width: 220px;
-  max-width: 220px;
-  height: 100%;
-  background-color: #1e5a68;
-  color: white;
-  padding: 20px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-} */
 .comments-container {
   height: 100%;
 }
 
-/* אזור תוכן הספר */
 .modal-content {
   flex-grow: 1;
   display: flex;
@@ -63,7 +47,6 @@
 
 }
 
-/* תמונת הספר בצד שמאל */
 .modal-image {
   width: 300px;
   height: 450px;
@@ -79,7 +62,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* אזור פרטים */
 .book-details-info {
   flex: 1;
   padding-left: 40px;
@@ -129,7 +111,6 @@ strong {
 
 }
 
-/* כפתורים */
 .modal-buttons {
   margin-top: 30px;
   display: flex;

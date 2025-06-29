@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import CartItem from './CartItem'; // ודא שיש לך קומפוננטה כזו
-import '../styleSheets/Cart.css'; // סגנונות לעגלה
-import Home from './Home'; // קומפוננטת הבית שלך
+import { useEffect, useState } from 'react';
+import CartItem from './CartItem'; 
+import '../styleSheets/Cart.css'; 
+import Home from './Home';
 import { useNavigate, Navigate } from 'react-router-dom';
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [total, setTotal] = useState(0);
-  const [showModal, setShowModal] = useState(false); // אם תשתמש במודל תשלום בעתיד
+  const [showModal, setShowModal] = useState(false); 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const navigate = useNavigate();
 
-  // טוען את המשתמש מהלוקל סטורג'
   let currentUser = null;
   const rawUser = localStorage.getItem('CurrentUser');
   if (rawUser) {
@@ -21,25 +20,21 @@ function Cart() {
       console.error("Invalid JSON in CurrentUser:", e);
     }
   }
-  // אם אין משתמש, מפנה לעמוד כניסה
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
 
-  // מחושב סך כל הפריטים
   const calculateTotal = (cart) => {
     if (cart.length === 0) return 0;
     return cart.reduce((acc, item) => acc + Number(item.Price), 0);
   };
 
-  // טוען עגלה ומסתכל אם יש פרמטר של תשלום מוצלח ב-URL
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('status');
 
     if (paymentStatus === 'success') {
-      // תשלום הצליח - מנקה עגלה ומציג הודעה
       localStorage.setItem('cart', JSON.stringify([]));
       setCartItems([]);
       setTotal(0);
@@ -51,7 +46,6 @@ function Cart() {
     }
   }, []);
 
-  // פונקציית תשלום - קוראת לשרת לקבלת כתובת Stripe ומפנה לשם
   const handlePay = async () => {
     if (cartItems.length === 0) {
       alert('Your cart is empty.');
@@ -80,7 +74,7 @@ function Cart() {
 
       }
       if (data.url) {
-        window.location.href = data.url; // מפנה ל-Stripe Checkout
+        window.location.href = data.url; 
       } else {
         alert("Something went wrong. Could not get checkout URL.");
       }
@@ -90,7 +84,6 @@ function Cart() {
     }
   };
 
-  // מחיקת פריט מהעגלה
   function removeItem(itemId) {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const cartAfterRemove = cart.filter(cartItem => cartItem.Id !== itemId);
@@ -111,7 +104,7 @@ function Cart() {
               alert('Your cart is empty. Please add items to your cart before proceeding to payment.');
               return;
             }
-            setShowModal(true); // אם תרצי לפתוח מודל תשלום
+            setShowModal(true); 
             handlePay();
           }}>Checkout</button>
         </div>
@@ -133,17 +126,7 @@ function Cart() {
         )}
       </div>
 
-      {/* אם תרצי לשלב מודל תשלום בעתיד */}
-      {/* {showModal && (
-        <div className="PaymentModal">
-          <div className="modal">
-            <h3>Enter Payment Details</h3>
-            // ... שדות תשלום כאן ...
-            <button onClick={handlePay}>Pay</button>
-            <button onClick={() => setShowModal(false)}>Cancel</button>
-          </div>
-        </div>
-      )} */}
+      
     </div>
   );
 }

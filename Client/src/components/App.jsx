@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import '../App.css';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Home.jsx';
@@ -18,7 +17,6 @@ import Cart from './Cart.jsx';
 import BookSellingPage from './BookSellingPage.jsx';
 import CheckoutButton from './CheckoutButton.jsx';
 import OrderDetails from './Order.jsx';
-import BeAbleBook from './BeAbleBook.jsx';
 
 function App() {
 
@@ -44,12 +42,6 @@ function App() {
       <Route path="/checkout-button" element={<CheckoutButton />} />
       <Route path="/order/:orderId" element={<OrderDetails />} />
 
-      {/* <Route path="/:user/:id/albums" element={<Albums />}/>
-      <Route path="/:user/:id/albums/:id/photos" element={<Photos />} />*/}
-      {/* <Route path="/:user/:id/posts" element={<Posts />} /> 
-      <Route path="/:user/:id/todos" element={<Todos />} />
-      <Route path="/:user/:id/posts/:id/comments" element={<Comments />} />
-       */}
     </Routes>
   );
 }

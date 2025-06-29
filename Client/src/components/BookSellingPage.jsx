@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../styleSheets/BookSellingPage.css';
 import Home from './Home';
-import { Navigate,useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 function BookSellingPage() {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
 
     let currentUser = null;
     const rawUser = localStorage.getItem('CurrentUser');
@@ -30,7 +30,7 @@ function BookSellingPage() {
         Editing_Date: '',
         sellerId: currentUser.Id,
         Status: 'offered',
-        Wholesale_Price:''
+        Wholesale_Price: ''
     });
     const [loading, setLoading] = useState(true); // כדי להבחין בין טוען לבין ריק
 
@@ -72,12 +72,10 @@ function BookSellingPage() {
             Editing_Date: newBookData.Editing_Date || new Date().toISOString().split("T")[0]
         };
         console.log("bookToSend", bookToSend);
-        // הוספת כל שדות הספר
         for (const key in bookToSend) {
             formData.append(key, bookToSend[key]);
         }
         console.log("formData", formData);
-        // הוספת קבצים
         if (imageFile) formData.append("bookImage", imageFile);
         if (pdfFile) formData.append("bookFile", pdfFile);
 
@@ -101,7 +99,6 @@ function BookSellingPage() {
             console.log("Book added:", result);
             alert(`Book "${newBookData.Book_Name}" added successfully!`);
 
-            // איפוס טופס
             setNewBookData({
                 Book_Name: '',
                 author: '',
@@ -112,12 +109,12 @@ function BookSellingPage() {
                 Editing_Date: '',
                 sellerId: currentUser.Id,
                 Status: 'offered',
-                Wholesale_Price:''
+                Wholesale_Price: ''
             })
             setImageFile(null);
             setPdfFile(null);
             setPreviewImage(null);
-            setLoading(false); // סיום הטעינה
+            setLoading(false); 
         } catch (err) {
             console.error("Error submitting book:", err);
             alert("Error submitting book: " + err.message);
@@ -138,7 +135,7 @@ function BookSellingPage() {
                 <input name="Category" placeholder="Category" value={newBookData.Category} onChange={handleChange} />
                 <textarea name="Note" placeholder="Summary" value={newBookData.Note} onChange={handleChange} />
                 <input name="Editing_Date" type="date" value={newBookData.Editing_Date} onChange={handleChange} />
-                   <input name="Wholesale_Price" type="number" step="0.01" placeholder="Wholesale_Price" value={newBookData.Wholesale_Price} onChange={handleChange} required />
+                <input name="Wholesale_Price" type="number" step="0.01" placeholder="Wholesale_Price" value={newBookData.Wholesale_Price} onChange={handleChange} required />
                 <label>Upload Book Image:</label>
                 <input type="file" accept="image/*" onChange={handleImageChange} />
 

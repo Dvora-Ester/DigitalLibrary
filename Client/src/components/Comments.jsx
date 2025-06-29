@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useNavigate, Navigate } from 'react-router-dom';
 import '../styleSheets/Comments.css';
-import Home from './Home';
 
 const Comments = ({ bookId }) => {
-  const location = useLocation();
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -20,7 +18,7 @@ const Comments = ({ bookId }) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, // 👈 הטוקן נשלח כאן
+        'Authorization': `Bearer ${token}`, 
       },
     })
       .then((response) => {
@@ -47,8 +45,8 @@ const Comments = ({ bookId }) => {
 
   const handleAddComment = () => {
     const commentData = {
-      title: titleRef.current?.value || '',  // אפשר לשים כאן newComment או משתנים דינמיים
-      content: newComment,  // או למשל newComment או currentUser.name
+      title: titleRef.current?.value || '',  
+      content: newComment,  
     };
 
     fetch(`http://localhost:3000/api/comments/addComment/${bookId}`, {
@@ -71,7 +69,6 @@ const Comments = ({ bookId }) => {
   titleRef.current.value = '';
 }
         setNewComment('');
-        // כאן אפשר לרוקן את התיבה או לעדכן את ה־state
       })
       .catch(error => {
         console.error('Error:', error);
@@ -121,9 +118,7 @@ const Comments = ({ bookId }) => {
   return (
     <div className="comments-page-container">
       <div className="comments-container">
-        {/* <button className="back-to-books-button" onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/books`)}>
-          {"<<< Back to books"}
-        </button> */}
+        
 
         <h1 className="comments-title">Readers comments for book number: {bookId}</h1>
 

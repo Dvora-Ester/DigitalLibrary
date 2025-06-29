@@ -92,7 +92,7 @@
   height: 150px;
   border-radius: 12px;
   overflow: hidden;
-  margin: 10px auto; /* מרכז את הריבוע אופקית */
+  margin: 10px auto;
   border: 1px solid #ccc;
 }
 
@@ -101,7 +101,6 @@
   height: 100%;
   object-fit: cover;
 }
-/* smartphones */
 @media (max-width: 768px) {
   .book-selling-page {
     display: flex;
@@ -109,7 +108,6 @@
   }
 }
 
-/* tablets and up */
 @media (min-width: 768px) {
   .book-selling-page {
     display: flex;

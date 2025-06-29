@@ -35,6 +35,7 @@ const user = {
       const user = { name, email, isManager, userId };
       let token = generateToken(user);
       user.token = token;
+      console.log("user",user);
       res.status(201).json({ message: "User added successfully", user });
     } catch (err) {
       console.error("Error adding the user to the database:", err);

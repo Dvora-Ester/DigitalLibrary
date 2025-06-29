@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import '../styleSheets/Home.css';
@@ -9,9 +8,12 @@ import shoppingBag from '../Assets/shopping-bag.png';
 import shoppingCart from '../Assets/shopping_cart.png';
 import ProfileResume from '../Assets/profile-resume.png';
 import logout from '../Assets/logout.png';
+
+
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
-  const [isManager, setIsManager] = useState(false);//change to false
+  const [isManager, setIsManager] = useState(false);
+  
   let currentUser = null;
   const rawUser = localStorage.getItem('CurrentUser');
   if (rawUser) {

@@ -1,5 +1,4 @@
 import promisePool from "../db.js";
-import bcrypt from 'bcrypt';
 const booksModel = {
   add: async (userData) => {
     const {
@@ -172,7 +171,7 @@ const [results] = await promisePool.query(query, [
       DELETE FROM Books WHERE Id = ?
     `, [book_Id]);
 
-      return result.affectedRows > 0; // מחזיר true אם נמחק, false אם לא נמצא
+      return result.affectedRows > 0; 
     } catch (err) {
       console.error("deleteBook error:", err);
       throw err;

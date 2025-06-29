@@ -6,19 +6,12 @@ import { isAdmin, verifyToken } from "../middleware/outh.js";
 const orderRouter = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 console.log("hello i am in order stripe");
-// שליפת הזמנות
 orderRouter.get("/getAllOrdersByUserId/:userId", verifyToken, ordersController.getAllByUserId);
 orderRouter.get("/getOrderById/:orderId", verifyToken, ordersController.getById);
 orderRouter.get("/search/", verifyToken, ordersController.search);
-
-// יצירת session
 orderRouter.post("/addOrder", verifyToken, ordersController.createCheckoutSession);
-
-// עדכון, מחיקה
 orderRouter.delete("/deleteOrder/:orderId", verifyToken, isAdmin, ordersController.delete);
 orderRouter.put("/updateOrder/:orderId", verifyToken, ordersController.update);
-
-// קבלת תשלום והוספת הזמנה
 orderRouter.get("/confirmOrder", async (req, res) => {
   const { session_id } = req.query;
   if (!session_id) return res.status(400).json({ error: "Missing session_id" });

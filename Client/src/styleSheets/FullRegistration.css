@@ -1,4 +1,3 @@
-/* FullRegistration.css - מודרני ונקי */
 
 * {
   margin: 0;
@@ -6,17 +5,7 @@
   box-sizing: border-box;
 }
 
-/* body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f5f5;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-} */
 
-/* קונטיינר מרכזי */
 .register-container {
   width: 100%;
   max-width: 600px;
@@ -28,7 +17,6 @@
   margin-top: 50px;
 }
 
-/* כותרות */
 h2, h3, h4 {
   color: rgb(70, 126, 142);
   margin-bottom: 20px;
@@ -47,7 +35,6 @@ h4 {
   font-size: 18px;
 }
 
-/* סידור שדות - GRID */
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -55,7 +42,6 @@ h4 {
   margin-bottom: 20px;
 }
 
-/* קבוצת שדה */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -81,7 +67,6 @@ h4 {
   outline: none;
 }
 
-/* כפתור רישום */
 .register-button {
   background-color: rgb(70, 126, 142);
   color: white;
@@ -103,7 +88,6 @@ h4 {
   background-color: #14424c;
 }
 
-/* אפקטים */
 input:focus,
 .register-button:hover {
   box-shadow: 0 0 8px rgba(70, 126, 142, 0.3);

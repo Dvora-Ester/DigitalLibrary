@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
 import '../styleSheets/AboutUs.css';
 import Home from './Home.jsx'
-import { useNavigate,Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 const AboutUs=()=>{
 let currentUser = null;

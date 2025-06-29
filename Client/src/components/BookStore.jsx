@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 
 import Book from './Book';
@@ -15,12 +15,12 @@ function BookStore() {
     const [value, setValue] = useState('');
     const navigate = useNavigate()
     let currentUser = null;
-    let token ;
+    let token;
     const rawUser = localStorage.getItem('CurrentUser');
     if (rawUser) {
         try {
             currentUser = JSON.parse(rawUser);
-             token = currentUser?.token;
+            token = currentUser?.token;
 
         } catch (e) {
             console.error("Invalid JSON in CurrentUser:", e);
@@ -76,12 +76,12 @@ function BookStore() {
     }, []);
 
 
-    const search = async (pageToFetch=1) => {
-        if(!value||!filterBy){
-           fetchBooks(pageToFetch)
+    const search = async (pageToFetch = 1) => {
+        if (!value || !filterBy) {
+            fetchBooks(pageToFetch)
             return;
         }
-        console.log(filterBy,value);
+        console.log(filterBy, value);
         try {
             const res = await fetch(`http://localhost:3000/api/books/search/${filterBy}/${value}?page=${pageToFetch}`, {
                 method: 'GET',
@@ -112,7 +112,7 @@ function BookStore() {
             }
 
             setBooks(data.books);
-            console.log(data.books,data)
+            console.log(data.books, data)
         }
         catch (err) {
             console.error('Failed to fetch books', err);

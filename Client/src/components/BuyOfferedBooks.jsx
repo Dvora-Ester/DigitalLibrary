@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 
 import Book from './Book';
@@ -11,8 +11,7 @@ function BuyOfferedBooks() {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-const navigate=useNavigate();
-
+    const navigate = useNavigate();
     const [filterText, setFilterText] = useState('');
     const [sortBy, setSortBy] = useState('');
 
@@ -83,12 +82,10 @@ const navigate=useNavigate();
         setPage(prev => prev + 1);
     };
 
-    // סינון הספרים לפי טקסט וחיפוש
     const filteredBooks = books.filter(book => {
         return book.Book_Name.toLowerCase().includes(filterText.toLowerCase());
     });
 
-    // מיון לפי הבחירה
     const sortedBooks = [...filteredBooks];
     if (sortBy === 'price-low-high') {
         sortedBooks.sort((a, b) => a.Price - b.Price);

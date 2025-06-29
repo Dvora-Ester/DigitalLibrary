@@ -1,6 +1,4 @@
-/* Home.css - Organized and cleaned version */
 
-/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -15,7 +13,6 @@ body {
     color: #222;
 }
 
-/* Container */
 .home-container {
     min-height: auto;
     display: flex;
@@ -25,7 +22,6 @@ body {
     margin-left: 0;
 }
 
-/* Header */
 .home-header {
     background-color: rgb(70, 126, 142);
     padding: 15px;
@@ -45,7 +41,6 @@ body {
     font-weight: 500;
 }
 
-/* Logo Area */
 .logo-area {
     display: flex;
     align-items: center;
@@ -76,7 +71,6 @@ body {
     
 }
 
-/* User Bar */
 .user-bar {
     display: flex;
     align-items: center;
@@ -175,7 +169,6 @@ background-color: transparent;
     transform: scale(1.05);
 }
 
-/* Buttons */
 .home-buttons {
     display: flex;
     justify-content: center;
@@ -205,19 +198,14 @@ background-color: transparent;
     transform: translateY(-2px);
 }
 
-/* Content */
 .home-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    /* justify-content: center;
-  align-items: center; */
-    padding: 10px;
     font-size: 1.5rem;
     color: #444;
 }
 
-/* Navigation Items */
 .nav-item {
     color: #1e5a68;
     font-family: 'Courier New', Courier, monospace;
@@ -239,7 +227,6 @@ background-color: transparent;
 
 .user-dropdown-wrapper {
     position: relative;
-    /* זה הבסיס למיקום מוחלט של התפריט */
     display: inline-block;
     width: 160px;
 }
@@ -247,7 +234,6 @@ background-color: transparent;
 .dropdown-menu {
     position: absolute;
     top: 110%;
-    /* קצת מתחת לכפתור */
     right: 0;
     background-color: white;
     border: 1px solid #ccc;

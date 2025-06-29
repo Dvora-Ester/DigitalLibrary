@@ -1,9 +1,5 @@
-
-
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
-
-import Book from './Book';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Home from './Home';
 import BookLibrary from './BookLibrary';
 import '../styleSheets/MyLibrary.css';
@@ -107,7 +103,7 @@ function MyLibrary() {
                 </div>
 
                 {filteredBooks.length === 0 && (
-                    <p>לא נמצאו ספרים להצגה</p>
+                    <p>Any book found</p>
                 )}
 
                 {error && (
