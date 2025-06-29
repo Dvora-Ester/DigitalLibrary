@@ -1,45 +1,73 @@
-// import React from "react";
-// import { useId } from "react";
-import promisePool from "../db.js"; 
+import { useId } from "react";
+import promisePool from "../db.js";
 import bcrypt from 'bcrypt';
 const user = {
   getById: async (user_Id) => {
     try {
-      
+
       const [results] = await promisePool.query(`
         SELECT * FROM Users WHERE Id = ?`, [user_Id]);
       console.log("SQL RESULTS:", results);
       if (results.length === 0) return null;
-     return results[0];
+      return results[0];
     } catch (err) {
       console.error("getUsersById error:", err);
       throw err;
     }
   },
 
-    register: async (userData) => {
-    const { name, email, phone, password,isManager } = userData;
+  //   register: async (userData) => {
+  //     const { name, email, phone, password,isManager } = userData;
+  //     try {
+  //       // הצפנת הסיסמה
+  //       const hashedPassword = await bcrypt.hash(password, 10);
+
+  //       // הכנסת המשתמש לטבלת users
+  //       const [userResult] = await promisePool.query(
+  //         "INSERT INTO users (Full_Name, email, Phone,Is_Manager) VALUES (?, ?, ?,?)",
+  //         [name, email, phone,isManager]
+  //       );
+  //       const userId = userResult.insertId;
+  //       console.log("User ID:", userId);
+  //       // בדיקת קיום המשתמש
+  //       // הכנסת הסיסמה המוצפנת לטבלת passwords
+  //       const addedUser=await promisePool.query(
+  //         "INSERT INTO passwords (User_Id, password_hash) VALUES (?, ?)",
+  //         [userId, hashedPassword]
+  //       );
+  // console.log(addedUser);
+  //       return { userId };
+  //     } catch (err) {
+  //       console.error("Registration error:", err);
+  //       throw err;
+  //     }
+  //   },
+  register: async (userData) => {
+    const { name, email, phone, password, isManager } = userData;
+    const conn = await promisePool.getConnection();
     try {
-      // הצפנת הסיסמה
+      await conn.beginTransaction();
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
-
-      // הכנסת המשתמש לטבלת users
-      const [userResult] = await promisePool.query(
-        "INSERT INTO users (Full_Name, email, Phone,Is_Manager) VALUES (?, ?, ?,?)",
-        [name, email, phone,isManager]
+      const [userResult] = await conn.query(
+        "INSERT INTO users (Full_Name, email, Phone, Is_Manager) VALUES (?, ?, ?, ?)",
+        [name, email, phone, isManager]
       );
       const userId = userResult.insertId;
-      console.log("User ID:", userId);
-      // בדיקת קיום המשתמש
-      // הכנסת הסיסמה המוצפנת לטבלת passwords
-      const addedUser=await promisePool.query(
+
+      await conn.query(
         "INSERT INTO passwords (User_Id, password_hash) VALUES (?, ?)",
         [userId, hashedPassword]
       );
-console.log(addedUser);
+
+      await conn.commit();
+      conn.release();
+
       return { userId };
     } catch (err) {
+      await conn.rollback();
+      conn.release();
       console.error("Registration error:", err);
       throw err;
     }
@@ -57,53 +85,75 @@ console.log(addedUser);
       `, [username]);
       console.log("SQL RESULTS:", results);
       if (results.length === 0) return null;
-     return results[0];
+      return results[0];
     } catch (err) {
       console.error("getUserByUsername error:", err);
       throw err;
     }
   },
   update: async (User_Id, data) => {
-        const fields = [];
-        const values = [];
-        console.log("Updating user:", User_Id, data);
-        // עדכון לפי השדות הקיימים בטבלה שלך
-       
-        if (data.Full_Name != null) {
-            fields.push("Full_Name = ?");
-            values.push(data.Full_Name);
-        }
-        if (data.Email != null) {
-            fields.push("Email = ?");
-            values.push(data.Email);
-        }
-         if (data.Is_Manager != null) {
-            fields.push("Is_Manager = ?");
-            values.push(data.Is_Manager);
-        }
+    const fields = [];
+    const values = [];
 
-        // אם אין שדות לעדכן, החזר 0
-        if (fields.length === 0) return { affectedRows: 0 };
+    // עדכון לפי השדות הקיימים בטבלה שלך
 
-        const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
-        values.push(User_Id);
-
-        const [result] = await promisePool.query(query, values);
-        return result;
-    },
-  delete: async (userId) => {
-    try {
-      // מחיקת המשתמש מטבלת passwords
-      await promisePool.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
-      // מחיקת המשתמש מטבלת users
-      const [result] = await promisePool.query("DELETE FROM users WHERE Id = ?", [userId]);
-      console.log("User deleted:", result);
-      return result.affectedRows > 0;
-    } catch (err) {
-      console.error("Delete user error:", err);
-      throw err;
+    if (data.Full_Name != null) {
+      fields.push("Full_Name = ?");
+      values.push(data.Full_Name);
     }
+    if (data.Email != null) {
+      fields.push("Email = ?");
+      values.push(data.Email);
+    }
+    if (data.Is_Manager != null) {
+      fields.push("Is_Manager = ?");
+      values.push(data.Is_Manager);
+    }
+
+    // אם אין שדות לעדכן, החזר 0
+    if (fields.length === 0) return { affectedRows: 0 };
+
+    const query = `UPDATE users SET ${fields.join(", ")} WHERE Id = ?`;
+    values.push(User_Id);
+
+    const [result] = await promisePool.query(query, values);
+    return result;
+  },
+  // delete: async (userId) => {
+  //   try {
+  //     // מחיקת המשתמש מטבלת passwords
+  //     await promisePool.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
+  //     // מחיקת המשתמש מטבלת users
+  //     const [result] = await promisePool.query("DELETE FROM users WHERE Id = ?", [userId]);
+  //     console.log("User deleted:", result);
+  //     return result.affectedRows > 0;
+  //   } catch (err) {
+  //     console.error("Delete user error:", err);
+  //     throw err;
+  //   }
+  // }
+  delete: async (userId) => {
+  const conn = await promisePool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    // מחיקת הסיסמה קודם (תלות)
+    await conn.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
+
+    // מחיקת המשתמש
+    const [result] = await conn.query("DELETE FROM users WHERE Id = ?", [userId]);
+
+    await conn.commit();
+    return result.affectedRows > 0;
+  } catch (err) {
+    await conn.rollback();
+    console.error("❌ Delete user error:", err);
+    throw err;
+  } finally {
+    conn.release();
   }
+}
+
 };
 
 export default user;
