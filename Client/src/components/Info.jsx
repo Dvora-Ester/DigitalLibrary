@@ -33,9 +33,9 @@ const Info = () => {
     const updatedUser = {
       Full_Name: name,
       Email: email,
-      Is_Manager: role === 'Manager',
+      Is_Manager: role === 'Manager' ? 1 : 0,
     };
-
+     console.log('Updating user:', updatedUser, JSON.stringify(updatedUser), user.Id);
     try {
       const response = await fetch(`http://localhost:3000/api/users/${user.Id}`, {
         method: 'PUT',
@@ -47,7 +47,7 @@ const Info = () => {
       });
 
       if (!response.ok) {
-        console.error('Failed to update user:', response.statusText);
+        console.error('Failed to update user:', response.message);
         return;
       }
 

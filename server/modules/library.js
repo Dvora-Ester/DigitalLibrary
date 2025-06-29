@@ -62,11 +62,10 @@ const libraryModel = {
     try {
       console.log("getAvailableBooksByUserId Model", User_Id);
       const [results] = await promisePool.query(`
-     SELECT DISTINCT b.*
-      FROM Library_Of_User l
-      INNER JOIN Books b ON l.Book_Id = b.Id
-      WHERE l.User_Id = ?
-      AND b.Status = 'offered'
+     SELECT b.*
+FROM library_of_user l
+JOIN books b ON l.Book_Id = b.Id
+WHERE l.User_Id = ?;
 
     `, [User_Id]);
 

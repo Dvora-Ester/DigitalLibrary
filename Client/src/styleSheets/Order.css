@@ -1,0 +1,36 @@
+/* OrderDetails.css */
+.order-details-container {
+  background-color: #f0faff;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  direction: rtl;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.order-summary p {
+  margin: 0.5rem 0;
+}
+
+.books-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.book-item {
+  padding: 0.5rem;
+  background-color: #e6f4ff;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+}
+
+.error {
+  color: red;
+  text-align: center;
+}
+
+.loading {
+  text-align: center;
+}

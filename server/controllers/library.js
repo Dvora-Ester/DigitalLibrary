@@ -21,13 +21,15 @@ const library = {
 
  
   getByUserId: async (req, res) => {
-    const userId = req.user.id; // נניח שהמשתמש מחובר
-    console.log("📚 getByUserId controller", { userId });
+    const User_Id = req.params.User_Id; // נניח שהמשתמש מחובר
+    console.log("📚 getByUserId controller", { User_Id });
 
     try {
       // שליפת ספרים עם INNER JOIN
-      const books = await libraryModel.getByUserId(userId);
+      const books = await libraryModel.getByUserId(User_Id);
+      console.log("📚 ספרים שנמצאו:", books);
       if (!books || books.length === 0) {
+        console.log("📚 No books found for user");
         return res.status(404).json({ message: 'לא נמצאו ספרים עבור המשתמש' });
       }
 

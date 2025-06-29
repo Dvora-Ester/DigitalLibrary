@@ -225,7 +225,7 @@ try {
     const bookId = req.params.bookId;
     const updatedBook = req.body;
 
-    
+    console.log("Update request received for book:", bookId, updatedBook);
 
     const validStatuses = ['offered', 'approved', 'available', 'sold'];
     if (!validStatuses.includes(updatedBook.Status)) {

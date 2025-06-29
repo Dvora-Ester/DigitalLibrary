@@ -1,205 +1,141 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import HTMLFlipBook from 'react-pageflip';
 import '../styleSheets/BookReader.css';
+import flipSound from '../Assets/pageturn-102978 (mp3cut.net).mp3';
 
 function BookReader() {
     const location = useLocation();
     const navigate = useNavigate();
     const { book } = location.state || {};
-    const [page, setPage] = useState(1);
-    const [imageUrl, setImageUrl] = useState(null);
-    const [error, setError] = useState(null);
+    const [pages, setPages] = useState([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageInput, setPageInput] = useState('');
+    const flipBookRef = useRef(null);
+    const audioRef = useRef(null);
 
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
-  }
-}    if (!currentUser) {
-        return <Navigate to="/login" />;
+    let currentUser = null;
+    const rawUser = localStorage.getItem('CurrentUser');
+    if (rawUser) {
+        try {
+            currentUser = JSON.parse(rawUser);
+        } catch (e) {
+            console.error("Invalid JSON in CurrentUser:", e);
+        }
     }
 
+    if (!currentUser) return <Navigate to="/login" />;
     const token = currentUser.token;
 
-    useEffect(() => {
-        const fetchPageImage = async () => {
-            try {
-                console.log("Fetching page image for book:", book, "page:", page);
-                const response = await fetch(`http://localhost:3000/api/library/book/${book.Id}/page/${page}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+    const fetchAllPages = async () => {
+        if (!book?.Id) return;
 
-                if (!response.ok) {
-                    throw new Error("שגיאה בטעינת עמוד");
-                }
-
-                const blob = await response.blob();
-                const url = URL.createObjectURL(blob);
-                setImageUrl(url);
-                setError(null);
-            } catch (err) {
-                console.error(err);
-                setError("⚠️ לא ניתן לטעון את העמוד או שהוא לא קיים");
-                setImageUrl(null);
-            }
-        };
-
-        if (book?.Id && page > 0) {
-            fetchPageImage();
+        const promises = [];
+        for (let i = 1; i <= book.number_Of_Page; i++) {
+            promises.push(
+                fetch(`http://localhost:3000/api/library/book/${book.Id}/page/${i}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }).then(async res => {
+                    if (!res.ok) return null;
+                    const blob = await res.blob();
+                    return URL.createObjectURL(blob);
+                }).catch(() => null)
+            );
         }
-    }, [book, page, token]);
+
+        const results = await Promise.all(promises);
+        setPages(results);
+    };
+
+    useEffect(() => {
+        fetchAllPages();
+    }, []);
+
+    const handlePageChange = (e) => {
+        setCurrentPage(e.data);
+        if (audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play();
+        }
+    };
+
+    const handleInputChange = (e) => {
+        setPageInput(e.target.value);
+    };
+
+    const handleInputKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            const num = parseInt(pageInput);
+            if (!isNaN(num) && num >= 1 && num <= book.number_Of_Page) {
+                let targetIndex = num % 2 === 0 ? num - 2 : num - 1;
+                if (targetIndex < 0) targetIndex = 0;
+
+                flipBookRef.current.pageFlip().flip(targetIndex);
+                setCurrentPage(targetIndex);
+                setPageInput('');
+            }
+        }
+    };
 
     if (!book?.Id) {
         return (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
-                ⚠️ ספר לא נבחר
-                <br />
-                <button onClick={() => navigate(-1)}>🔙 חזור</button>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
-                <p style={{ color: 'red' }}>{error}</p>
-                <button onClick={() => navigate(-1)}>🔙 חזור</button>
+                ⚠️ Book not found<br />
+                <button onClick={() => navigate(-1)}>🔙 Return to my library</button>
             </div>
         );
     }
 
     return (
         <div className="book-reader">
-            <div className="book-navigation" style={{ margin: '10px 0' }}>
-                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}>◀ הקודם</button>
-                <span style={{ margin: '0 1rem' }}>עמוד {page}</span>
-                <button onClick={() => setPage(p => p + 1)}>▶ הבא</button>
+            <audio ref={audioRef} src={flipSound} preload="auto" />
+
+            <div className="book-flip-container">
+                <HTMLFlipBook
+                    width={350}
+                    height={480}
+                    minWidth={300}
+                    maxWidth={600}
+                    minHeight={400}
+                    maxHeight={600}
+                    size="stretch"
+                    drawShadow={true}
+                    showCover={false}
+                    mobileScrollSupport={true}
+                    className="flip-book"
+                    ref={flipBookRef}
+                    onFlip={handlePageChange}
+                >
+                    {pages.map((img, index) => (
+                        <div className="page" key={index}>
+                            {img ? (
+                                <img src={img} alt={`Page ${index + 1}`} className="flip-page-image" />
+                            ) : (
+                                <div className="page-placeholder">Page {index + 1} not available</div>
+                            )}
+                        </div>
+                    ))}
+                </HTMLFlipBook>
             </div>
 
-            <div className="book-page" style={{ textAlign: 'center' }}>
-                {imageUrl ? (
-                    <img
-                        src={imageUrl}
-                        alt={`Page ${page}`}
-                        onContextMenu={e => e.preventDefault()}
-                        draggable={false}
-                        style={{
-                            maxWidth: '100%',
-                            maxHeight: '85vh',
-                            border: '1px solid #ccc',
-                            userSelect: 'none',
-                        }}
-                    />
-                ) : (
-                    <p>⏳ טוען עמוד...</p>
-                )}
+            <div className="page-controls" style={{ textAlign: 'center', marginTop: '20px' }}>
+                <span className='page-info'>Page {currentPage + 1} & {currentPage + 2} of {book.number_Of_Page}</span><br />
+
+                <input
+                    type="number"
+                    min="1"
+                    max={book.number_Of_Page}
+                    value={pageInput}
+                    onChange={handleInputChange}
+                    onKeyDown={handleInputKeyDown}
+                    placeholder={`Enter page (1 - ${book.number_Of_Page})`}
+                    style={{ padding: '8px', width: '150px', marginTop: '10px', borderRadius: '6px', border: '1px solid #ccc' }}
+                /><br />
+
+                <button className='return-btn' onClick={() => navigate(-1)} style={{ marginTop: '10px' }}>🔙 Return to my library</button>
             </div>
         </div>
     );
 }
-
-// export default BookReader;
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState ,useNavigate} from 'react';
-// import { useLocation, Navigate } from 'react-router-dom';
-// import '../styleSheets/BookReader.css';
-
-
-
-
-// function BookReader() {
-//     const location = useLocation();
-//     const { book } = location.state || {};
-//     const [page, setPage] = useState(1);
-//     const [imageUrl, setImageUrl] = useState(null);
-//     const [error, setError] = useState(null);
-
-//     const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
-//     if (!currentUser) {
-//         return <Navigate to="/login" />;
-//     }
-
-//     const token = currentUser.token;
-
-//     useEffect(() => {
-//         const fetchPageImage = async () => {
-//             try {
-//             console.log("Fetching page image for book:", book, "page:", page);
-//                 const response = await fetch(`http://localhost:3000/api/library/book/${book.Id}/page/${page}`, {
-//                     method: 'GET',
-//                     headers: {
-//                         'Authorization': `Bearer ${token}`
-//                     }
-//                 });
-
-//                 if (!response.ok) {
-//                     throw new Error("שגיאה בטעינת עמוד");
-//                 }
-
-//                 const blob = await response.blob();
-//                 const url = URL.createObjectURL(blob);
-//                 setImageUrl(url);
-//             } catch (err) {
-//                 console.error(err);
-//                 setError("⚠️ לא ניתן לטעון את העמוד או שהוא לא קיים");
-//                 setImageUrl(null);
-//             }
-//         };
-
-//         if (book?.Id && page > 0) {
-//             fetchPageImage();
-//         }
-//     }, [book, page, token]);
-
-//     if (!book?.Id) return <div>⚠️ ספר לא נבחר</div>;
-//     if (error) return <div>{error}</div>;
-
-//     return (
-//         <div className="book-reader">
-//             <div className="book-navigation" style={{ margin: '10px 0' }}>
-//                 <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page <= 1}>◀ הקודם</button>
-//                 <span style={{ margin: '0 1rem' }}>עמוד {page}</span>
-//                 <button onClick={() => setPage(p => p + 1)}>▶ הבא</button>
-//             </div>
-
-//             <div className="book-page" style={{ textAlign: 'center' }}>
-//                 {imageUrl ? (
-//                     <img
-//                         src={imageUrl}
-//                         alt={`Page ${page}`}
-//                         onContextMenu={(e) => e.preventDefault()} // מניעת קליק ימני
-//                         draggable={false}                         // מניעת גרירה
-//                         style={{
-//                             maxWidth: '100%',
-//                             maxHeight: '85vh',
-//                             border: '1px solid #ccc',
-//                             userSelect: 'none',
-//                         }}
-//                     />
-//                 ) : (
-//                     <p>⏳ טוען עמוד...</p>
-//                 )}
-//             </div>
-//         </div>
-//     );
-// }
-
 
 export default BookReader;

@@ -1,7 +1,10 @@
+
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import Home from './Home';
 import '../styleSheets/MyOrders.css';
+
 
 function MyOrders() {
     const [orders, setOrders] = useState([]);
@@ -10,6 +13,7 @@ function MyOrders() {
     const [filterText, setFilterText] = useState('');
     const [sortBy, setSortBy] = useState('');
     const navigate = useNavigate();
+
 
     let currentUser = null;
     const rawUser = localStorage.getItem('CurrentUser');
@@ -24,6 +28,7 @@ function MyOrders() {
         return <Navigate to="/login" />;
     }
 
+
     useEffect(() => {
         const userData = localStorage.getItem('CurrentUser');
         if (!userData) {
@@ -31,8 +36,10 @@ function MyOrders() {
             return;
         }
 
+
         const currentUser = JSON.parse(userData);
         const token = currentUser.token;
+
 
         fetch('http://localhost:3000/api/orders/getAllOrdersByUserId', {
             method: 'GET',
@@ -64,6 +71,7 @@ function MyOrders() {
             });
     }, [navigate]);
 
+
     const sortedOrders = [...orders].sort((a, b) => {
         switch (sortBy) {
             case 'price-low-high':
@@ -81,9 +89,11 @@ function MyOrders() {
         }
     });
 
+
     const filteredOrders = sortedOrders.filter(order => {
         if (!filterText) return true;
         const lowerFilter = filterText.toLowerCase();
+
 
         switch (sortBy) {
             case 'price-low-high':
@@ -99,6 +109,7 @@ function MyOrders() {
                 return order.Id.toString().includes(lowerFilter);
         }
     });
+
 
     return (
         <div className="my-orders-container">
@@ -125,6 +136,7 @@ function MyOrders() {
                     </div>
                 </div>
 
+
                 {loading ? (
                     <p>Loading...</p>
                 ) : error ? (
@@ -134,7 +146,11 @@ function MyOrders() {
                 ) : (
                     <ul className="orders-list">
                         {filteredOrders.map(order => (
-                            <button key={order.Id} className="order-button">
+                            <button
+                                key={order.Id}
+                                className="order-button"
+                                onClick={() => navigate(`/order/${order.Id}`)}
+                            >
                                 <strong>Order ID:</strong> {order.Id}<br />
                                 <strong>Purchase Date:</strong> {order.date}
                             </button>
@@ -145,5 +161,6 @@ function MyOrders() {
         </div>
     );
 }
+
 
 export default MyOrders;

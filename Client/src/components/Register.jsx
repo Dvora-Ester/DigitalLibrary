@@ -11,51 +11,108 @@ function Register() {
   localStorage.setItem("CurrentUser", '');
   localStorage.setItem("Password", '')
   localStorage.setItem("email", '')
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   //בדיקה אם המשתמש קיים לפני שהוא נרשם
+  //   fetch(`http://localhost:3000/api/users/login/${email}/${password}`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify()
+  //   })
+  //     .then(response => {
+  //       console.log(response);
+  //       return response.json();
+  //     })
+  //     .then(data => {
+  //       console.log(data)
+  //       if (data.length > 0) {
+  //         setError("User already exists. Please go to the login page.");
+  //         console.log('User found:', data);
+  //         return;
+  //       } else {
+  //         console.log('User not found');
+
+
+  //         if (password !== passwordVerify) {
+  //           setError('Passwords do not match');
+  //           return;
+  //         }
+  //         if (!checkPassword(password)) {
+  //           setError('The password must contain 6 characters,at least one upperCase letter ,one lowercase lette and a special char');
+  //         }
+
+  //         console.log('Email:', email);
+  //         console.log('Password:', password);
+  //         localStorage.setItem('Email', email)
+  //         localStorage.setItem('Password', password)
+  //         navigate('/full-registration');
+  //       }
+  //     })
+  //     .catch(error => {
+  //       navigate('/full-registration', {
+  //         state: {
+  //           message: "יש להשלים את ההרשמה",
+  //           from: "register",
+  //           email:email,
+  //           password:password
+  //         }
+  //       });
+  //     });
+  // };
   const handleSubmit = (e) => {
-    e.preventDefault();
-    //בדיקה אם המשתמש קיים לפני שהוא נרשם
-    fetch(`http://localhost:3000/api/users/login/${email}/${password}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body:JSON.stringify()
+  e.preventDefault();
+
+  // בדיקת התאמה בין הסיסמאות
+  if (password !== passwordVerify) {
+    setError('Passwords do not match');
+    return;
+  }
+
+  // בדיקת חוזק הסיסמה
+  // if (!checkPassword(password)) {
+  //   setError('The password must contain 6 characters, at least one upperCase letter, one lowercase letter and a special char');
+  //   return;
+  // }
+
+  // המשך לבדיקה מול השרת
+  fetch(`http://localhost:3000/api/users/login/${email}/${password}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify()
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        setError("User already exists. Please go to the login page.");
+        return;
+      }
+
+      // משתמש לא נמצא - עוברים לרישום מלא
+      localStorage.setItem('Email', email)
+      localStorage.setItem('Password', password)
+      navigate('/full-registration');
     })
-      .then(response => {
-        console.log(response);
-        return response.json();
-      })
-      .then(data => {
-        console.log(data)
-        if (data.length>0) {
-          setError("User already exists. Please go to the login page.");
-          console.log('User found:', data);
-          return;
-        } else {
-          console.log('User not found');
-
-
-          if (password !== passwordVerify) {
-            setError('Passwords do not match');
-            return;
-          }
-          if (!checkPassword(password)) {
-            setError('The password must contain 6 characters,at least one upperCase letter ,one lowercase lette and a special char');
-          }
-
-          console.log('Email:', email);
-          console.log('Password:', password);
-          localStorage.setItem('Email', email)
-          localStorage.setItem('Password', password)
-          navigate('/full-registration');
+    .catch(error => {
+      navigate('/full-registration', {
+        state: {
+          message: "יש להשלים את ההרשמה",
+          from: "register",
+          email,
+          password
         }
-      })
-      .catch(error => console.error('Error fetching user:', error));
-  };
+      });
+    });
+};
+
   const handleLoginRedirect = () => {
     navigate('/login');
 
   };
+
   const checkPassword = (password) => {
     if (password.length < 6) { console.log("length"); return false; }
 

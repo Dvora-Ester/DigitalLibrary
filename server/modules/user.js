@@ -1,4 +1,5 @@
-import { useId } from "react";
+// import React from "react";
+// import { useId } from "react";
 import promisePool from "../db.js"; 
 import bcrypt from 'bcrypt';
 const user = {
@@ -16,11 +17,12 @@ const user = {
     }
   },
 
-  register: async (userData) => {
+    register: async (userData) => {
     const { name, email, phone, password,isManager } = userData;
     try {
       // הצפנת הסיסמה
       const hashedPassword = await bcrypt.hash(password, 10);
+
 
       // הכנסת המשתמש לטבלת users
       const [userResult] = await promisePool.query(
@@ -36,12 +38,13 @@ const user = {
         [userId, hashedPassword]
       );
 console.log(addedUser);
-      return { addedUser };
+      return { userId };
     } catch (err) {
       console.error("Registration error:", err);
       throw err;
     }
   },
+
 
   getUserByUsername: async (username) => {
     try {
@@ -63,7 +66,7 @@ console.log(addedUser);
   update: async (User_Id, data) => {
         const fields = [];
         const values = [];
-
+        console.log("Updating user:", User_Id, data);
         // עדכון לפי השדות הקיימים בטבלה שלך
        
         if (data.Full_Name != null) {
