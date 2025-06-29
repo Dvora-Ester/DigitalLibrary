@@ -151,6 +151,11 @@ function MyOrders() {
                                 className="order-button"
                                 onClick={() => navigate(`/order/${order.Id}`)}
                             >
+                            <button
+                                key={order.Id}
+                                className="order-button"
+                                onClick={() => navigate(`/order/${order.Id}`)}
+                            >
                                 <strong>Order ID:</strong> {order.Id}<br />
                                 <strong>Purchase Date:</strong> {order.date}
                             </button>
