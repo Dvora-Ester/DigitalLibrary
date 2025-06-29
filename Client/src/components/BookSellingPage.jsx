@@ -29,7 +29,8 @@ function BookSellingPage() {
         Note: '',
         Editing_Date: '',
         sellerId: currentUser.Id,
-        Status: 'offered'
+        Status: 'offered',
+        Wholesale_Price:''
     });
     const [loading, setLoading] = useState(true); // כדי להבחין בין טוען לבין ריק
 
@@ -110,7 +111,8 @@ function BookSellingPage() {
                 Note: '',
                 Editing_Date: '',
                 sellerId: currentUser.Id,
-                Status: 'offered'
+                Status: 'offered',
+                Wholesale_Price:''
             })
             setImageFile(null);
             setPdfFile(null);
@@ -136,7 +138,7 @@ function BookSellingPage() {
                 <input name="Category" placeholder="Category" value={newBookData.Category} onChange={handleChange} />
                 <textarea name="Note" placeholder="Summary" value={newBookData.Note} onChange={handleChange} />
                 <input name="Editing_Date" type="date" value={newBookData.Editing_Date} onChange={handleChange} />
-
+                   <input name="Wholesale_Price" type="number" step="0.01" placeholder="Wholesale_Price" value={newBookData.Wholesale_Price} onChange={handleChange} required />
                 <label>Upload Book Image:</label>
                 <input type="file" accept="image/*" onChange={handleImageChange} />
 

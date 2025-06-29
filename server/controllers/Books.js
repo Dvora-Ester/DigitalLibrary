@@ -47,15 +47,15 @@ const Books = {
       res.status(500).json({ error: 'Failed to fetch books' });
     }
   },
-  filterBy:async(req,res)=>{
-         const value=req.params.value;
-         const filterBy=req.params.filterBy;
-         const page=parseInt(req.params.page)||1;
-         const limit = 10;
-         const offset = (page - 1) * limit;
-         console.log("getAll books controller", page, limit, offset,value,filterBy);
-        try {
-      const books = await booksModel.getFilterBy( limit, offset,value,filterBy) || [];
+  filterBy: async (req, res) => {
+    const value = req.params.value;
+    const filterBy = req.params.filterBy;
+    const page = parseInt(req.params.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+    console.log("getAll books controller", page, limit, offset, value, filterBy);
+    try {
+      const books = await booksModel.getFilterBy(limit, offset, value, filterBy) || [];
       const totalCount = books.length;// סך כל הספרים
 
       const booksWithImage = books.map(book => {
@@ -88,7 +88,7 @@ const Books = {
       console.error(err);
       res.status(500).json({ error: 'Failed to fetch books' });
     }
-    },
+  },
   getAll: async (req, res) => {
     const { error } = paginationQuerySchema.validate(req.query);
     if (error) return res.status(400).json({ error: error.details[0].message });
@@ -193,25 +193,57 @@ const Books = {
       res.status(500).json({ error: 'Failed to fetch book' });
     }
   },
+  getByStatusAndUserId: async (req, res) => {
+    try {
+      const books = await booksModel.getByStatusAndUserId(req.params.status, req.user.id);
+      if (!books || books.length === 0) {
+        return res.status(404).json({ message: 'Book not found' });
+      }
 
+      const booksWithImage = books.map(book => {
+        const id = book.Id;
+        const possibleExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+        let imageUrl = null;
+
+        for (const ext of possibleExtensions) {
+          const imagePath = path.join(picturesDir, `${id}${ext}`);
+          if (fs.existsSync(imagePath)) {
+            imageUrl = `/book-images/${id}${ext}`;
+            break;
+          }
+        }
+
+        return {
+          ...book,
+          imageUrl
+        };
+      });
+
+      res.json(booksWithImage); // ⬅️ שימי לב – זה מה שהיה חסר
+    } catch (err) {
+      console.error('Error getting book by status and user ID:', err);
+      res.status(500).json({ error: 'Failed to fetch books' });
+    }
+  },
   add: async (req, res) => {
     const pdfFile = req.files?.bookFile?.[0];
     const imageFile = req.files?.bookImage?.[0];
-
+    console.log("1#");
     if (!pdfFile) {
       return res.status(400).json({ error: "חובה לצרף קובץ PDF של הספר" });
     }
-
+    console.log("2#");
     const validationPayload = {
       ...req.body,
       Seller_Id: req.user.id,
     };
-
-    const { error } = addBookSchema.validate(validationPayload);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-
+    console.log("3#");
+    // const { error } = addBookSchema.validate(validationPayload);
+    // if (error) return res.status(400).json({ error: error.details[0].message });
+    console.log("4#", validationPayload);
     try {
       const result = await booksModel.add(validationPayload);
+      console.log("result", result)
       const bookId = result.bookId;
 
       // שמירת קובץ PDF בשם קבוע לפי bookId
