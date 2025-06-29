@@ -12,24 +12,26 @@ const ordersController = {
   getAllByUserId: async (req, res) => {
     // const { userId } = req.params;
 
-    const userId = req.user.id;
+    const userId = req.params.userId;
     const { sortBy } = req.query;
     console.log("Fetching orders for user ID:", userId);
 
     try {
       const orders = await ordersModel.getAllByUserId(userId, sortBy);
+      console.log(orders)
       const filteredOrders = orders.map(order => ({
         Id: order.Id,
         date: order.date
       }));
 
       res.json(filteredOrders);
-    } catch (err) {
+    } 
+    catch (err) {
       res.status(500).json({ error: "Database error" });
     }
   },
 
-  add1: async (req, res) => {
+  add: async (req, res) => {
     const { ccNumber, validity, cvv, date, orderedBookIds, total } = req.body;
     const userId = req.user.id;
     console.log("Adding order for user ID:", userId);

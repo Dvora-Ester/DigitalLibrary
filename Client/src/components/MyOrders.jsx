@@ -41,7 +41,7 @@ function MyOrders() {
         const token = currentUser.token;
 
 
-        fetch('http://localhost:3000/api/orders/getAllOrdersByUserId', {
+        fetch(`http://localhost:3000/api/orders/getAllOrdersByUserId/${currentUser.Id}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -146,11 +146,6 @@ function MyOrders() {
                 ) : (
                     <ul className="orders-list">
                         {filteredOrders.map(order => (
-                            <button
-                                key={order.Id}
-                                className="order-button"
-                                onClick={() => navigate(`/order/${order.Id}`)}
-                            >
                             <button
                                 key={order.Id}
                                 className="order-button"

@@ -7,7 +7,7 @@ const orderRouter = express.Router();
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 console.log("hello i am in order stripe");
 // שליפת הזמנות
-orderRouter.get("/getAllOrdersByUserId", verifyToken, ordersController.getAllByUserId);
+orderRouter.get("/getAllOrdersByUserId/:userId", verifyToken, ordersController.getAllByUserId);
 orderRouter.get("/getOrderById/:orderId", verifyToken, ordersController.getById);
 orderRouter.get("/search/", verifyToken, ordersController.search);
 
