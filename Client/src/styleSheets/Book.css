@@ -20,7 +20,7 @@
   object-fit: cover;
   display: block;
   border-bottom: 1px solid #ddd;
-  
+  z-index: 1;
 }
 
 .book-details {
@@ -68,6 +68,7 @@
 
   display: block;
   margin: -15px auto 0 auto; /* רווח מהתמונה + מרכז אופקי */
+  z-index: 999;
 }
 
 
