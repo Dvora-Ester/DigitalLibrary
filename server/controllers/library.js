@@ -239,12 +239,13 @@ const library = {
   },
 
   getByUserId: async (req, res) => {
-    const { error } = getByUserIdSchema.validate(req.params);
-    if (error) return res.status(400).json({ error: error.details[0].message });
-
-    const User_Id = req.params.User_Id;
+    // const { error } = getByUserIdSchema.validate(req.params);
+    // if (error) return res.status(400).json({ error: error.details[0].message });
+    const User_Id = req.user.id;
+    console.log(User_Id);
     try {
       const books = await libraryModel.getByUserId(User_Id);
+      console.log("boooooooooooooooooks",books);
       if (!books || books.length === 0) {
         return res.status(404).json({ message: 'לא נמצאו ספרים עבור המשתמש' });
       }

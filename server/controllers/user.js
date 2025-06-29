@@ -264,7 +264,19 @@ const user = {
     try {
       const result = await usersModel.update(user_Id, { Full_Name, Email, phone, Is_Manager });
       console.log("result controller", result)
-      if (result === true) { res.json({ message: "User updated successfully" }); }
+      if (result === true) {
+        const newToken = generateToken({
+          Id: user_Id,
+          Email:Email,
+          Is_Manager:Is_Manager
+        });
+
+        res.json({
+          message: "User updated successfully",
+          newToken,
+        });
+      }
+
       else {
         return res.status(404).json({ message: 'User was not update' });
       }
