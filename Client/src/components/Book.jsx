@@ -25,7 +25,7 @@ function Book({ book, commingFrom, onApprove }) {
         if (commingFrom === "BuyOfferedBooks") { setBtnText("🛒 approve Book"); }
     }, []);
     const approveBook = (event) => {
-        
+
         event.stopPropagation();
         const token = currentUser?.token;
 
@@ -72,6 +72,7 @@ function Book({ book, commingFrom, onApprove }) {
     };
 
     const addToCart = (event) => {
+        event.preventDefault();
         event.stopPropagation();
         let isExsistingInCart = false;
         // Update cart in local storage

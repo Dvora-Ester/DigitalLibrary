@@ -120,7 +120,7 @@ function FullRegistration() {
               />
             </div>
             <div className="input-group">
-              <label className="input-group-label">Email:</label>
+              <label className="input-group-label">Username:</label>
               <div>{email?.split('@')[0]}</div>
             </div>
           </div>

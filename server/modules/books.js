@@ -23,7 +23,6 @@ const booksModel = {
       throw err;
     }
   },
-
   getByName: async (Book_Name) => {
     try {
       console.log(Book_Name)
@@ -171,8 +170,6 @@ const booksModel = {
       console.error("deleteBook error:", err);
       throw err;
     }
-  },
-
-
+  }
 };
 export default booksModel;
