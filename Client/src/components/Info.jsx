@@ -144,7 +144,7 @@
 
 // export default Info;
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import '../styleSheets/info.css';
 import Home from './Home.jsx';
 import defaultProfile from '../Assets/defaultProfile.webp';

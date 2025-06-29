@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useNavigate } from "react";
 
 function CheckoutButton() {
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
     const [error, setError] = useState(null);
     const currentUser = JSON.parse(localStorage.getItem("CurrentUser"));
     if (!currentUser) { <navigate to="/login" />; }
@@ -24,7 +26,12 @@ function CheckoutButton() {
             });
 
             const data = await response.json();
+            if (data.status === 401) {
+                alert("expired or invalid token, you are redictering to the login page")
+                navigate('/login');
+                return;
 
+            }
             if (data.url) {
                 // מפנה את המשתמש ל-Stripe Checkout
                 window.location.href = data.url;

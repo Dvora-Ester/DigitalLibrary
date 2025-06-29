@@ -11,6 +11,7 @@ function BookReader() {
     const [pages, setPages] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageInput, setPageInput] = useState('');
+    
     const flipBookRef = useRef(null);
     const audioRef = useRef(null);
 
@@ -35,15 +36,24 @@ function BookReader() {
             promises.push(
                 fetch(`http://localhost:3000/api/library/book/${book.Id}/page/${i}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
-                }).then(async res => {
+                })
+                .then(async res => {
+                    if (res.status === 401) {
+                        alert("expired or invalid token, you are redictering to the login page")
+                        navigate('/login');
+                        return;
+
+                    }
                     if (!res.ok) return null;
                     const blob = await res.blob();
+
                     return URL.createObjectURL(blob);
                 }).catch(() => null)
             );
         }
 
         const results = await Promise.all(promises);
+
         setPages(results);
     };
 

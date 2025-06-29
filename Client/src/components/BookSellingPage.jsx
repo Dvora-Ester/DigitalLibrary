@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import '../styleSheets/BookSellingPage.css';
 import Home from './Home';
-import { Navigate } from 'react-router-dom';
+import { Navigate,useNavigate } from 'react-router-dom';
 
 function BookSellingPage() {
+    const navigate=useNavigate();
+
     let currentUser = null;
     const rawUser = localStorage.getItem('CurrentUser');
     if (rawUser) {
@@ -86,7 +88,12 @@ function BookSellingPage() {
                 },
                 body: formData,
             });
+            if (res.status === 401) {
+                alert("expired or invalid token, you are redictering to the login page")
+                navigate('/login');
+                return;
 
+            }
             if (!res.ok) throw new Error("Failed to add book");
 
             const result = await res.json();

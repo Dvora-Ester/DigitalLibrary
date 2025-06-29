@@ -1,6 +1,8 @@
 
 
 import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+
 import Book from './Book';
 import Home from './Home';
 import BookLibrary from './BookLibrary';
@@ -11,10 +13,12 @@ function MyLibrary() {
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('');
     const [error, setError] = useState('');
+    const navigate=useNavigate();
+
     const fetchBooks = async () => {
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
         const token = userData?.token;
-        
+
         try {
             const res = await fetch(`http://localhost:3000/api/library/getAllBookByUserId`, {
                 method: 'GET',
@@ -25,8 +29,14 @@ function MyLibrary() {
             });
 
             if (!res.ok) {
+                 if (res.status === 401) {
+                        alert("expired or invalid token, you are redictering to the login page")
+                        navigate('/login');
+                        return;
+
+                    }
                 const errMsg = await res.json();
-                throw new Error(errMsg.message ||'Error fetching books');
+                throw new Error(errMsg.message || 'Error fetching books');
             }
 
             const data = await res.json();

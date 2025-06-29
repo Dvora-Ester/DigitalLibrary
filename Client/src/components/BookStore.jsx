@@ -12,14 +12,17 @@ function BookStore() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const [sortBy, setSortBy] = useState('');
-    const [searchText, setSearchText] = useState('');
-
+    const [filterBy, setFilterBy] = useState('');
+    const [value, setValue] = useState('');
+    const navigate = useNavigate()
     let currentUser = null;
+    let token ;
     const rawUser = localStorage.getItem('CurrentUser');
     if (rawUser) {
         try {
             currentUser = JSON.parse(rawUser);
+             token = currentUser?.token;
+
         } catch (e) {
             console.error("Invalid JSON in CurrentUser:", e);
         }
@@ -30,10 +33,9 @@ function BookStore() {
     }
 
     const fetchBooks = async (pageToFetch) => {
-        const token = currentUser?.token;
         setLoading(true);
         try {
-            const res = await fetch(`http://localhost:3000/api/books/getByStatus/approved?page=${pageToFetch}`, {
+            const res = await fetch(`http://localhost:3000/api/books/getByStatus/available?page=${pageToFetch}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -41,6 +43,12 @@ function BookStore() {
                 }
             });
 
+            if (res.status === 401) {
+                alert("expired or invalid token, you are redictering to the login page")
+                navigate('/login');
+                return;
+
+            }
             if (!res.ok) throw new Error('Server returned status ' + res.status);
 
             const data = await res.json() || [];
@@ -67,6 +75,46 @@ function BookStore() {
     useEffect(() => {
         fetchBooks(page);
     }, []);
+    const search = async (pageToFetch) => {
+        try {
+            const res = await fetch(`http://localhost:3000/api/books/search/${filterBy}/${value}?page=${pageToFetch}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+            if (!res.ok) {
+                if (res.status === 401) {
+                    alert("expired or invalid token, you are redictering to the login page")
+                    navigate('/login');
+                    return;
+
+                }
+            }
+            const data = await res.json() || [];
+
+            if (!data || !Array.isArray(data.books)) {
+                console.warn("Unexpected response:", data);
+                setHasMore(false);
+                setBooks([]);
+                return;
+            }
+
+            if (data.books.length === 0 || pageToFetch >= data.totalPages) {
+                setHasMore(false);
+            }
+
+            setBooks(prev => [...prev, ...data.books]);
+        }
+        catch (err) {
+            console.error('Failed to fetch books', err);
+            setError("Failed to load books: " + err.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
 
     const handleLoadMore = () => {
         const nextPage = page + 1;
@@ -74,17 +122,6 @@ function BookStore() {
         fetchBooks(nextPage);
     };
 
-    // סינון בזמן אמת
-    const filteredBooks = books
-        .filter(book =>
-            book.Book_Name?.toLowerCase().includes(searchText.toLowerCase())
-        )
-        .sort((a, b) => {
-            if (sortBy === 'price-low-high') return a.Price - b.Price;
-            if (sortBy === 'price-high-low') return b.Price - a.Price;
-            if (sortBy === 'name') return a.Book_Name.localeCompare(b.Book_Name);
-            return 0;
-        });
 
     return (
         <div className="bookStorePage">
@@ -93,31 +130,32 @@ function BookStore() {
                 <div className="bookstore-header">
                     <h2>Books Store</h2>
                     <div className="filters">
-                        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+                        <select value={filterBy} onChange={(e) => setFilterBy(e.target.value)}>
                             <option value="">Sort by</option>
-                            <option value="price-low-high">Price: Low to High</option>
-                            <option value="price-high-low">Price: High to Low</option>
-                            <option value="name">Name</option>
+                            <option value="Author">Author</option>
+                            <option value="Book_Name">Name</option>
                         </select>
                         <input
                             className="sorters"
                             type="text"
                             placeholder="Search by name..."
-                            value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
+                            value={value}
+                            onChange={(e) => setValue(e.target.value)}
                         />
+                        <button className='search-btn' onClick={() => search()}>🔍</button>
+
                     </div>
                 </div>
 
                 <div className="books-grid">
-                    {filteredBooks.map(book => (
+                    {books.map(book => (
                         <Book key={book.Id} book={book} commingFrom="BookStore" onApprove={fetchBooks} />
                     ))}
                 </div>
 
                 {loading && <p className="loading-message">Loading books...</p>}
 
-                {!loading && filteredBooks.length === 0 && (
+                {!loading && books.length === 0 && (
                     <p className='red-message'>No matching books found.</p>
                 )}
 

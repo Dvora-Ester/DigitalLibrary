@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { use } from 'react';
 function Book({ book, commingFrom, onApprove }) {
     const [btnText, setBtnText] = useState("");
+    
     console.log(book);
     const navigate = useNavigate();
     let currentUser = null;
@@ -46,6 +47,12 @@ function Book({ book, commingFrom, onApprove }) {
         })
             .then(res => {
                 if (!res.ok) {
+                     if (res.status === 401) {
+                        alert("expired or invalid token, you are redictering to the login page")
+                        navigate('/login');
+                        return;
+
+                    }
                     throw new Error('Failed to approve book');
                 }
                 return res.json();
