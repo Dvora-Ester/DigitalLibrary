@@ -19,7 +19,7 @@ function BookReader() {
     if (rawUser) {
         try {
             currentUser = JSON.parse(rawUser);
-        } catch (e) {
+        } catch (e) {  
             console.error("Invalid JSON in CurrentUser:", e);
         }
     }
