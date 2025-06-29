@@ -16,7 +16,7 @@ function MyLibrary() {
         const token = userData?.token;
         
         try {
-            const res = await fetch(`http://localhost:3000/api/library/getAllBookByUserId/${userData.Id}`, {
+            const res = await fetch(`http://localhost:3000/api/library/getAllBookByUserId`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
