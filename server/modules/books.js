@@ -101,20 +101,7 @@ const booksModel = {
     console.log("Total count by status:", results[0].count);
     return results[0].count;
   },
-  // getAll: async () => {
-  //     try {
-  //       console.log("getAll of modules")
-  //       const [results] = await promisePool.query(`
-  //         SELECT * FROM Books`);
-  //       console.log("SQL RESULTS:", results);
-  //       if (results.length === 0) return null;
-  //      return results;
-  //     } catch (err) {
-  //       console.error("getAllBooks error:", err);
-  //       throw err;
-  //     }
-  //   }
-  // ,
+ 
   getFilterBy: async (limit, offset, value, filterBy) => {
     try {
       console.log("getAllByFilterPaginated of modules");
