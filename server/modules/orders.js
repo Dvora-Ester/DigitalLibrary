@@ -13,16 +13,23 @@ const ordersModel = {
         return results;
     },
 
-    add: async (orderData) => {
+     add: async (orderData) => {
         console.log("hello");
-        const { userId, ccNumber, date,total } = orderData;
+        // const { userId, ccNumber, date,total } = orderData;
+        const { userId, date,total,stripeSessionId } = orderData;
+    if (!userId || !date || !total || !stripeSessionId) {
+            console.error("Missing required fields in orderData:", orderData);}
         //טוקן של תשלום אמיתי
         console.log("Adding order with data:", orderData);
-        const lastFour = ccNumber.slice(-4);
         const [orderResult] = await promisePool.query(
-            "INSERT INTO orders (User_Id, cc_Last_Four_Diggits, date,total) VALUES (?, ?, ?,?)",
-            [userId, lastFour, date,total]
+            "INSERT INTO orders (User_Id, date,total,stripeSessionId) VALUES (?, ?, ?,?)",
+            [userId, date,total,stripeSessionId]
         );
+        // const lastFour = ccNumber.slice(-4);
+        // const [orderResult] = await promisePool.query(
+        //     "INSERT INTO orders (User_Id, cc_Last_Four_Diggits, date,total) VALUES (?, ?, ?,?)",
+        //     [userId, lastFour, date,total]
+        // );
         if (orderResult.length === 0) return null;
         return { orderId: orderResult.insertId };
     },
@@ -82,19 +89,6 @@ const ordersModel = {
         const [results] = await promisePool.query(sql, params);
         return results;
 
-    },
-    getByIdaa: async (id) => {
-        console.log("getById called with id:", id);
-        if (!id) {
-            console.error("getById called with invalid id:", id);
-            return null;
-        }
-        const [results] = await promisePool.query(`
-      SELECT * FROM orders WHERE id = ?
-      `, [id]);
-        console.log("getById results:", results);
-        if (results.length === 0) return null;
-        return results[0];
     },
     getById: async (orderId) => {
         console.log("getById called with id:", orderId);
