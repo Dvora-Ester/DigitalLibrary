@@ -15,6 +15,7 @@ const Comments = ({ bookId }) => {
 
 
   useEffect(() => {
+    console.log(bookId)
     fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`, {
       method: 'GET',
       headers: {
@@ -24,7 +25,7 @@ const Comments = ({ bookId }) => {
     })
       .then((response) => {
         if (!response.ok) {
-          if (res.status === 401) {
+          if (response.status === 401) {
             alert("expired or invalid token, you are redictering to the login page")
             navigate('/login');
             return;
@@ -35,6 +36,7 @@ const Comments = ({ bookId }) => {
         return response.json();
       })
       .then((data) => {
+
         setComments(data);
         console.log('data from server:', data);
       })
@@ -64,6 +66,11 @@ const Comments = ({ bookId }) => {
       })
       .then(data => {
         console.log('Comment added:', data);
+        setComments(prev=>[...prev,{Id:data.commentId,User_Id:currentUser.Id,Book_Id:bookId,content: commentData.content,title:commentData.title,Created_At:`${Date.now()}`}])
+        if (titleRef.current) {
+  titleRef.current.value = '';
+}
+        setNewComment('');
         // כאן אפשר לרוקן את התיבה או לעדכן את ה־state
       })
       .catch(error => {
@@ -157,7 +164,7 @@ const Comments = ({ bookId }) => {
           </>
         ) : (
           <>
-            <input id="titleOfComment" ref={titleRef} />
+            <input id="titleOfComment" ref={titleRef} placeholder='title' />
             <textarea
               placeholder="Add a comment..."
               value={newComment}

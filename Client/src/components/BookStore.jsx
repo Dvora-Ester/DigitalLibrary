@@ -11,7 +11,6 @@ function BookStore() {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const [filterBy, setFilterBy] = useState('');
     const [value, setValue] = useState('');
     const navigate = useNavigate()
@@ -75,7 +74,14 @@ function BookStore() {
     useEffect(() => {
         fetchBooks(page);
     }, []);
-    const search = async (pageToFetch) => {
+
+
+    const search = async (pageToFetch=1) => {
+        if(!value||!filterBy){
+           fetchBooks(pageToFetch)
+            return;
+        }
+        console.log(filterBy,value);
         try {
             const res = await fetch(`http://localhost:3000/api/books/search/${filterBy}/${value}?page=${pageToFetch}`, {
                 method: 'GET',
@@ -105,7 +111,8 @@ function BookStore() {
                 setHasMore(false);
             }
 
-            setBooks(prev => [...prev, ...data.books]);
+            setBooks(data.books);
+            console.log(data.books,data)
         }
         catch (err) {
             console.error('Failed to fetch books', err);

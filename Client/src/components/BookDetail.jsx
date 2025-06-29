@@ -56,16 +56,16 @@ if (rawUser) {
                             <h2>{book.Book_Name}</h2>
                             <div className='detail-container'>
                                 <div className='book-details'>
-                                    <p>${Number(book.Price).toFixed(2)}</p>
+                                    <p className='bookPrice'>${Number(book.Price).toFixed(2)}</p>
 
-                                    <p>By {book.author}</p>
-                                    <p>{book.Category} Category</p>
-                                    <p>{book.number_Of_Page} pg.</p>
-                                    <p>{book.Note}</p>
-                                    <p>Edited at {new Date(book.Editing_Date).toLocaleDateString()}</p>
+                                    <p className='bookAuthor'>By {book.author}</p>
+                                    <p className='bookCategory' >{book.Category} Category</p>
+                                    <p className='bookNoPage'>{book.number_Of_Page} pg.</p>
+                                    {/* <p className='summary'>{book.Note}</p> */}
+                                    <p className='bookEditedAt'>Edited at {new Date(book.Editing_Date).toLocaleDateString()}</p>
                                 </div>
                                 <div className='book-summary'>
-                                    <p><strong>~ Summary ~</strong><br />{book.Note}</p>
+                                    <p className='summary'><strong>~ Summary ~</strong><br />{book.Note}</p>
                                 </div>
                             </div>
                             {/* <Comments/> */}
