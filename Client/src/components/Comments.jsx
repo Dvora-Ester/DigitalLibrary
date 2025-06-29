@@ -1,5 +1,5 @@
-import React, { useState, useEffect,useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 import '../styleSheets/Comments.css';
 import Home from './Home';
 
@@ -8,34 +8,40 @@ const Comments = ({ bookId }) => {
   const navigate = useNavigate();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState('');
-   const titleRef = useRef(null);
+  const titleRef = useRef(null);
   const [editingComment, setEditingComment] = useState(null);
   const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
   const token = currentUser?.token;
 
- 
-useEffect(() => {
-  fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`, // 👈 הטוקן נשלח כאן
-    },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      return response.json();
+
+  useEffect(() => {
+    fetch(`http://localhost:3000/api/comments/getAllByBookId/${bookId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // 👈 הטוקן נשלח כאן
+      },
     })
-    .then((data) => {
-      setComments(data);
-      console.log('data from server:', data);
-    })
-    .catch((err) => {
-      console.error('Error fetching comments:', err);
-    });
-}, [bookId]);
+      .then((response) => {
+        if (!response.ok) {
+          if (res.status === 401) {
+            alert("expired or invalid token, you are redictering to the login page")
+            navigate('/login');
+            return;
+
+          }
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setComments(data);
+        console.log('data from server:', data);
+      })
+      .catch((err) => {
+        console.error('Error fetching comments:', err);
+      });
+  }, [bookId]);
 
   const handleAddComment = () => {
     const commentData = {
@@ -47,7 +53,7 @@ useEffect(() => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,  
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(commentData),
     })
@@ -65,7 +71,7 @@ useEffect(() => {
       });
   };
 
-  
+
 
   const handleDeleteComment = (commentId) => {
     const commentToDelete = comments.find((comment) => comment.id === commentId);
@@ -93,6 +99,11 @@ useEffect(() => {
     })
       .then((response) => response.json())
       .then((data) => {
+        if (data.status === 401) {
+          alert("expired or invalid token, you are redictering to the login page")
+          return <Navigate to="/login" />;
+
+        }
         setComments(comments.map((comment) => (comment.id === data.id ? data : comment)));
         setEditingComment(null);
         setNewComment('');
@@ -110,13 +121,13 @@ useEffect(() => {
         <h1 className="comments-title">Readers comments for book number: {bookId}</h1>
 
         <div className="comments-list">
-          
-          { comments.map((comment) => (
+
+          {comments.map((comment) => (
             <div key={comment.Id} className="comment-card">
               <p>{comment.Id}</p>
               <p><strong>{comment.title}</strong> ({comment.title})</p>
               <p>{comment.content}</p>
-              
+
               {comment.email === currentUser?.email && (
                 <div>
                   <button className="edit-comment-button" onClick={() => handleEditComment(comment.Id)}>
@@ -129,7 +140,7 @@ useEffect(() => {
               )}
             </div>
           ))}
-         
+
         </div>
 
 
@@ -146,7 +157,7 @@ useEffect(() => {
           </>
         ) : (
           <>
-           <input id="titleOfComment" ref={titleRef} />
+            <input id="titleOfComment" ref={titleRef} />
             <textarea
               placeholder="Add a comment..."
               value={newComment}

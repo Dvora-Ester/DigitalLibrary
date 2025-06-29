@@ -38,9 +38,9 @@ const booksModel = {
     }
   },
   getByStatus: async (limit, offset, Status) => {
-    
+
     try {
-      console.log("getAllPaginated of modules",Status);
+      console.log("getAllPaginated of modules", Status);
       const [results] = await promisePool.query(`
       SELECT * FROM Books
       WHERE Status = ?
@@ -116,6 +116,26 @@ const booksModel = {
   //     }
   //   }
   // ,
+  getFilterBy: async (limit, offset, value, filterBy) => {
+    try {
+      console.log("getAllByFilterPaginated of modules");
+
+      let query = `
+        SELECT * FROM Books
+        WHERE ?? = ?
+        ORDER BY Id DESC
+        LIMIT ? OFFSET ?
+      `;
+
+      const [results] = await promisePool.query(query, [filterBy, value, limit, offset]);
+      console.log("SQL RESULTS:", results);
+      // תמיד תחזיר מערך (גם אם ריק)
+      return results;
+    } catch (err) {
+      console.error("getAllByFilterPaginated error:", err);
+      throw err;
+    }
+  },
   update: async (book_Id, bookData) => {
     const {
       Book_Name, author, number_Of_Page, Price,

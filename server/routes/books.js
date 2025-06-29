@@ -20,7 +20,7 @@ booksRouter.post("/addBook",verifyToken,isAdmin,uploadBoth.fields([
   books.add
 );
 
-
+booksRouter.get("/search/:filterBy/:value",verifyToken,books.filterBy)
 booksRouter.get("/getByStatus/:Status",verifyToken, books.getByStatus);
 booksRouter.get("/getAll",verifyToken, books.getAll);
 booksRouter.get("/:bookId",verifyToken ,books.getById);

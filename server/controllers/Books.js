@@ -42,6 +42,48 @@ const Books = {
       res.status(500).json({ error: 'Failed to fetch books' });
     }
   },
+  filterBy:async(req,res)=>{
+         const value=req.params.value;
+         const filterBy=req.params.filterBy;
+         const page=parseInt(req.params.page)||1;
+         const limit = 10;
+         const offset = (page - 1) * limit;
+         console.log("getAll books controller", page, limit, offset,value,filterBy);
+        try {
+      const books = await booksModel.getFilterBy( limit, offset,value,filterBy) || [];
+      const totalCount = books.length;// סך כל הספרים
+
+      const booksWithImage = books.map(book => {
+        const id = book.Id;
+        const possibleExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
+        let imageUrl = null;
+
+        for (const ext of possibleExtensions) {
+          const imagePath = path.join(picturesDir, `${id}${ext}`);
+          if (fs.existsSync(imagePath)) {
+            imageUrl = `/book-images/${id}${ext}`;
+            break;
+          }
+        }
+
+        return {
+          ...book,
+          imageUrl
+        };
+      });
+
+      res.json({
+        totalCount,
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+        books: booksWithImage
+      });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Failed to fetch books' });
+    }
+    },
   getAll: async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = 10;

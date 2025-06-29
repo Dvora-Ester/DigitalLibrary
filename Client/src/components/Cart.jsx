@@ -73,7 +73,12 @@ function Cart() {
       });
 
       const data = await response.json();
+      if (data.status === 401) {
+        alert("expired or invalid token, you are redictering to the login page")
+        navigate('/login');
+        return;
 
+      }
       if (data.url) {
         window.location.href = data.url; // מפנה ל-Stripe Checkout
       } else {

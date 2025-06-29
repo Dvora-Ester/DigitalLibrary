@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import '../styleSheets/info.css';
 import Home from './Home.jsx';
 import defaultProfile from '../Assets/defaultProfile.webp';
@@ -11,6 +11,7 @@ const Info = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
+  const navigate = useNavigate();
 
   const rawUser = localStorage.getItem('CurrentUser');
   if (!rawUser) return <Navigate to="/login" />;
@@ -47,20 +48,26 @@ const Info = () => {
       })
         .then((response) => {
           if (!response.ok) {
+            if (response.status === 401) {
+              alert("expired or invalid token, you are redictering to the login page")
+              navigate('/login');
+              return;
+
+            }
             console.error('Failed to update user:', response.message);
             return;
           }
-          else{
+          else {
             console.log(updatedUser)
-          setUser(updatedUser);
-          setName(updatedUser.Full_Name);
-          setEmail(updatedUser.Email);
-          setRole(updatedUser.Is_Manager ? 'Manager' : 'Customer');
-          localStorage.setItem('CurrentUser', JSON.stringify(updatedUser));
-          alert("user updated successfully");
+            setUser(updatedUser);
+            setName(updatedUser.Full_Name);
+            setEmail(updatedUser.Email);
+            setRole(updatedUser.Is_Manager ? 'Manager' : 'Customer');
+            localStorage.setItem('CurrentUser', JSON.stringify(updatedUser));
+            alert("user updated successfully");
           }
         })
-        
+
     }
     catch (error) {
       console.error('Error updating user:', error);

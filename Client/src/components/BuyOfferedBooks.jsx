@@ -11,6 +11,7 @@ function BuyOfferedBooks() {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+const navigate=useNavigate();
 
     const [filterText, setFilterText] = useState('');
     const [sortBy, setSortBy] = useState('');
@@ -41,7 +42,12 @@ function BuyOfferedBooks() {
                     'Content-Type': 'application/json',
                 }
             });
+            if (res.status === 401) {
+                alert("expired or invalid token, you are redictering to the login page")
+                navigate('/login');
+                return;
 
+            }
             if (!res.ok) {
                 throw new Error('Server returned status ' + res.status);
             }

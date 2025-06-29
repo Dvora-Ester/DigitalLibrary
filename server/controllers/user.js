@@ -81,16 +81,17 @@ register: async (req, res) => {
             res.status(500).json({ error: "Database error" });
         }
     },
+    
      update: async (req, res) => {
     const  user_Id  = req.params.user_Id;
     const {Full_Name,Email,Is_Manager } = req.body;
     const phone="0548440911";
-    if ( !Full_Name&&!Email&&Is_Manager===null) {
-      return res.status(400).json({ error: "At least one field must be provided for update" });
-    }
-    if (!validation.isValidEmail(Email)) {
-        return res.status(400).json({ error: "Invalid email address" });
-    }
+    // if ( !Full_Name&&!Email&&Is_Manager===null) {
+    //   return res.status(400).json({ error: "At least one field must be provided for update" });
+    // }
+    // if (!validation.isValidEmail(Email)) {
+    //     return res.status(400).json({ error: "Invalid email address" });
+    // }
     try {
       const result = await usersModel.update(user_Id, { Full_Name, Email,phone, Is_Manager });
       console.log("result controller", result)
