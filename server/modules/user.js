@@ -7,7 +7,7 @@ const user = {
 
       const [results] = await promisePool.query(`
         SELECT * FROM Users WHERE Id = ?`, [user_Id]);
-      console.log("SQL RESULTS:", results,results.length,results[0]);
+      console.log("SQL RESULTS:", results, results.length, results[0]);
 
       if (results.length === 0) return null;
       return results[0];
@@ -64,11 +64,11 @@ const user = {
 
       await conn.commit();
       conn.release();
-const [results] = await promisePool.query(`
+      const [results] = await promisePool.query(`
         SELECT * FROM Users WHERE Id = ?`, [userId]);
-      console.log("SQL RESULTS:", results,results.length,results[0]);
+      console.log("SQL RESULTS:", userId);
 
-      return results[0];
+      return {userId};
     } catch (err) {
       await conn.rollback();
       conn.release();
@@ -97,19 +97,19 @@ const [results] = await promisePool.query(`
   },
   update: async (User_Id, Data) => {
     const {
-      Full_Name, Email,phone, Is_Manager
+      Full_Name, Email, phone, Is_Manager
     } = Data;
-  console.log(Data,"User_Id", User_Id)
+    console.log(Data, "User_Id", User_Id)
     try {
       const result = await promisePool.query(`
       UPDATE users
       SET Full_Name = ?, Email = ?, Phone = ?, Is_Manager = ?
       WHERE Id = ?
     `, [
-        Full_Name,Email,phone,Is_Manager,User_Id
+        Full_Name, Email, phone, Is_Manager, User_Id
 
       ]);
-       console.log("result", result)
+      console.log("result", result)
       return result[0].affectedRows > 0; // מחזיר true אם עודכן, false אם לא
 
     } catch (err) {
@@ -159,26 +159,26 @@ const [results] = await promisePool.query(`
   //   }
   // }
   delete: async (userId) => {
-  const conn = await promisePool.getConnection();
-  try {
-    await conn.beginTransaction();
+    const conn = await promisePool.getConnection();
+    try {
+      await conn.beginTransaction();
 
-    // מחיקת הסיסמה קודם (תלות)
-    await conn.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
+      // מחיקת הסיסמה קודם (תלות)
+      await conn.query("DELETE FROM passwords WHERE User_Id = ?", [userId]);
 
-    // מחיקת המשתמש
-    const [result] = await conn.query("DELETE FROM users WHERE Id = ?", [userId]);
+      // מחיקת המשתמש
+      const [result] = await conn.query("DELETE FROM users WHERE Id = ?", [userId]);
 
-    await conn.commit();
-    return result.affectedRows > 0;
-  } catch (err) {
-    await conn.rollback();
-    console.error("❌ Delete user error:", err);
-    throw err;
-  } finally {
-    conn.release();
+      await conn.commit();
+      return result.affectedRows > 0;
+    } catch (err) {
+      await conn.rollback();
+      console.error("❌ Delete user error:", err);
+      throw err;
+    } finally {
+      conn.release();
+    }
   }
-}
 
 };
 
