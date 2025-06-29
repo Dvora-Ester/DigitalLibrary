@@ -18,6 +18,7 @@ import Cart from './Cart.jsx';
 import BookSellingPage from './BookSellingPage.jsx';
 import CheckoutButton from './CheckoutButton.jsx';
 import OrderDetails from './Order.jsx';
+import BeAbleBook from './BeAbleBook.jsx';
 
 function App() {
 

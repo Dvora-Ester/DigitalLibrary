@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import '../styleSheets/Home.css';
 import logo from '../Assets/logo.png';
@@ -12,19 +12,19 @@ import logout from '../Assets/logout.png';
 function Home() {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isManager, setIsManager] = useState(false);//change to false
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
+  let currentUser = null;
+  const rawUser = localStorage.getItem('CurrentUser');
+  if (rawUser) {
+    try {
+      currentUser = JSON.parse(rawUser);
+    } catch (e) {
+      console.error("Invalid JSON in CurrentUser:", e);
+    }
   }
-}
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
-useEffect(() => {
+  useEffect(() => {
     if (currentUser?.Is_Manager === 1) {
       setIsManager(true);
     }
@@ -65,28 +65,23 @@ useEffect(() => {
             <div className="dropdown-menu">
               <div className="dropdown-item" >
                 <button className="logout-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/info`)}>
-                <img src={ProfileResume} alt="Profile" className="dropdown-icon" />
-                My Profile</button>
+                  <img src={ProfileResume} alt="Profile" className="dropdown-icon" />
+                  My Profile</button>
               </div>
               <div className="dropdown-item">
                 <button className="logout-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/my-orders`)}>
-                <img src={shoppingBag} alt="Orders" className="dropdown-icon" />
-                My Orders</button>
+                  <img src={shoppingBag} alt="Orders" className="dropdown-icon" />
+                  My Orders</button>
               </div>
               <div className="dropdown-item">
                 <button className="logout-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/my-library`)}>
-                <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
-                My Library</button>
+                  <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
+                  My Library</button>
               </div>
-                {/* <div className="dropdown-item">
-                <button className="logout-btn" onClick={handleLogout}>
-                <img src={onlinelibrary} alt="Library" className="dropdown-icon" />
-                My Library</button>
-              </div> */}
               <div className="dropdown-item">
                 <button className="logout-btn" onClick={handleLogout}>
-                <img src={logout} alt="LogOut" className="dropdown-icon" />
-                Log-Out</button>
+                  <img src={logout} alt="LogOut" className="dropdown-icon" />
+                  Log-Out</button>
               </div>
             </div>
 
@@ -94,20 +89,16 @@ useEffect(() => {
         </div>
         <div className='cart-container'>
           <img src={shoppingCart} alt="shoppingCart" className="cart-icon" />
-          <button className="cart-btn" onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/cart`)}>My Cart</button>
+          <button className="cart-btn" onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/cart`)}>My Cart</button>
         </div>
       </div>
 
       <div className="home-content" >
-        <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/Welcome-page`)}>Home</button>
-        <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/about-us`)}>About Us</button>
-        <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-store`)}>Book Store</button>
-        <button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-selling`)}>sell A Book</button>
-        {isManager&&<button className='nav-item' onClick={()=>navigate(`/${currentUser.Full_Name}/${currentUser.Id}/buy-offered-books`)}>Watch at new books offers to buy</button>}
-        {/* <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/todos`)}>Todos</button>
-        <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/posts`)}>Posts</button> */}
-        {/* <button onClick={() => navigate(`/${currentUser.username}/${currentUser.id}/albums`)}>Albums</button> */}
-
+        <button className='nav-item' onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/Welcome-page`)}>Home</button>
+        <button className='nav-item' onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/about-us`)}>About Us</button>
+        <button className='nav-item' onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-store`)}>Book Store</button>
+        <button className='nav-item' onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/book-selling`)}>sell A Book</button>
+        {isManager && <button className='nav-item' onClick={() => navigate(`/${currentUser.Full_Name}/${currentUser.Id}/buy-offered-books`)}>Watch at new books offers to buy</button>}
       </div>
     </div>
   );

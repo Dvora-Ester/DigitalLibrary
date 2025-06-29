@@ -4,14 +4,14 @@ const booksModel = {
   add: async (userData) => {
     const {
       Book_Name, author, number_Of_Page, Price,
-      Category, Note, Status, Seller_Id, Editing_Date
+      Category, Note, Status, Seller_Id, Editing_Date, Wholesale_Price
     } = userData;
     try {
 
       // הכנסת המשתמש לטבלת books
       const [bookResult] = await promisePool.query(
-        "INSERT INTO Books (Book_Name, author, number_Of_Page, Price,Category, Note, Status, Seller_Id, Editing_Date) VALUES (?, ?, ?,?,?,?,?,?,?)",
-        [Book_Name, author, number_Of_Page, Price, Category, Note, Status, Seller_Id, Editing_Date]
+        "INSERT INTO Books (Book_Name, author, number_Of_Page, Price,Category, Note, Status, Seller_Id, Editing_Date,Wholesale_Price) VALUES (?, ?, ?,?,?,?,?,?,?,?)",
+        [Book_Name, author, number_Of_Page, Price, Category, Note, Status, Seller_Id, Editing_Date, Wholesale_Price]
       );
       const bookId = bookResult.insertId;
       console.log("Book ID:", bookId);
@@ -56,6 +56,20 @@ const booksModel = {
       throw err;
     }
 
+  },
+  getByStatusAndUserId: async (Status, Seller_Id) => {
+    try {
+      const [results] = await promisePool.query(`
+      SELECT * FROM Books
+      WHERE Status = ? AND Seller_Id = ?
+      ORDER BY Id DESC
+    `, [Status, Seller_Id]);
+
+      return results;
+    } catch (err) {
+      console.error("getByStatusAndUserId error:", err);
+      throw err;
+    }
   },
   getById: async (book_Id) => {
     try {
@@ -131,22 +145,22 @@ const [results] = await promisePool.query(query, [
   update: async (book_Id, bookData) => {
     const {
       Book_Name, author, number_Of_Page, Price,
-      Category, Note, Status, Seller_Id, Editing_Date
+      Category, Note, Status, Seller_Id, Editing_Date, Wholesale_Price
     } = bookData;
 
     try {
       const [result] = await promisePool.query(`
       UPDATE Books
       SET Book_Name = ?, author = ?, number_Of_Page = ?, Price = ?,
-          Category = ?, Note = ?, Status = ?, Seller_Id = ?, Editing_Date = ?
+          Category = ?, Note = ?, Status = ?, Seller_Id = ?, Editing_Date = ?,Wholesale_Price=?
       WHERE Id = ?
     `, [
         Book_Name, author, number_Of_Page, Price,
         Category, Note, Status, Seller_Id, Editing_Date,
-        book_Id
+        book_Id, Wholesale_Price
       ]);
 
-      return result.affectedRows > 0; // מחזיר true אם עודכן, false אם לא
+      return result.affectedRows > 0;
     } catch (err) {
       console.error("updateBook error:", err);
       throw err;
