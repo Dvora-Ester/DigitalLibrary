@@ -46,7 +46,7 @@ function FullRegistration() {
           };
 
           localStorage.setItem("CurrentUser", JSON.stringify(user));
-          navigate(`/${user.name}/${user.id}/welcome-page`, {
+          navigate(`/${user.Full_Name}/${user.id}/welcome-page`, {
             state: {
               username: user.email,
               token: user.token
