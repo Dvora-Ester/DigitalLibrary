@@ -252,7 +252,7 @@ const user = {
   //   }
   // },
   update: async (req, res) => {
-    const user_Id = req.params.user_Id;
+    const user_Id = req.user.id
     const { Full_Name, Email, Is_Manager } = req.body;
     const phone = "0548440911";
     // if ( !Full_Name&&!Email&&Is_Manager===null) {

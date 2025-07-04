@@ -184,7 +184,7 @@ const Info = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${user.Id}`, {
+      const response = await fetch(`http://localhost:3000/api/users/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
