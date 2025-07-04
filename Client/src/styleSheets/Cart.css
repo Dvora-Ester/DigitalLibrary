@@ -15,7 +15,6 @@
   }
 }
 
-/* tablets and up */
 @media (min-width: 768px) {
   .cart-page {
     display: flex;

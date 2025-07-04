@@ -1,15 +1,14 @@
 
-import React, { useEffect, useState } from 'react';
-import Book from './Book';
+import { useEffect, useState } from 'react';
 import '../styleSheets/WelcomePage.css';
 import Home from './Home';
-import poster from '../Assets/poster.png'; // Placeholder image if book picture is not available
-import noImage from '../Assets/no-photo.png'; // Placeholder image if book picture is not available
+import poster from '../Assets/poster.png'; 
+import noImage from '../Assets/no-photo.png'; 
 
 function BookStore() {
     const [books, setBooks] = useState([]);
     const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true); // האם יש עוד ספרים להביא
+    const [hasMore, setHasMore] = useState(true); 
 
     const fetchBooks = async (pageToFetch) => {
         const userData = JSON.parse(localStorage.getItem('CurrentUser'));
@@ -36,12 +35,10 @@ function BookStore() {
 
             const data = await res.json();
 
-            // אם אין יותר ספרים – מפסיקים לטעון
             if (data.books.length === 0 || pageToFetch >= data.totalPages) {
                 setHasMore(false);
             }
 
-            // מוסיף את הספרים החדשים לרשימה הקיימת
             setBooks(prev => [...prev, ...data.books]);
 
         } catch (err) {
@@ -50,11 +47,11 @@ function BookStore() {
     };
 
     useEffect(() => {
-        fetchBooks(page); // טוען את העמוד הראשון בהתחלה
+        fetchBooks(page); 
     }, [page]);
 
     const handleLoadMore = () => {
-        setPage(prev => prev + 1); // מעלה את מספר העמוד → useEffect יופעל שוב
+        setPage(prev => prev + 1); 
     };
 
     return (

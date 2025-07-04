@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../styleSheets/Login.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,6 +7,8 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+
   useEffect(() => {
     localStorage.setItem("CurrentUser", '');
     localStorage.setItem("AlbumsToShowOfCurrentUser", []);
@@ -27,12 +29,6 @@ function Login() {
     })
       .then(response => response.json())
       .then(data => {
-        // if (data !== undefined) {
-        // console.log('User found:', data[0]);
-        // // localStorage.setItem("CurrentUser", JSON.stringify(data[0]));
-        // localStorage.setItem("CurrentUser", JSON.stringify(data));
-        // const currentUser = data;
-        // console.log(data, currentUser);
         if (data && data.userWithoutPassword) {
           const currentUser = data.userWithoutPassword;
           localStorage.setItem("CurrentUser", JSON.stringify(currentUser));

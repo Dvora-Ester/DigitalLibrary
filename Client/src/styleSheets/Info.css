@@ -19,7 +19,6 @@
   
 }
 
-/* tablets and up */
 @media (min-width: 768px) {
   .info-page {
     display: flex;

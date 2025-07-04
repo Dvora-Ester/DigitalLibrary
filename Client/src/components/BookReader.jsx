@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import HTMLFlipBook from 'react-pageflip';
 import '../styleSheets/BookReader.css';
@@ -11,7 +11,7 @@ function BookReader() {
     const [pages, setPages] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [pageInput, setPageInput] = useState('');
-    
+
     const flipBookRef = useRef(null);
     const audioRef = useRef(null);
 
@@ -20,7 +20,7 @@ function BookReader() {
     if (rawUser) {
         try {
             currentUser = JSON.parse(rawUser);
-        } catch (e) {  
+        } catch (e) {
             console.error("Invalid JSON in CurrentUser:", e);
         }
     }
@@ -37,18 +37,18 @@ function BookReader() {
                 fetch(`http://localhost:3000/api/library/book/${book.Id}/page/${i}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 })
-                .then(async res => {
-                    if (res.status === 401) {
-                        alert("expired or invalid token, you are redictering to the login page")
-                        navigate('/login');
-                        return;
+                    .then(async res => {
+                        if (res.status === 401) {
+                            alert("expired or invalid token, you are redictering to the login page")
+                            navigate('/login');
+                            return;
 
-                    }
-                    if (!res.ok) return null;
-                    const blob = await res.blob();
+                        }
+                        if (!res.ok) return null;
+                        const blob = await res.blob();
 
-                    return URL.createObjectURL(blob);
-                }).catch(() => null)
+                        return URL.createObjectURL(blob);
+                    }).catch(() => null)
             );
         }
 

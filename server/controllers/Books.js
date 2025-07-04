@@ -238,26 +238,21 @@ const Books = {
       Seller_Id: req.user.id,
     };
     console.log("3#");
-    // const { error } = addBookSchema.validate(validationPayload);
-    // if (error) return res.status(400).json({ error: error.details[0].message });
-    console.log("4#", validationPayload);
+     console.log("4#", validationPayload);
     try {
       const result = await booksModel.add(validationPayload);
       console.log("result", result)
       const bookId = result.bookId;
 
-      // שמירת קובץ PDF בשם קבוע לפי bookId
       const pdfTargetPath = path.join(process.cwd(), 'books_storage', `${bookId}.pdf`);
       fs.renameSync(pdfFile.path, pdfTargetPath);
 
-      // שמירת תמונת עטיפה (אם יש)
       if (imageFile) {
         const imageExt = path.extname(imageFile.originalname).toLowerCase();
         const imageTargetPath = path.join(process.cwd(), 'pictures_of_books', `${bookId}${imageExt}`);
         fs.renameSync(imageFile.path, imageTargetPath);
       }
 
-      // המרת PDF לתמונות (כל עמוד לתמונה)
       await renderPdfToImages(pdfTargetPath, bookId);
 
       res.status(201).json({ message: "הספר נוסף והומר בהצלחה", bookId });

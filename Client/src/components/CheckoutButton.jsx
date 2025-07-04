@@ -1,13 +1,14 @@
-import React, { useState, useNavigate } from "react";
+import { useState, useNavigate } from "react";
 
 function CheckoutButton() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
     const [error, setError] = useState(null);
+
     const currentUser = JSON.parse(localStorage.getItem("CurrentUser"));
     if (!currentUser) { <navigate to="/login" />; }
     const token = currentUser.token;
+    
     const handleCheckout = async () => {
         setLoading(true);
         setError(null);

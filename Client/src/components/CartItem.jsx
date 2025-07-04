@@ -1,6 +1,6 @@
 import React from 'react';
 import '../styleSheets/Cart.css';
-import noImage from '../Assets/no-photo.png'; // Placeholder image if book picture is not available
+import noImage from '../Assets/no-photo.png'; 
 function CartItem({ item, onRemoveItem}) {
 
   return (

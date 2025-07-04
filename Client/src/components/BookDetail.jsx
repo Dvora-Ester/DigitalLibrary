@@ -1,44 +1,40 @@
-import React from 'react';
 import '../styleSheets/bookDetail.css';
-import { useNavigate,Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import Home from './Home';
 import Comments from './Comments';
 import { useLocation } from 'react-router-dom';
 import noImage from '../Assets/no-photo.png'; // Placeholder image if book picture is not available
 function BookDetailsModal() {
-
-    const navigate = useNavigate();
     const location = useLocation();
     const { book } = location.state || {};
     console.log('Book details:', book, book.Id, book.Book_Name, book.author, book.imageUrl, book.number_Of_Page, book.Category, book.Price, book.Note, book.Editing_Date);
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
-  }
-}
-  if (!currentUser) {
-    return <Navigate to="/login" />;
-  }
+    let currentUser = null;
+    const rawUser = localStorage.getItem('CurrentUser');
+    if (rawUser) {
+        try {
+            currentUser = JSON.parse(rawUser);
+        } catch (e) {
+            console.error("Invalid JSON in CurrentUser:", e);
+        }
+    }
+    if (!currentUser) {
+        return <Navigate to="/login" />;
+    }
 
     const addToCart = () => {
-          let isExsistingInCart= false;
-        // Update cart in local storage
+        let isExsistingInCart = false;
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
         cart.forEach(itemInCart => {
             if (itemInCart.Id === book.Id) {
                 isExsistingInCart = true;
-                
+
                 alert(`the Book ${book.Book_Name} is already exxisting in your cart.`);
             }
         });
         if (!isExsistingInCart) {
-        cart.push({...book,amount: 1}); // Add book to cart with default amount of 1
-        localStorage.setItem('cart', JSON.stringify(cart));
-        alert(`${book.Book_Name} was added to your cart.`);
+            cart.push({ ...book, amount: 1 }); // Add book to cart with default amount of 1
+            localStorage.setItem('cart', JSON.stringify(cart));
+            alert(`${book.Book_Name} was added to your cart.`);
         }
     };
 
@@ -61,14 +57,12 @@ if (rawUser) {
                                     <p className='bookAuthor'>By {book.author}</p>
                                     <p className='bookCategory' >{book.Category} Category</p>
                                     <p className='bookNoPage'>{book.number_Of_Page} pg.</p>
-                                    {/* <p className='summary'>{book.Note}</p> */}
                                     <p className='bookEditedAt'>Edited at {new Date(book.Editing_Date).toLocaleDateString()}</p>
                                 </div>
                                 <div className='book-summary'>
                                     <p className='summary'><strong>~ Summary ~</strong><br />{book.Note}</p>
                                 </div>
                             </div>
-                            {/* <Comments/> */}
                         </div>
                     </div>
                     <Comments className="  height: 100vh;

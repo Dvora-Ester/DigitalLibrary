@@ -1,19 +1,18 @@
-import React from 'react';
 import '../styleSheets/BookLibrary.css';
 import { useNavigate, Navigate } from 'react-router-dom';
 import noImage from '../Assets/no-photo.png';
 
-function BookLibrary({ book }) { // קבל book בפרופס
+function BookLibrary({ book }) {
     const navigate = useNavigate();
-let currentUser = null;
-const rawUser = localStorage.getItem('CurrentUser');
-if (rawUser) {
-  try {
-    currentUser = JSON.parse(rawUser);
-  } catch (e) {
-    console.error("Invalid JSON in CurrentUser:", e);
-  }
-}
+    let currentUser = null;
+    const rawUser = localStorage.getItem('CurrentUser');
+    if (rawUser) {
+        try {
+            currentUser = JSON.parse(rawUser);
+        } catch (e) {
+            console.error("Invalid JSON in CurrentUser:", e);
+        }
+    }
     if (!currentUser) {
         return <Navigate to="/login" />;
     }
@@ -40,7 +39,7 @@ if (rawUser) {
                             <div className='detail-container'>
                                 <div className='book-details'>
                                     <p>By {book.author}</p>
-                                
+
                                 </div>
                             </div>
                         </div>

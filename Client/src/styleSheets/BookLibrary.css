@@ -14,7 +14,6 @@
   }
 }
 
-/* tablets and up */
 @media (min-width: 768px) {
   .modal-overlay {
     display: flex;
@@ -26,19 +25,7 @@
 
   }
 }
-/* .modal-overlay > .Home {
-  flex-shrink: 0;
-  min-width: 220px;
-  max-width: 220px;
-  height: 100%;
-  background-color: #1e5a68;
-  color: white;
-  padding: 20px;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-  overflow-y: auto;
-} */
 
-/* אזור תוכן הספר */
 .modal-content {
   flex-grow: 1;
   display: flex;
@@ -52,7 +39,6 @@
 
 }
 
-/* תמונת הספר בצד שמאל */
 .modal-image {
   width: 300px;
   height: 450px;
@@ -66,7 +52,6 @@
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-/* אזור פרטים */
 .book-details-info {
   flex: 1;
   padding-left: 40px;
@@ -111,7 +96,6 @@ strong{
     font-weight: bold;
     
 }
-/* כפתורים */
 .modal-buttons {
   margin-top: 30px;
   display: flex;

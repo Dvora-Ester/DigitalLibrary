@@ -88,8 +88,6 @@ em{
   }
   
 }
-
-/* tablets and up */
 @media (min-width: 900px) {
   .pageContainer {
     display: flex;

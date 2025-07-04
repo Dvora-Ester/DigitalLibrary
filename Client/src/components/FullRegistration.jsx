@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../styleSheets/FullRegistration.css';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function FullRegistration() {
   const location = useLocation();
   const state = location.state || {};
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState(state.email || '');
   const [password, setPassword] = useState(state.password || '');
@@ -46,11 +45,8 @@ function FullRegistration() {
             token: data.user.token
           };
 
-          // שמירת המשתמש בלוקאל סטורג'
           localStorage.setItem("CurrentUser", JSON.stringify(user));
-
-          // ניווט עם פרמטרים ו-state
-          navigate(`/${user.name}/${user.id}/welcome-page`, {
+          navigate(`/${user.Full_Name}/${user.id}/welcome-page`, {
             state: {
               username: user.email,
               token: user.token
@@ -71,37 +67,6 @@ function FullRegistration() {
 
   };
 
-
-
-  //  fetch("http://localhost:3000/api/users/login", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json"
-  //   },
-  //   body: JSON.stringify({
-  //     email: email,
-  //     password: password
-  //   })
-  // })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     // if (data !== undefined) {
-  //     // console.log('User found:', data[0]);
-  //     // // localStorage.setItem("CurrentUser", JSON.stringify(data[0]));
-  //     // localStorage.setItem("CurrentUser", JSON.stringify(data));
-  //     // const currentUser = data;
-  //     // console.log(data, currentUser);
-  //     if (data && data.userWithoutPassword) {
-  //       const currentUser = data.userWithoutPassword;
-  //       localStorage.setItem("CurrentUser", JSON.stringify(currentUser));
-  //       console.log('User found:', currentUser);
-  //       let userName = currentUser.Full_Name;
-  //       navigate(`/${currentUser.Full_Name}/${currentUser.Id}/welcome-page`, { state: { userName, password } })
-  //     } else {
-  //       setError('User not found pass to Registration');
-  //     }
-  //   })
-  //   .catch(error => console.error('Error fetching user:', error));
 
   return (
     <div className="register-container">
